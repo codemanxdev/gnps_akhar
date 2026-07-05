@@ -36,7 +36,7 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
   }
 
   Future<void> registerAppOpen() async {
-    await _initialLoad; // wait for Hive to actually finish loading
+    await _initialLoad;
     final current = state.value;
     if (current == null) return;
     final updated = await _service.registerAppOpen(current);
@@ -44,7 +44,7 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
   }
 
   Future<void> ensureFirstLessonUnlocked(Journey journey) async {
-    await _initialLoad; // wait for Hive to actually finish loading
+    await _initialLoad;
     final current = state.value;
     if (current == null) return;
     final updated = await _service.ensureFirstLessonUnlocked(current, journey);
@@ -66,6 +66,16 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
       pointsEarned: points,
     );
     state = AsyncValue.data(LocalProgress.fromJson(updated.toJson()));
+  }
+
+  /// Wipes progress and resets to a fresh default. Used by the
+  /// "Reset Progress" button on the Profile screen.
+  Future<void> reset() async {
+    await _initialLoad;
+    await _repository.clear();
+    final fresh = LocalProgress();
+    await _repository.save(fresh);
+    state = AsyncValue.data(fresh);
   }
 }
 

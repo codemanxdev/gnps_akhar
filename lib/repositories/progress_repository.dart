@@ -31,4 +31,10 @@ class ProgressRepository {
     await _ensureBox();
     await _box!.put(_progressKey, jsonEncode(progress.toJson()));
   }
+
+  /// Wipes all saved progress. Used by the "Reset Progress" button.
+  Future<void> clear() async {
+    await _ensureBox();
+    await _box!.delete(_progressKey);
+  }
 }

@@ -109,7 +109,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                 onBack: () => Navigator.of(context).pop(),
               ),
               loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
+              error: (_, _) => const SizedBox.shrink(),
             ),
             Expanded(
               child: KeyedSubtree(

@@ -84,7 +84,7 @@ class _WordSelectionTaskWidgetState extends ConsumerState<WordSelectionTaskWidge
                       // Assumes assets for mock data; swap to Image.network
                       // once images are served from Firestore/Storage URLs.
                       child: Image.asset(imageUrl, fit: BoxFit.cover, errorBuilder:
-                          (_, __, ___) => const Icon(Icons.image_not_supported, size: 48)),
+                          (_, _, _) => const Icon(Icons.image_not_supported, size: 48)),
                     ),
                   ),
                 );

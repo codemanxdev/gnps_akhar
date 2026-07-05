@@ -6,6 +6,47 @@ import '../providers.dart';
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
+  Future<void> _confirmAndReset(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reset progress?'),
+        content: const Text(
+          'This clears all points, streaks, and lesson progress, and reloads '
+          'lesson content fresh. This can\'t be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Reset'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    await ref.read(progressProvider.notifier).reset();
+    await ref.read(contentRepositoryProvider).clearCache();
+    ref.invalidate(journeyProvider);
+
+    final journey = await ref.read(journeyProvider.future);
+    await ref
+        .read(progressProvider.notifier)
+        .ensureFirstLessonUnlocked(journey);
+
+    if (context.mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Progress reset.')));
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final progressAsync = ref.watch(progressProvider);
@@ -48,6 +89,18 @@ class ProfileScreen extends ConsumerWidget {
               Text(
                 'Lessons completed: ${progress.completedLessonIds.length}',
                 style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const Spacer(),
+              OutlinedButton.icon(
+                onPressed: () => _confirmAndReset(context, ref),
+                icon: const Icon(Icons.restart_alt, color: Colors.red),
+                label: const Text(
+                  'Reset Progress',
+                  style: TextStyle(color: Colors.red),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Colors.red),
+                ),
               ),
             ],
           ),

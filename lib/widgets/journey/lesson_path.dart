@@ -2,7 +2,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../models/lesson.dart';
+import 'bobbing_butterfly.dart';
 import 'dashed_path_painter.dart';
+import 'floating_leaf.dart';
+import 'forest_background_painter.dart';
 import 'lesson_node.dart';
 
 class LessonPath extends StatelessWidget {
@@ -47,6 +50,34 @@ class LessonPath extends StatelessWidget {
     return centerX + wave * _horizontalAmplitude;
   }
 
+  /// Scatters a leaf/butterfly between each consecutive pair of nodes,
+  /// alternating sides of the path so they read as part of the scenery
+  /// rather than clutter directly on top of the trail.
+  List<Widget> _buildDecorations(List<Offset> nodeCenters, double centerX) {
+    final decorations = <Widget>[];
+    for (int i = 0; i < nodeCenters.length - 1; i++) {
+      final midY = (nodeCenters[i].dy + nodeCenters[i + 1].dy) / 2;
+      final side = i.isEven ? -1 : 1;
+      final x = centerX + side * (150 + 20 * (i % 3));
+
+      final isLeaf = i.isEven;
+      decorations.add(
+        Positioned(
+          left: x,
+          top: midY,
+          child: isLeaf
+              ? FloatingLeaf(
+                  period: Duration(milliseconds: 2600 + (i % 3) * 400),
+                )
+              : BobbingButterfly(
+                  period: Duration(milliseconds: 3400 + (i % 4) * 300),
+                ),
+        ),
+      );
+    }
+    return decorations;
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -73,12 +104,21 @@ class LessonPath extends StatelessWidget {
               children: [
                 Positioned.fill(
                   child: CustomPaint(
-                    painter: DashedPathPainter(
-                      points: nodeCenters,
-                      color: Theme.of(context).colorScheme.outlineVariant,
+                    painter: ForestBackgroundPainter(
+                      pathPoints: nodeCenters,
+                      centerX: centerX,
                     ),
                   ),
                 ),
+                Positioned.fill(
+                  child: CustomPaint(
+                    painter: DashedPathPainter(
+                      points: nodeCenters,
+                      color: Colors.white.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ),
+                ..._buildDecorations(nodeCenters, centerX),
                 for (int i = 0; i < lessons.length; i++)
                   Positioned(
                     left: nodeCenters[i].dx - (_nodeSize + 24) / 2,

@@ -3,13 +3,278 @@ import '../models/journey.dart';
 /// Sample content used until Firestore is connected (see ContentRepository).
 /// Mirrors exactly the shape lessons will have in Firestore, so swapping
 /// the data source later requires no changes to models or UI.
+///
+/// Lesson order: the Gurmukhi alphabet (ਪੈਂਤੀ) comes first, grouped into
+/// 7 lessons of 5 letters each following the traditional phonetic groups
+/// (vargas) — foundation sounds, then guttural/palatal/retroflex/dental/
+/// labial groups, then semivowels. Vocabulary/sentence lessons come after,
+/// since they build on letters the child has already traced.
 final Journey mockJourney = Journey.fromJson({
-  'version': 1,
+  'version': 2,
   'lessons': [
+    {
+      'id': 'lesson_letters_01',
+      'title': 'Foundation Sounds',
+      'order': 1,
+      'tasks': [
+        {
+          'id': 'trace_01',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ੳ', 'transliteration': 'ura'},
+        },
+        {
+          'id': 'trace_02',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਅ', 'transliteration': 'aira'},
+        },
+        {
+          'id': 'trace_03',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ੲ', 'transliteration': 'iri'},
+        },
+        {
+          'id': 'trace_04',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਸ', 'transliteration': 'sa'},
+        },
+        {
+          'id': 'trace_05',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਹ', 'transliteration': 'ha'},
+        },
+      ],
+    },
+    {
+      'id': 'lesson_letters_02',
+      'title': 'Guttural Sounds',
+      'order': 2,
+      'tasks': [
+        {
+          'id': 'trace_06',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਕ', 'transliteration': 'ka'},
+        },
+        {
+          'id': 'trace_07',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਖ', 'transliteration': 'kha'},
+        },
+        {
+          'id': 'trace_08',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਗ', 'transliteration': 'ga'},
+        },
+        {
+          'id': 'trace_09',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਘ', 'transliteration': 'gha'},
+        },
+        {
+          'id': 'trace_10',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਙ', 'transliteration': 'nga'},
+        },
+      ],
+    },
+    {
+      'id': 'lesson_letters_03',
+      'title': 'Palatal Sounds',
+      'order': 3,
+      'tasks': [
+        {
+          'id': 'trace_11',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਚ', 'transliteration': 'cha'},
+        },
+        {
+          'id': 'trace_12',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਛ', 'transliteration': 'chha'},
+        },
+        {
+          'id': 'trace_13',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਜ', 'transliteration': 'ja'},
+        },
+        {
+          'id': 'trace_14',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਝ', 'transliteration': 'jha'},
+        },
+        {
+          'id': 'trace_15',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਞ', 'transliteration': 'nya'},
+        },
+      ],
+    },
+    {
+      'id': 'lesson_letters_04',
+      'title': 'Retroflex Sounds',
+      'order': 4,
+      'tasks': [
+        {
+          'id': 'trace_16',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਟ', 'transliteration': 'tta'},
+        },
+        {
+          'id': 'trace_17',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਠ', 'transliteration': 'ttha'},
+        },
+        {
+          'id': 'trace_18',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਡ', 'transliteration': 'dda'},
+        },
+        {
+          'id': 'trace_19',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਢ', 'transliteration': 'ddha'},
+        },
+        {
+          'id': 'trace_20',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਣ', 'transliteration': 'nna'},
+        },
+      ],
+    },
+    {
+      'id': 'lesson_letters_05',
+      'title': 'Dental Sounds',
+      'order': 5,
+      'tasks': [
+        {
+          'id': 'trace_21',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਤ', 'transliteration': 'ta'},
+        },
+        {
+          'id': 'trace_22',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਥ', 'transliteration': 'tha'},
+        },
+        {
+          'id': 'trace_23',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਦ', 'transliteration': 'da'},
+        },
+        {
+          'id': 'trace_24',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਧ', 'transliteration': 'dha'},
+        },
+        {
+          'id': 'trace_25',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਨ', 'transliteration': 'na'},
+        },
+      ],
+    },
+    {
+      'id': 'lesson_letters_06',
+      'title': 'Labial Sounds',
+      'order': 6,
+      'tasks': [
+        {
+          'id': 'trace_26',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਪ', 'transliteration': 'pa'},
+        },
+        {
+          'id': 'trace_27',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਫ', 'transliteration': 'pha'},
+        },
+        {
+          'id': 'trace_28',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਬ', 'transliteration': 'ba'},
+        },
+        {
+          'id': 'trace_29',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਭ', 'transliteration': 'bha'},
+        },
+        {
+          'id': 'trace_30',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਮ', 'transliteration': 'ma'},
+        },
+      ],
+    },
+    {
+      'id': 'lesson_letters_07',
+      'title': 'Semivowels',
+      'order': 7,
+      'tasks': [
+        {
+          'id': 'trace_31',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਯ', 'transliteration': 'ya'},
+        },
+        {
+          'id': 'trace_32',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਰ', 'transliteration': 'ra'},
+        },
+        {
+          'id': 'trace_33',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਲ', 'transliteration': 'la'},
+        },
+        {
+          'id': 'trace_34',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ਵ', 'transliteration': 'va'},
+        },
+        {
+          'id': 'trace_35',
+          'type': 'trace',
+          'pointsAwarded': 10,
+          'content': {'letter': 'ੜ', 'transliteration': 'rra'},
+        },
+      ],
+    },
     {
       'id': 'lesson_001',
       'title': 'Greetings',
-      'order': 1,
+      'order': 8,
       'tasks': [
         {
           'id': 't1',
@@ -24,7 +289,10 @@ final Journey mockJourney = Journey.fromJson({
           'content': {
             'word': 'ਕੁੱਤਾ',
             'correctImageUrl': 'assets/images/dog.png',
-            'distractorImageUrls': ['assets/images/cat.png', 'assets/images/bird.png'],
+            'distractorImageUrls': [
+              'assets/images/cat.png',
+              'assets/images/bird.png',
+            ],
           },
         },
       ],
@@ -32,7 +300,7 @@ final Journey mockJourney = Journey.fromJson({
     {
       'id': 'lesson_002',
       'title': 'Animals',
-      'order': 2,
+      'order': 9,
       'tasks': [
         {
           'id': 't3',
@@ -59,7 +327,7 @@ final Journey mockJourney = Journey.fromJson({
     {
       'id': 'lesson_003',
       'title': 'Simple Sentences',
-      'order': 3,
+      'order': 10,
       'tasks': [
         {
           'id': 't5',

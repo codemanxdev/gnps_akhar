@@ -95,7 +95,7 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.asset(imageUrl, fit: BoxFit.cover, errorBuilder:
-                  (_, __, ___) => const Icon(Icons.image_not_supported, size: 64)),
+                  (_, _, _) => const Icon(Icons.image_not_supported, size: 64)),
             ),
           ),
           const SizedBox(height: 8),
