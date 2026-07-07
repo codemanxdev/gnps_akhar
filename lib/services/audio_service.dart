@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
@@ -9,13 +10,16 @@ import 'package:flutter_tts/flutter_tts.dart';
 /// pre-recorded audio instead of live TTS).
 class AudioService {
   final FlutterTts _tts = FlutterTts();
+  final AudioPlayer _sfxPlayer = AudioPlayer();
   bool _initialized = false;
 
   Future<void> _init() async {
     if (_initialized) return;
     await _tts.setLanguage('pa-IN');
-    await _tts.setSpeechRate(0.4); // slower, easier for kids to follow
+    await _tts.setSpeechRate(0.4);
     await _tts.setPitch(1.0);
+    await _sfxPlayer.setPlayerMode(PlayerMode.lowLatency);
+
     _initialized = true;
   }
 
@@ -37,9 +41,30 @@ class AudioService {
     await _tts.stop();
   }
 
-  /// Plays a short 'tick' sound for successful actions.
+  /// Success
   Future<void> playSuccess() async {
-    await SystemSound.play(SystemSoundType.click);
+    await _init();
+    try {
+      await _sfxPlayer.play(AssetSource('sounds/success.wav'));
+    } catch (_) {
+      // Fail silently rather than crash.
+    }
     await HapticFeedback.lightImpact();
+  }
+
+  ///Failure
+  Future<void> playFailure() async {
+    await _init();
+    try {
+      await _sfxPlayer.play(AssetSource('sounds/failure.wav'));
+    } catch (_) {
+      // Fail silently rather than crash.
+    }
+    await HapticFeedback.selectionClick();
+  }
+
+  /// Call from provider dispose to release native audio resources.
+  void dispose() {
+    _sfxPlayer.dispose();
   }
 }

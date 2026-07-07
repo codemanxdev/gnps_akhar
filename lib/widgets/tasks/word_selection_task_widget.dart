@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
@@ -10,14 +9,22 @@ import '../common/task_header.dart';
 class WordSelectionTaskWidget extends ConsumerStatefulWidget {
   final Task task;
   final VoidCallback onComplete;
+  final VoidCallback? onIncorrect;
 
-  const WordSelectionTaskWidget({super.key, required this.task, required this.onComplete});
+  const WordSelectionTaskWidget({
+    super.key,
+    required this.task,
+    required this.onComplete,
+    this.onIncorrect,
+  });
 
   @override
-  ConsumerState<WordSelectionTaskWidget> createState() => _WordSelectionTaskWidgetState();
+  ConsumerState<WordSelectionTaskWidget> createState() =>
+      _WordSelectionTaskWidgetState();
 }
 
-class _WordSelectionTaskWidgetState extends ConsumerState<WordSelectionTaskWidget>
+class _WordSelectionTaskWidgetState
+    extends ConsumerState<WordSelectionTaskWidget>
     with SingleTickerProviderStateMixin {
   late final List<String> _options;
   String? _selected;
@@ -32,8 +39,9 @@ class _WordSelectionTaskWidgetState extends ConsumerState<WordSelectionTaskWidge
   void initState() {
     super.initState();
     final correct = widget.task.content['correctImageUrl'] as String;
-    final distractors =
-        List<String>.from(widget.task.content['distractorImageUrls'] as List);
+    final distractors = List<String>.from(
+      widget.task.content['distractorImageUrls'] as List,
+    );
     _options = [correct, ...distractors]..shuffle(Random());
   }
 
@@ -53,8 +61,8 @@ class _WordSelectionTaskWidgetState extends ConsumerState<WordSelectionTaskWidge
     if (option == correct) {
       Future.delayed(const Duration(milliseconds: 600), widget.onComplete);
     } else {
-      HapticFeedback.heavyImpact();
       _shakeController.forward(from: 0.0);
+      widget.onIncorrect?.call();
     }
   }
 
@@ -95,8 +103,9 @@ class _WordSelectionTaskWidgetState extends ConsumerState<WordSelectionTaskWidge
                   final isSelected = _selected == imageUrl;
                   Color? borderColor;
                   if (isSelected) {
-                    borderColor =
-                        (_isCorrect ?? false) ? Colors.green : Colors.red;
+                    borderColor = (_isCorrect ?? false)
+                        ? Colors.green
+                        : Colors.red;
                   }
                   return GestureDetector(
                     onTap: () => _select(imageUrl),
@@ -115,10 +124,8 @@ class _WordSelectionTaskWidgetState extends ConsumerState<WordSelectionTaskWidge
                         child: Image.asset(
                           imageUrl,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => const Icon(
-                            Icons.image_not_supported,
-                            size: 48,
-                          ),
+                          errorBuilder: (_, _, _) =>
+                              const Icon(Icons.image_not_supported, size: 48),
                         ),
                       ),
                     ),

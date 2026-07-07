@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
@@ -15,14 +14,22 @@ import '../common/task_result_preview.dart';
 class ArrangeSentenceTaskWidget extends ConsumerStatefulWidget {
   final Task task;
   final VoidCallback onComplete;
+  final VoidCallback? onIncorrect;
 
-  const ArrangeSentenceTaskWidget({super.key, required this.task, required this.onComplete});
+  const ArrangeSentenceTaskWidget({
+    super.key,
+    required this.task,
+    required this.onComplete,
+    this.onIncorrect,
+  });
 
   @override
-  ConsumerState<ArrangeSentenceTaskWidget> createState() => _ArrangeSentenceTaskWidgetState();
+  ConsumerState<ArrangeSentenceTaskWidget> createState() =>
+      _ArrangeSentenceTaskWidgetState();
 }
 
-class _ArrangeSentenceTaskWidgetState extends ConsumerState<ArrangeSentenceTaskWidget>
+class _ArrangeSentenceTaskWidgetState
+    extends ConsumerState<ArrangeSentenceTaskWidget>
     with SingleTickerProviderStateMixin {
   late List<_WordTile> _bankTiles;
   final List<_WordTile> _builtTiles = [];
@@ -66,26 +73,31 @@ class _ArrangeSentenceTaskWidgetState extends ConsumerState<ArrangeSentenceTaskW
   }
 
   void _check() {
-    final correctOrder =
-        List<int>.from(widget.task.content['correctOrder'] as List);
+    final correctOrder = List<int>.from(
+      widget.task.content['correctOrder'] as List,
+    );
     final builtOrder = _builtTiles.map((t) => t.originalIndex).toList();
-    final isCorrect = builtOrder.length == correctOrder.length &&
-        List.generate(builtOrder.length, (i) => builtOrder[i] == correctOrder[i])
-            .every((b) => b);
+    final isCorrect =
+        builtOrder.length == correctOrder.length &&
+        List.generate(
+          builtOrder.length,
+          (i) => builtOrder[i] == correctOrder[i],
+        ).every((b) => b);
 
     setState(() => _lastCheckCorrect = isCorrect);
     if (isCorrect) {
       Future.delayed(const Duration(milliseconds: 600), widget.onComplete);
     } else {
-      HapticFeedback.heavyImpact();
       _shakeController.forward(from: 0.0);
+      widget.onIncorrect?.call();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final fullSentence =
-        (List<String>.from(widget.task.content['words'] as List)).join(' ');
+    final fullSentence = (List<String>.from(
+      widget.task.content['words'] as List,
+    )).join(' ');
     final builtSentence = _builtTiles.map((t) => t.text).join(' ');
 
     return Padding(
@@ -101,14 +113,14 @@ class _ArrangeSentenceTaskWidgetState extends ConsumerState<ArrangeSentenceTaskW
             ],
           ),
           const SizedBox(height: 24),
-          
+
           // Sentence Preview
           if (_builtTiles.isNotEmpty)
             TaskResultPreview(
               text: builtSentence,
               isCorrect: _lastCheckCorrect,
             ),
-          
+
           const SizedBox(height: 24),
 
           DragTarget<_WordTile>(
@@ -118,31 +130,37 @@ class _ArrangeSentenceTaskWidgetState extends ConsumerState<ArrangeSentenceTaskW
                 isCorrect: _lastCheckCorrect,
                 shakeController: _shakeController,
                 hintText: 'Drag words here in order',
-                children: _builtTiles.map((t) => TaskBuiltTile(
-                  text: t.text,
-                  fontSize: 24,
-                  onTap: () => _moveToBank(t),
-                )).toList(),
+                children: _builtTiles
+                    .map(
+                      (t) => TaskBuiltTile(
+                        text: t.text,
+                        fontSize: 24,
+                        onTap: () => _moveToBank(t),
+                      ),
+                    )
+                    .toList(),
               );
             },
           ),
           const SizedBox(height: 32),
-          
+
           // Word bank
           Wrap(
             spacing: 12,
             runSpacing: 12,
             alignment: WrapAlignment.center,
-            children: _bankTiles.map((t) => TaskBankTile(
-              text: t.text,
-              data: t,
-              onTap: () => _moveToBuilt(t),
-            )).toList(),
+            children: _bankTiles
+                .map(
+                  (t) => TaskBankTile(
+                    text: t.text,
+                    data: t,
+                    onTap: () => _moveToBuilt(t),
+                  ),
+                )
+                .toList(),
           ),
           const Spacer(),
-          TaskCheckButton(
-            onPressed: _builtTiles.isEmpty ? null : _check,
-          ),
+          TaskCheckButton(onPressed: _builtTiles.isEmpty ? null : _check),
         ],
       ),
     );
@@ -152,5 +170,6 @@ class _ArrangeSentenceTaskWidgetState extends ConsumerState<ArrangeSentenceTaskW
 class _WordTile {
   final int originalIndex;
   final String text;
+
   _WordTile({required this.originalIndex, required this.text});
 }

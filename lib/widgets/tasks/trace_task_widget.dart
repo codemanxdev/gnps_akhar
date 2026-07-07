@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
@@ -21,11 +21,13 @@ import '../common/task_header.dart';
 class TraceTaskWidget extends ConsumerStatefulWidget {
   final Task task;
   final VoidCallback onComplete;
+  final VoidCallback? onIncorrect;
 
   const TraceTaskWidget({
     super.key,
     required this.task,
     required this.onComplete,
+    this.onIncorrect,
   });
 
   @override
@@ -193,8 +195,8 @@ class _TraceTaskWidgetState extends ConsumerState<TraceTaskWidget>
       _points.add(point);
       if (!onLetter) {
         _failed = true;
-        HapticFeedback.heavyImpact();
         _shakeController.forward(from: 0.0);
+        widget.onIncorrect?.call();
       } else {
         _updateCoverage(point);
       }
@@ -251,8 +253,9 @@ class _TraceTaskWidgetState extends ConsumerState<TraceTaskWidget>
                   child: AnimatedBuilder(
                     animation: _shakeController,
                     builder: (context, child) {
-                      final sineValue =
-                          math.sin(_shakeController.value * 4 * math.pi);
+                      final sineValue = math.sin(
+                        _shakeController.value * 4 * math.pi,
+                      );
                       return Transform.translate(
                         offset: Offset(sineValue * 8, 0),
                         child: child,

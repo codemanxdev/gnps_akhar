@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/journey.dart';
@@ -52,6 +53,11 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     }
   }
 
+  void _onTaskIncorrect() {
+    HapticFeedback.heavyImpact();
+    ref.read(audioServiceProvider).playFailure();
+  }
+
   void _showCompletionDialog() {
     showDialog(
       context: context,
@@ -78,26 +84,31 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
         return TraceTaskWidget(
           task: task,
           onComplete: () => _onTaskComplete(task),
+          onIncorrect: _onTaskIncorrect,
         );
       case TaskType.spelling:
         return SpellingTaskWidget(
           task: task,
           onComplete: () => _onTaskComplete(task),
+          onIncorrect: _onTaskIncorrect,
         );
       case TaskType.wordSelection:
         return WordSelectionTaskWidget(
           task: task,
           onComplete: () => _onTaskComplete(task),
+          onIncorrect: _onTaskIncorrect,
         );
       case TaskType.arrangeSentence:
         return ArrangeSentenceTaskWidget(
           task: task,
           onComplete: () => _onTaskComplete(task),
+          onIncorrect: _onTaskIncorrect,
         );
       case TaskType.fillInBlank:
         return FillInBlankTaskWidget(
           task: task,
           onComplete: () => _onTaskComplete(task),
+          onIncorrect: _onTaskIncorrect,
         );
     }
   }

@@ -1,6 +1,4 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
@@ -13,11 +11,18 @@ import '../common/task_build_area.dart';
 class FillInBlankTaskWidget extends ConsumerStatefulWidget {
   final Task task;
   final VoidCallback onComplete;
+  final VoidCallback? onIncorrect;
 
-  const FillInBlankTaskWidget({super.key, required this.task, required this.onComplete});
+  const FillInBlankTaskWidget({
+    super.key,
+    required this.task,
+    required this.onComplete,
+    this.onIncorrect,
+  });
 
   @override
-  ConsumerState<FillInBlankTaskWidget> createState() => _FillInBlankTaskWidgetState();
+  ConsumerState<FillInBlankTaskWidget> createState() =>
+      _FillInBlankTaskWidgetState();
 }
 
 class _FillInBlankTaskWidgetState extends ConsumerState<FillInBlankTaskWidget>
@@ -45,15 +50,16 @@ class _FillInBlankTaskWidgetState extends ConsumerState<FillInBlankTaskWidget>
     if (option == correctWord) {
       Future.delayed(const Duration(milliseconds: 600), widget.onComplete);
     } else {
-      HapticFeedback.heavyImpact();
       _shakeController.forward(from: 0.0);
+      widget.onIncorrect?.call();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final parts =
-        List<String>.from(widget.task.content['sentenceParts'] as List);
+    final parts = List<String>.from(
+      widget.task.content['sentenceParts'] as List,
+    );
     final options = List<String>.from(widget.task.content['options'] as List);
     final correctWord = widget.task.content['correctWord'] as String;
 
@@ -64,8 +70,9 @@ class _FillInBlankTaskWidgetState extends ConsumerState<FillInBlankTaskWidget>
           const TaskHeader(title: 'Fill in the blank'),
           const SizedBox(height: 32),
           TaskSpeakerButton(
-            textToSpeak:
-                parts.map((p) => p == '___' ? correctWord : p).join(' '),
+            textToSpeak: parts
+                .map((p) => p == '___' ? correctWord : p)
+                .join(' '),
           ),
           const SizedBox(height: 24),
           TaskBuildArea(
@@ -90,10 +97,7 @@ class _FillInBlankTaskWidgetState extends ConsumerState<FillInBlankTaskWidget>
             runSpacing: 12,
             alignment: WrapAlignment.center,
             children: options.map((option) {
-              return TaskBankTile(
-                text: option,
-                onTap: () => _select(option),
-              );
+              return TaskBankTile(text: option, onTap: () => _select(option));
             }).toList(),
           ),
         ],

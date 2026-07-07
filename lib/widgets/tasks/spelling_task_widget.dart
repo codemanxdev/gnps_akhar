@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
@@ -18,8 +17,14 @@ import '../common/task_result_preview.dart';
 class SpellingTaskWidget extends ConsumerStatefulWidget {
   final Task task;
   final VoidCallback onComplete;
+  final VoidCallback? onIncorrect;
 
-  const SpellingTaskWidget({super.key, required this.task, required this.onComplete});
+  const SpellingTaskWidget({
+    super.key,
+    required this.task,
+    required this.onComplete,
+    this.onIncorrect,
+  });
 
   @override
   ConsumerState<SpellingTaskWidget> createState() => _SpellingTaskWidgetState();
@@ -39,8 +44,9 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
   @override
   void initState() {
     super.initState();
-    final letterBank =
-        List<String>.from(widget.task.content['letterBank'] as List);
+    final letterBank = List<String>.from(
+      widget.task.content['letterBank'] as List,
+    );
     _bankTiles = [
       for (int i = 0; i < letterBank.length; i++)
         _Tile(id: i, text: letterBank[i]),
@@ -78,8 +84,8 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
     if (isCorrect) {
       Future.delayed(const Duration(milliseconds: 600), widget.onComplete);
     } else {
-      HapticFeedback.heavyImpact();
       _shakeController.forward(from: 0.0);
+      widget.onIncorrect?.call();
     }
   }
 
@@ -99,14 +105,18 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
             height: 140,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: Image.asset(imageUrl, fit: BoxFit.cover, errorBuilder:
-                  (_, _, _) => const Icon(Icons.image_not_supported, size: 64)),
+              child: Image.asset(
+                imageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (_, _, _) =>
+                    const Icon(Icons.image_not_supported, size: 64),
+              ),
             ),
           ),
           const SizedBox(height: 12),
           TaskSpeakerButton(textToSpeak: targetWord),
           const SizedBox(height: 20),
-          
+
           // Resulting Word Preview (This makes matras look correct)
           if (_builtTiles.isNotEmpty)
             TaskResultPreview(
@@ -114,9 +124,9 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
               isCorrect: _lastCheckCorrect,
               fontSize: 40,
             ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Build Area (Slots)
           DragTarget<_Tile>(
             onAcceptWithDetails: (details) => _moveToBuilt(details.data),
@@ -125,31 +135,37 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
                 isCorrect: _lastCheckCorrect,
                 shakeController: _shakeController,
                 hintText: 'Drag letters here',
-                children: _builtTiles.map((t) => TaskBuiltTile(
-                  text: t.text,
-                  onTap: () => _moveToBank(t),
-                )).toList(),
+                children: _builtTiles
+                    .map(
+                      (t) => TaskBuiltTile(
+                        text: t.text,
+                        onTap: () => _moveToBank(t),
+                      ),
+                    )
+                    .toList(),
               );
             },
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Letter bank
           Wrap(
             spacing: 12,
             runSpacing: 12,
             alignment: WrapAlignment.center,
-            children: _bankTiles.map((t) => TaskBankTile(
-              text: t.text,
-              data: t,
-              onTap: () => _moveToBuilt(t),
-            )).toList(),
+            children: _bankTiles
+                .map(
+                  (t) => TaskBankTile(
+                    text: t.text,
+                    data: t,
+                    onTap: () => _moveToBuilt(t),
+                  ),
+                )
+                .toList(),
           ),
           const Spacer(),
-          TaskCheckButton(
-            onPressed: _builtTiles.isEmpty ? null : _check,
-          ),
+          TaskCheckButton(onPressed: _builtTiles.isEmpty ? null : _check),
         ],
       ),
     );
@@ -159,5 +175,6 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
 class _Tile {
   final int id;
   final String text;
+
   _Tile({required this.id, required this.text});
 }

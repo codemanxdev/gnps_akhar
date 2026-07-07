@@ -7,8 +7,12 @@ import '../models/journey.dart';
 /// Lesson order: the Gurmukhi alphabet (ਪੈਂਤੀ) comes first, grouped into
 /// 7 lessons of 5 letters each following the traditional phonetic groups
 /// (vargas) — foundation sounds, then guttural/palatal/retroflex/dental/
-/// labial groups, then semivowels. Vocabulary/sentence lessons come after,
-/// since they build on letters the child has already traced.
+/// labial groups, then semivowels. Vocabulary lessons come after, since
+/// they build on letters the child has already traced. Fill-in-the-blank
+/// tasks are grouped into their own dedicated lesson (rather than mixed
+/// into letter/vocabulary lessons) so the task type gets focused practice
+/// once the child has the vocabulary to draw on. Sentence-arrangement
+/// lessons come last, as the most advanced task type.
 ///
 /// Each lesson carries a `visible` flag (default true) and an `order`
 /// used for journey-map placement. Set `visible: false` to hide a lesson
@@ -148,16 +152,6 @@ final Journey mockJourney = Journey.fromJson({
           'type': 'trace',
           'pointsAwarded': 10,
           'content': {'letter': 'ਞ', 'transliteration': 'nya'},
-        },
-        {
-          'id': 'fillInBlank_01',
-          'type': 'fillInBlank',
-          'pointsAwarded': 15,
-          'content': {
-            'sentenceParts': ['ਇਹ', '___', 'ਹੈ'],
-            'correctWord': 'ਚਿੜੀ',
-            'options': ['ਚਿੜੀ', 'ਗਾਂ', 'ਬਿੱਲੀ'],
-          },
         },
       ],
     },
@@ -331,16 +325,6 @@ final Journey mockJourney = Journey.fromJson({
           },
         },
         {
-          'id': 't4',
-          'type': 'fillInBlank',
-          'pointsAwarded': 15,
-          'content': {
-            'sentenceParts': ['ਮੈਂ', '___', 'ਹਾਂ'],
-            'correctWord': 'ਜਾਂਦਾ',
-            'options': ['ਜਾਂਦਾ', 'ਖਾਂਦਾ', 'ਸੌਂਦਾ'],
-          },
-        },
-        {
           'id': 't6',
           'type': 'spelling',
           'pointsAwarded': 15,
@@ -348,6 +332,34 @@ final Journey mockJourney = Journey.fromJson({
             'imageUrl': 'assets/images/dog.png',
             'targetWord': 'ਕੁੱਤਾ',
             'letterBank': ['ਕੁ', 'ੱ', 'ਤਾ', 'ਬ', 'ਲੀ'],
+          },
+        },
+      ],
+    },
+    {
+      'id': 'lesson_fill_in_blanks',
+      'title': 'Fill in the Blanks',
+      'order': 9,
+      'visible': true,
+      'tasks': [
+        {
+          'id': 'fillInBlank_01',
+          'type': 'fillInBlank',
+          'pointsAwarded': 15,
+          'content': {
+            'sentenceParts': ['ਇਹ', '___', 'ਹੈ'],
+            'correctWord': 'ਚਿੜੀ',
+            'options': ['ਚਿੜੀ', 'ਗਾਂ', 'ਬਿੱਲੀ'],
+          },
+        },
+        {
+          'id': 't4',
+          'type': 'fillInBlank',
+          'pointsAwarded': 15,
+          'content': {
+            'sentenceParts': ['ਮੈਂ', '___', 'ਹਾਂ'],
+            'correctWord': 'ਜਾਂਦਾ',
+            'options': ['ਜਾਂਦਾ', 'ਖਾਂਦਾ', 'ਸੌਂਦਾ'],
           },
         },
         {
@@ -365,7 +377,7 @@ final Journey mockJourney = Journey.fromJson({
     {
       'id': 'lesson_003',
       'title': 'Simple Sentences',
-      'order': 9,
+      'order': 10,
       'visible': true,
       'tasks': [
         {
