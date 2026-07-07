@@ -173,8 +173,6 @@ class LessonPath extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final centerX = constraints.maxWidth / 2;
-        final totalHeight =
-            _verticalSpacing * lessons.length + _nodeSize + _topPadding + 68;
 
         final nodeCenters = [
           for (int i = 0; i < lessons.length; i++)
@@ -184,10 +182,17 @@ class LessonPath extends StatelessWidget {
             ),
         ];
 
+        final contentHeight =
+            _verticalSpacing * (lessons.length - 1) +
+            _nodeSize +
+            _topPadding +
+            100;
+        final viewHeight = max(constraints.maxHeight, contentHeight);
+
         return SingleChildScrollView(
           child: SizedBox(
             width: constraints.maxWidth,
-            height: totalHeight,
+            height: viewHeight,
             child: Stack(
               clipBehavior: Clip.none,
               // Ensures layout elements glide naturally offscreen
@@ -202,7 +207,7 @@ class LessonPath extends StatelessWidget {
                 ),
                 ..._buildCreatures(nodeCenters, centerX),
                 ..._buildExtraLeaves(nodeCenters, centerX),
-                ..._buildBirds(totalHeight, constraints.maxWidth),
+                ..._buildBirds(viewHeight, constraints.maxWidth),
                 for (int i = 0; i < lessons.length; i++)
                   Positioned(
                     left: nodeCenters[i].dx - (_nodeSize + 24) / 2,
