@@ -117,7 +117,7 @@ class LessonPath extends StatelessWidget {
               x = centerX - 120 - random.nextDouble() * 20;
             }
 
-            const butterflySize = 2.0; // Tiny, elegant forest butterfly scale
+            const butterflySize = 12.0; // Tiny, elegant forest butterfly scale
             creature = SizedBox(
               width: butterflySize * 1.6,
               height: butterflySize,

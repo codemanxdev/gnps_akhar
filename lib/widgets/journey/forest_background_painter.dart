@@ -1,17 +1,20 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'props/forest_trail_props.dart';
+import 'props/forest_tree.dart';
+import 'props/forest_bush.dart';
+import 'props/forest_grass_tuft.dart';
+import 'props/forest_leaf_litter.dart';
+import 'props/forest_log.dart';
+import 'props/forest_mushroom.dart';
+import 'props/forest_moss_patch.dart';
 
-/// Draws an illustrated forest scene behind the lesson path: a soft green
-/// gradient, a hand-worn dirt trail with grass fraying its edges, ambient
-/// grass tufts scattered across the whole ground, dense scattered
-/// trees/bushes/leaf-litter on either side, and clusters of stones and
-/// pebbles piled toward the outside of each bend in the trail.
+/// Draws an illustrated forest scene behind the lesson path.
 ///
-/// Scenery bands are computed relative to the path's *local* x position
-/// at each row (interpolated from pathPoints), not a fixed global center —
-/// so trees hug the path's actual curve as it winds left/right, rather
-/// than sometimes ending up implausibly far from (or overlapping) the
-/// trail depending on how far the wave has swung at that height.
+/// This painter orchestrates the background gradient, the trail, and the
+/// scattered forest scenery (trees, bushes, logs, etc.). The actual drawing
+/// logic for individual elements is modularized into independent classes
+/// in the props directory.
 class ForestBackgroundPainter extends CustomPainter {
   final List<Offset> pathPoints;
   final double centerX;
@@ -20,14 +23,14 @@ class ForestBackgroundPainter extends CustomPainter {
   ForestBackgroundPainter({
     required this.pathPoints,
     required this.centerX,
-    this.pathClearance = 65, // reduced — lets trees sit closer to the trail
+    this.pathClearance = 65,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     _paintBackground(canvas, size);
-    _paintTrail(canvas);
-    _paintCornerStones(canvas);
+    ForestTrailProps.paintTrail(canvas, pathPoints);
+    ForestTrailProps.paintCornerStones(canvas, pathPoints);
     _paintScenery(canvas, size);
   }
 
@@ -61,196 +64,6 @@ class ForestBackgroundPainter extends CustomPainter {
     return centerX;
   }
 
-  void _paintTrail(Canvas canvas) {
-    if (pathPoints.length < 2) return;
-    final random = Random(11);
-
-    for (int i = 0; i < pathPoints.length - 1; i++) {
-      final start = pathPoints[i];
-      final end = pathPoints[i + 1];
-      const segments = 6;
-
-      for (int s = 0; s < segments; s++) {
-        final t0 = s / segments;
-        final t1 = (s + 1) / segments;
-        final p0 = Offset.lerp(start, end, t0)!;
-        final p1 = Offset.lerp(start, end, t1)!;
-
-        final width = 42 + random.nextDouble() * 16;
-        final colorMix = random.nextDouble();
-        final trailPaint = Paint()
-          ..color = Color.lerp(
-            const Color(0xFFDCC49A),
-            const Color(0xFFC9AF7C),
-            colorMix,
-          )!.withValues(alpha: 0.75)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = width
-          ..strokeCap = StrokeCap.round;
-
-        canvas.drawLine(p0, p1, trailPaint);
-      }
-
-      for (int j = 0; j < 4; j++) {
-        final t = random.nextDouble();
-        final base = Offset.lerp(start, end, t)!;
-        final jitter = Offset(
-          (random.nextDouble() - 0.5) * 30,
-          (random.nextDouble() - 0.5) * 10,
-        );
-        final point = base + jitter;
-
-        if (random.nextBool()) {
-          final pebblePaint = Paint()
-            ..color = const Color(0xFFAFA089).withValues(alpha: 0.8);
-          canvas.drawCircle(point, 2.5 + random.nextDouble() * 2, pebblePaint);
-        } else {
-          _paintLeafLitter(canvas, point, random);
-        }
-      }
-
-      for (int j = 0; j < 7; j++) {
-        final t = random.nextDouble();
-        final base = Offset.lerp(start, end, t)!;
-        final side = random.nextBool() ? -1 : 1;
-        final edgeOffset = Offset(side * (24 + random.nextDouble() * 14), 0);
-        _paintGrassTuft(canvas, base + edgeOffset, random);
-      }
-    }
-  }
-
-  /// Scatters clusters of stones and pebbles at each bend of the trail,
-  /// biased toward the outside (convex side) of the curve — the way loose
-  /// debris naturally piles up on the outer edge of a winding path.
-  void _paintCornerStones(Canvas canvas) {
-    if (pathPoints.length < 2) return;
-    final random = Random(29);
-
-    for (int i = 0; i < pathPoints.length; i++) {
-      final point = pathPoints[i];
-
-      // Estimate which side this bend curves toward, so stones land on
-      // the outer edge rather than scattered evenly across the trail.
-      double bendDir;
-      if (i > 0 && i < pathPoints.length - 1) {
-        final prev = pathPoints[i - 1];
-        final next = pathPoints[i + 1];
-        bendDir = (point.dx - prev.dx) - (next.dx - point.dx);
-      } else if (i == 0) {
-        bendDir = point.dx - pathPoints[1].dx;
-      } else {
-        bendDir = point.dx - pathPoints[i - 1].dx;
-      }
-      final side = bendDir >= 0 ? 1 : -1;
-
-      final stoneCount = 5 + random.nextInt(4); // 5-8 per bend
-      for (int s = 0; s < stoneCount; s++) {
-        final along = (random.nextDouble() - 0.5) * 60;
-        final across = side * (28 + random.nextDouble() * 42);
-        final stonePoint = point + Offset(across, along);
-        final radius = 3 + random.nextDouble() * 5.5;
-        _paintStone(canvas, stonePoint, radius, random);
-      }
-
-      // A couple of loose pebbles drifted toward the inner edge too, so
-      // the cluster doesn't look perfectly one-sided.
-      for (int s = 0; s < 2; s++) {
-        final along = (random.nextDouble() - 0.5) * 40;
-        final across = -side * (10 + random.nextDouble() * 20);
-        final pebblePoint = point + Offset(across, along);
-        canvas.drawCircle(
-          pebblePoint,
-          2 + random.nextDouble() * 2,
-          Paint()..color = const Color(0xFFAFA089).withValues(alpha: 0.8),
-        );
-      }
-    }
-  }
-
-  /// A single irregular, lightly shaded stone (rougher and more varied
-  /// than the small round trail pebbles).
-  void _paintStone(Canvas canvas, Offset center, double radius, Random random) {
-    const baseColors = [
-      Color(0xFF9C9284),
-      Color(0xFFA8A296),
-      Color(0xFF8A8175),
-      Color(0xFFB0AA9C),
-    ];
-    final base = baseColors[random.nextInt(baseColors.length)];
-
-    canvas.save();
-    canvas.translate(center.dx, center.dy);
-    canvas.rotate(random.nextDouble() * pi);
-
-    final path = Path();
-    const sides = 7;
-    for (int p = 0; p < sides; p++) {
-      final angle = (p / sides) * 2 * pi;
-      final r = radius * (0.8 + random.nextDouble() * 0.35);
-      final x = cos(angle) * r;
-      final y = sin(angle) * r * 0.85; // slightly flattened, more stone-like
-      if (p == 0) {
-        path.moveTo(x, y);
-      } else {
-        path.lineTo(x, y);
-      }
-    }
-    path.close();
-
-    canvas.drawPath(path, Paint()..color = base.withValues(alpha: 0.9));
-    canvas.drawPath(
-      path,
-      Paint()
-        ..color = const Color(0xFF5F594E).withValues(alpha: 0.5)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 0.8,
-    );
-
-    // Small highlight for a touch of dimensionality.
-    canvas.drawCircle(
-      Offset(-radius * 0.25, -radius * 0.25),
-      radius * 0.28,
-      Paint()..color = Colors.white.withValues(alpha: 0.35),
-    );
-
-    canvas.restore();
-  }
-
-  static const _leafLitterColors = [
-    Color(0xFFB5883D),
-    Color(0xFFD99A3E),
-    Color(0xFFC96A3D),
-    Color(0xFF8FAE5C),
-  ];
-
-  void _paintLeafLitter(Canvas canvas, Offset point, Random random) {
-    final paint = Paint()
-      ..color = _leafLitterColors[random.nextInt(_leafLitterColors.length)]
-          .withValues(alpha: 0.75);
-    canvas.save();
-    canvas.translate(point.dx, point.dy);
-    canvas.rotate(random.nextDouble() * pi);
-    canvas.drawOval(
-      Rect.fromCenter(center: Offset.zero, width: 7, height: 4),
-      paint,
-    );
-    canvas.restore();
-  }
-
-  void _paintGrassTuft(Canvas canvas, Offset base, Random random) {
-    final paint = Paint()
-      ..color = const Color(0xFF6FA85C).withValues(alpha: 0.85)
-      ..strokeWidth = 2
-      ..strokeCap = StrokeCap.round;
-    for (int blade = 0; blade < 3; blade++) {
-      final angle =
-          -pi / 2 + (blade - 1) * 0.4 + (random.nextDouble() - 0.5) * 0.2;
-      final length = 8 + random.nextDouble() * 7;
-      final tip = base + Offset(cos(angle), sin(angle)) * length;
-      canvas.drawLine(base, tip, paint);
-    }
-  }
-
   void _paintScenery(Canvas canvas, Size size) {
     final random = Random(7);
     const verticalStep = 38.0;
@@ -262,7 +75,7 @@ class ForestBackgroundPainter extends CustomPainter {
 
       if (random.nextDouble() < 0.95 && leftBandMax > 30) {
         final x = random.nextDouble() * (leftBandMax - 30) + 10;
-        _paintTreeOrBush(
+        ForestTree.paintTreeOrBush(
           canvas,
           Offset(x, y + random.nextDouble() * 25),
           random,
@@ -272,7 +85,7 @@ class ForestBackgroundPainter extends CustomPainter {
         final x =
             rightBandMin +
             random.nextDouble() * (size.width - rightBandMin - 30);
-        _paintTreeOrBush(
+        ForestTree.paintTreeOrBush(
           canvas,
           Offset(x, y + random.nextDouble() * 25),
           random,
@@ -281,7 +94,7 @@ class ForestBackgroundPainter extends CustomPainter {
 
       if (random.nextDouble() < 0.5 && leftBandMax > 30) {
         final x = random.nextDouble() * (leftBandMax - 30) + 10;
-        _paintBush(
+        ForestBush.paint(
           canvas,
           Offset(x, y + 20 + random.nextDouble() * 15),
           14 + random.nextDouble() * 6,
@@ -291,7 +104,7 @@ class ForestBackgroundPainter extends CustomPainter {
         final x =
             rightBandMin +
             random.nextDouble() * (size.width - rightBandMin - 30);
-        _paintBush(
+        ForestBush.paint(
           canvas,
           Offset(x, y + 20 + random.nextDouble() * 15),
           14 + random.nextDouble() * 6,
@@ -301,7 +114,7 @@ class ForestBackgroundPainter extends CustomPainter {
       for (int g = 0; g < 3; g++) {
         if (random.nextDouble() < 0.7 && leftBandMax > 30) {
           final x = random.nextDouble() * (leftBandMax - 20) + 10;
-          _paintGrassTuft(
+          ForestGrassTuft.paint(
             canvas,
             Offset(x, y + random.nextDouble() * verticalStep),
             random,
@@ -311,7 +124,7 @@ class ForestBackgroundPainter extends CustomPainter {
           final x =
               rightBandMin +
               random.nextDouble() * (size.width - rightBandMin - 20);
-          _paintGrassTuft(
+          ForestGrassTuft.paint(
             canvas,
             Offset(x, y + random.nextDouble() * verticalStep),
             random,
@@ -326,7 +139,7 @@ class ForestBackgroundPainter extends CustomPainter {
             : rightBandMin +
                   random.nextDouble() * (size.width - rightBandMin - 20);
         for (int l = 0; l < 3; l++) {
-          _paintLeafLitter(
+          ForestLeafLitter.paint(
             canvas,
             Offset(
               x + (random.nextDouble() - 0.5) * 18,
@@ -336,52 +149,75 @@ class ForestBackgroundPainter extends CustomPainter {
           );
         }
       }
-    }
-  }
 
-  void _paintTreeOrBush(Canvas canvas, Offset base, Random random) {
-    final isBush = random.nextDouble() < 0.35;
-    if (isBush) {
-      _paintBush(canvas, base, 18 + random.nextDouble() * 10);
-    } else {
-      _paintTree(canvas, base, 24 + random.nextDouble() * 18);
-    }
-  }
+      if (random.nextDouble() < 0.12) {
+        final onLeft = random.nextBool();
+        if (onLeft && leftBandMax > 50) {
+          final x = random.nextDouble() * (leftBandMax - 50) + 20;
+          ForestLog.paint(
+            canvas,
+            Offset(x, y + 10),
+            34 + random.nextDouble() * 20,
+            random,
+          );
+        } else if (!onLeft && rightBandMin < size.width - 50) {
+          final x =
+              rightBandMin +
+              random.nextDouble() * (size.width - rightBandMin - 50);
+          ForestLog.paint(
+            canvas,
+            Offset(x, y + 10),
+            34 + random.nextDouble() * 20,
+            random,
+          );
+        }
+      }
 
-  void _paintTree(Canvas canvas, Offset base, double foliageRadius) {
-    final trunkPaint = Paint()..color = const Color(0xFF8B6A4A);
-    final trunkRect = Rect.fromCenter(
-      center: Offset(base.dx, base.dy + foliageRadius * 0.6),
-      width: foliageRadius * 0.35,
-      height: foliageRadius * 1.1,
-    );
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(trunkRect, const Radius.circular(3)),
-      trunkPaint,
-    );
+      if (random.nextDouble() < 0.18) {
+        final onLeft = random.nextBool();
+        if (onLeft && leftBandMax > 30) {
+          final x = random.nextDouble() * (leftBandMax - 30) + 10;
+          ForestMushroom.paint(
+            canvas,
+            Offset(x, y + 22 + random.nextDouble() * 10),
+            6 + random.nextDouble() * 4,
+            random,
+          );
+        } else if (!onLeft && rightBandMin < size.width - 30) {
+          final x =
+              rightBandMin +
+              random.nextDouble() * (size.width - rightBandMin - 30);
+          ForestMushroom.paint(
+            canvas,
+            Offset(x, y + 22 + random.nextDouble() * 10),
+            6 + random.nextDouble() * 4,
+            random,
+          );
+        }
+      }
 
-    final foliageColors = [
-      const Color(0xFF6FA85C),
-      const Color(0xFF5C9650),
-      const Color(0xFF80B86A),
-      const Color(0xFF4F8A45),
-    ];
-    for (int i = 0; i < 4; i++) {
-      final paint = Paint()..color = foliageColors[i % foliageColors.length];
-      final offset = Offset(
-        base.dx + (i - 1.5) * foliageRadius * 0.3,
-        base.dy - foliageRadius * 0.3 - i * foliageRadius * 0.12,
-      );
-      canvas.drawCircle(offset, foliageRadius * (1 - i * 0.1), paint);
-    }
-  }
-
-  void _paintBush(Canvas canvas, Offset base, double radius) {
-    final colors = [const Color(0xFF7BB566), const Color(0xFF669C55)];
-    for (int i = 0; i < 3; i++) {
-      final paint = Paint()..color = colors[i % colors.length];
-      final offset = Offset(base.dx + (i - 1) * radius * 0.6, base.dy);
-      canvas.drawCircle(offset, radius * 0.7, paint);
+      if (random.nextDouble() < 0.25) {
+        final onLeft = random.nextBool();
+        if (onLeft && leftBandMax > 30) {
+          final x = random.nextDouble() * (leftBandMax - 30) + 10;
+          ForestMossPatch.paint(
+            canvas,
+            Offset(x, y + random.nextDouble() * 20),
+            10 + random.nextDouble() * 8,
+            random,
+          );
+        } else if (!onLeft && rightBandMin < size.width - 30) {
+          final x =
+              rightBandMin +
+              random.nextDouble() * (size.width - rightBandMin - 30);
+          ForestMossPatch.paint(
+            canvas,
+            Offset(x, y + random.nextDouble() * 20),
+            10 + random.nextDouble() * 8,
+            random,
+          );
+        }
+      }
     }
   }
 
