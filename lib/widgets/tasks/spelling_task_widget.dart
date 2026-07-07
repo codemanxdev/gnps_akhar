@@ -11,7 +11,7 @@ import '../common/task_built_tile.dart';
 import '../common/task_build_area.dart';
 import '../common/task_result_preview.dart';
 
-/// Presents an image + word bank; the child drags letter/syllable tiles
+/// Presents an emoji + word bank; the child drags letter/syllable tiles
 /// from the bank into a build area to spell the target word. The bank
 /// includes distractor tiles that don't belong in the answer.
 class SpellingTaskWidget extends ConsumerStatefulWidget {
@@ -91,7 +91,7 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = widget.task.content['imageUrl'] as String;
+    final emoji = widget.task.content['emoji'] as String;
     final targetWord = widget.task.content['targetWord'] as String;
     final builtWord = _builtTiles.map((t) => t.text).join();
 
@@ -103,14 +103,8 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
           const SizedBox(height: 16),
           SizedBox(
             height: 140,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.asset(
-                imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (_, _, _) =>
-                    const Icon(Icons.image_not_supported, size: 64),
-              ),
+            child: Center(
+              child: Text(emoji, style: const TextStyle(fontSize: 96)),
             ),
           ),
           const SizedBox(height: 12),

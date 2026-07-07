@@ -57,16 +57,6 @@ final Journey mockJourney = Journey.fromJson({
           'pointsAwarded': 10,
           'content': {'letter': 'ਹ', 'transliteration': 'ha'},
         },
-        {
-          'id': 'spelling_01',
-          'type': 'spelling',
-          'pointsAwarded': 15,
-          'content': {
-            'imageUrl': 'assets/images/sun.png',
-            'targetWord': 'ਸੂਰਜ',
-            'letterBank': ['ਸੂ', 'ਰ', 'ਜ', 'ਹ', 'ਅ'],
-          },
-        },
       ],
     },
     {
@@ -104,16 +94,6 @@ final Journey mockJourney = Journey.fromJson({
           'type': 'trace',
           'pointsAwarded': 10,
           'content': {'letter': 'ਙ', 'transliteration': 'nga'},
-        },
-        {
-          'id': 'spelling_02',
-          'type': 'spelling',
-          'pointsAwarded': 15,
-          'content': {
-            'imageUrl': 'assets/images/crow.png',
-            'targetWord': 'ਕਾਂ',
-            'letterBank': ['ਕਾਂ', 'ਗ', 'ਖ', 'ਘ'],
-          },
         },
       ],
     },
@@ -319,7 +299,7 @@ final Journey mockJourney = Journey.fromJson({
           'type': 'spelling',
           'pointsAwarded': 15,
           'content': {
-            'imageUrl': 'assets/images/cat.png',
+            'emoji': '🐈',
             'targetWord': 'ਬਿੱਲੀ',
             'letterBank': ['ਬਿ', 'ੱ', 'ਲੀ', 'ਮ', 'ਅ'],
           },
@@ -329,7 +309,7 @@ final Journey mockJourney = Journey.fromJson({
           'type': 'spelling',
           'pointsAwarded': 15,
           'content': {
-            'imageUrl': 'assets/images/dog.png',
+            'emoji': '🐕',
             'targetWord': 'ਕੁੱਤਾ',
             'letterBank': ['ਕੁ', 'ੱ', 'ਤਾ', 'ਬ', 'ਲੀ'],
           },
@@ -339,9 +319,29 @@ final Journey mockJourney = Journey.fromJson({
           'type': 'spelling',
           'pointsAwarded': 15,
           'content': {
-            'imageUrl': 'assets/images/book.png',
+            'emoji': '📖',
             'targetWord': 'ਕਿਤਾਬ',
             'letterBank': ['ਕਿ', 'ਤਾ', 'ਬ', 'ਮੇਰੀ', 'ਸਕੂਲ'],
+          },
+        },
+        {
+          'id': 'spelling_01',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '☀️',
+            'targetWord': 'ਸੂਰਜ',
+            'letterBank': ['ਸੂ', 'ਰ', 'ਜ', 'ਹ', 'ਅ'],
+          },
+        },
+        {
+          'id': 'spelling_02',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🐦',
+            'targetWord': 'ਕਾਂ',
+            'letterBank': ['ਕਾਂ', 'ਗ', 'ਖ', 'ਘ'],
           },
         },
       ],
