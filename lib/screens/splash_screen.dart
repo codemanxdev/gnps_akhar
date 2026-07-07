@@ -19,14 +19,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _bootstrap() async {
-    final minimumSplashTime = Future.delayed(const Duration(milliseconds: 1200));
+    final minimumSplashTime = Future.delayed(
+      const Duration(milliseconds: 2400),
+    );
 
     // Kick off content + progress loading in parallel.
     final journeyFuture = ref.read(journeyProvider.future);
     await ref.read(progressProvider.notifier).registerAppOpen();
 
     final journey = await journeyFuture;
-    await ref.read(progressProvider.notifier).ensureFirstLessonUnlocked(journey);
+    await ref
+        .read(progressProvider.notifier)
+        .ensureFirstLessonUnlocked(journey);
 
     await minimumSplashTime;
 
@@ -45,18 +49,21 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Swap for an Image.asset('assets/logo/logo.png') once you have one.
-            Icon(
-              Icons.school_rounded,
-              size: 96,
-              color: Theme.of(context).colorScheme.onPrimary,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Image.asset(
+                'assets/logo/logo.jpg',
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+              ),
             ),
             const SizedBox(height: 16),
             Text(
               'ਪੰਜਾਬੀ ਸਿੱਖੋ',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ),
             const SizedBox(height: 32),
             CircularProgressIndicator(
