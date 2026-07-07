@@ -126,8 +126,14 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
             ),
             Expanded(
               child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  KeyedSubtree(key: ValueKey(task.id), child: _buildTask(task)),
+                  Positioned.fill(
+                    child: KeyedSubtree(
+                      key: ValueKey(task.id),
+                      child: _buildTask(task),
+                    ),
+                  ),
                   if (_showingSuccess)
                     Container(
                       color: Colors.white.withValues(alpha: 0.8),

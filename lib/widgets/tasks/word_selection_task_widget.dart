@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
@@ -16,17 +17,30 @@ class WordSelectionTaskWidget extends ConsumerStatefulWidget {
   ConsumerState<WordSelectionTaskWidget> createState() => _WordSelectionTaskWidgetState();
 }
 
-class _WordSelectionTaskWidgetState extends ConsumerState<WordSelectionTaskWidget> {
+class _WordSelectionTaskWidgetState extends ConsumerState<WordSelectionTaskWidget>
+    with SingleTickerProviderStateMixin {
   late final List<String> _options;
   String? _selected;
   bool? _isCorrect;
+
+  late final AnimationController _shakeController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 400),
+  );
 
   @override
   void initState() {
     super.initState();
     final correct = widget.task.content['correctImageUrl'] as String;
-    final distractors = List<String>.from(widget.task.content['distractorImageUrls'] as List);
+    final distractors =
+        List<String>.from(widget.task.content['distractorImageUrls'] as List);
     _options = [correct, ...distractors]..shuffle(Random());
+  }
+
+  @override
+  void dispose() {
+    _shakeController.dispose();
+    super.dispose();
   }
 
   void _select(String option) {
@@ -38,6 +52,9 @@ class _WordSelectionTaskWidgetState extends ConsumerState<WordSelectionTaskWidge
 
     if (option == correct) {
       Future.delayed(const Duration(milliseconds: 600), widget.onComplete);
+    } else {
+      HapticFeedback.heavyImpact();
+      _shakeController.forward(from: 0.0);
     }
   }
 
@@ -61,33 +78,53 @@ class _WordSelectionTaskWidgetState extends ConsumerState<WordSelectionTaskWidge
           ),
           const SizedBox(height: 24),
           Expanded(
-            child: GridView.count(
-              crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              children: _options.map((imageUrl) {
-                final isSelected = _selected == imageUrl;
-                Color? borderColor;
-                if (isSelected) {
-                  borderColor = (_isCorrect ?? false) ? Colors.green : Colors.red;
-                }
-                return GestureDetector(
-                  onTap: () => _select(imageUrl),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: borderColor ?? Colors.grey.shade300, width: 3),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      // Assumes assets for mock data; swap to Image.network
-                      // once images are served from Firestore/Storage URLs.
-                      child: Image.asset(imageUrl, fit: BoxFit.cover, errorBuilder:
-                          (_, _, _) => const Icon(Icons.image_not_supported, size: 48)),
-                    ),
-                  ),
+            child: AnimatedBuilder(
+              animation: _shakeController,
+              builder: (context, child) {
+                final sineValue = sin(_shakeController.value * 4 * pi);
+                return Transform.translate(
+                  offset: Offset(sineValue * 8, 0),
+                  child: child,
                 );
-              }).toList(),
+              },
+              child: GridView.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                children: _options.map((imageUrl) {
+                  final isSelected = _selected == imageUrl;
+                  Color? borderColor;
+                  if (isSelected) {
+                    borderColor =
+                        (_isCorrect ?? false) ? Colors.green : Colors.red;
+                  }
+                  return GestureDetector(
+                    onTap: () => _select(imageUrl),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: borderColor ?? Colors.grey.shade300,
+                          width: 3,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        // Assumes assets for mock data; swap to Image.network
+                        // once images are served from Firestore/Storage URLs.
+                        child: Image.asset(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => const Icon(
+                            Icons.image_not_supported,
+                            size: 48,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ],

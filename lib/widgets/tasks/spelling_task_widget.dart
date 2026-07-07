@@ -1,11 +1,16 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
 import '../common/task_speaker_button.dart';
 import '../common/task_check_button.dart';
 import '../common/task_header.dart';
+import '../common/task_bank_tile.dart';
+import '../common/task_built_tile.dart';
+import '../common/task_build_area.dart';
+import '../common/task_result_preview.dart';
 
 /// Presents an image + word bank; the child drags letter/syllable tiles
 /// from the bank into a build area to spell the target word. The bank
@@ -20,18 +25,32 @@ class SpellingTaskWidget extends ConsumerStatefulWidget {
   ConsumerState<SpellingTaskWidget> createState() => _SpellingTaskWidgetState();
 }
 
-class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget> {
+class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
+    with SingleTickerProviderStateMixin {
   late List<_Tile> _bankTiles;
   final List<_Tile> _builtTiles = [];
   bool? _lastCheckCorrect;
 
+  late final AnimationController _shakeController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 400),
+  );
+
   @override
   void initState() {
     super.initState();
-    final letterBank = List<String>.from(widget.task.content['letterBank'] as List);
+    final letterBank =
+        List<String>.from(widget.task.content['letterBank'] as List);
     _bankTiles = [
-      for (int i = 0; i < letterBank.length; i++) _Tile(id: i, text: letterBank[i]),
+      for (int i = 0; i < letterBank.length; i++)
+        _Tile(id: i, text: letterBank[i]),
     ]..shuffle(Random());
+  }
+
+  @override
+  void dispose() {
+    _shakeController.dispose();
+    super.dispose();
   }
 
   void _moveToBuilt(_Tile tile) {
@@ -58,63 +77,10 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget> {
 
     if (isCorrect) {
       Future.delayed(const Duration(milliseconds: 600), widget.onComplete);
+    } else {
+      HapticFeedback.heavyImpact();
+      _shakeController.forward(from: 0.0);
     }
-  }
-
-  Widget _buildBuiltTile(_Tile tile) {
-    return GestureDetector(
-      onTap: () => _moveToBank(tile),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            tile.text,
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.w500,
-              color: Colors.blue,
-            ),
-          ),
-          Container(
-            width: 30,
-            height: 3,
-            decoration: BoxDecoration(
-              color: Colors.blue.shade200,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBankTile(_Tile tile) {
-    final chip = Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        child: Text(
-          tile.text,
-          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-
-    return Draggable<_Tile>(
-      data: tile,
-      feedback: Material(color: Colors.transparent, child: chip),
-      childWhenDragging: Opacity(opacity: 0.2, child: chip),
-      child: GestureDetector(
-        onTap: () => _moveToBuilt(tile),
-        child: chip,
-      ),
-    );
   }
 
   @override
@@ -143,23 +109,10 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget> {
           
           // Resulting Word Preview (This makes matras look correct)
           if (_builtTiles.isNotEmpty)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                builtWord,
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                  color: _lastCheckCorrect == null
-                      ? Colors.black
-                      : (_lastCheckCorrect! ? Colors.green : Colors.red),
-                ),
-              ),
+            TaskResultPreview(
+              text: builtWord,
+              isCorrect: _lastCheckCorrect,
+              fontSize: 40,
             ),
           
           const SizedBox(height: 24),
@@ -168,28 +121,14 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget> {
           DragTarget<_Tile>(
             onAcceptWithDetails: (details) => _moveToBuilt(details.data),
             builder: (context, candidateData, rejectedData) {
-              return Container(
-                width: double.infinity,
-                constraints: const BoxConstraints(minHeight: 100),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  border: Border.all(
-                    color: _lastCheckCorrect == null
-                        ? Colors.grey.shade300
-                        : (_lastCheckCorrect! ? Colors.green : Colors.red),
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Wrap(
-                  spacing: 12,
-                  runSpacing: 16,
-                  alignment: WrapAlignment.center,
-                  children: _builtTiles.isEmpty 
-                    ? [Text('Drag letters here', style: TextStyle(color: Colors.grey.shade400))]
-                    : _builtTiles.map((t) => _buildBuiltTile(t)).toList(),
-                ),
+              return TaskBuildArea(
+                isCorrect: _lastCheckCorrect,
+                shakeController: _shakeController,
+                hintText: 'Drag letters here',
+                children: _builtTiles.map((t) => TaskBuiltTile(
+                  text: t.text,
+                  onTap: () => _moveToBank(t),
+                )).toList(),
               );
             },
           ),
@@ -201,7 +140,11 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget> {
             spacing: 12,
             runSpacing: 12,
             alignment: WrapAlignment.center,
-            children: _bankTiles.map((t) => _buildBankTile(t)).toList(),
+            children: _bankTiles.map((t) => TaskBankTile(
+              text: t.text,
+              data: t,
+              onTap: () => _moveToBuilt(t),
+            )).toList(),
           ),
           const Spacer(),
           TaskCheckButton(

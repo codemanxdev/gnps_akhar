@@ -32,7 +32,8 @@ class TraceTaskWidget extends ConsumerStatefulWidget {
   ConsumerState<TraceTaskWidget> createState() => _TraceTaskWidgetState();
 }
 
-class _TraceTaskWidgetState extends ConsumerState<TraceTaskWidget> {
+class _TraceTaskWidgetState extends ConsumerState<TraceTaskWidget>
+    with SingleTickerProviderStateMixin {
   // --- Tunable validation constants ---
   static const double _onTrackTolerance =
       16; // px a stroke point may sit off the letter's ink and still count
@@ -55,11 +56,22 @@ class _TraceTaskWidgetState extends ConsumerState<TraceTaskWidget> {
   bool _failed = false;
   bool _isBuildingMask = false;
 
+  late final AnimationController _shakeController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 400),
+  );
+
   double get _coverageRatio => _inkSamples.isEmpty
       ? 0
       : _coveredSampleIndices.length / _inkSamples.length;
 
   bool get _canComplete => !_failed && _coverageRatio >= _requiredCoverage;
+
+  @override
+  void dispose() {
+    _shakeController.dispose();
+    super.dispose();
+  }
 
   Future<void> _ensureMask(Size size, String letter) async {
     if (_isBuildingMask) return;
@@ -181,14 +193,12 @@ class _TraceTaskWidgetState extends ConsumerState<TraceTaskWidget> {
       _points.add(point);
       if (!onLetter) {
         _failed = true;
+        HapticFeedback.heavyImpact();
+        _shakeController.forward(from: 0.0);
       } else {
         _updateCoverage(point);
       }
     });
-
-    if (!onLetter) {
-      HapticFeedback.mediumImpact();
-    }
   }
 
   void _clear() {
@@ -238,20 +248,31 @@ class _TraceTaskWidgetState extends ConsumerState<TraceTaskWidget> {
                   onPanUpdate: _onPanUpdate,
                   onPanEnd: (_) => setState(() => _points.add(Offset.infinite)),
                   // pen lift marker
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: _failed ? Colors.red : Colors.grey.shade300,
+                  child: AnimatedBuilder(
+                    animation: _shakeController,
+                    builder: (context, child) {
+                      final sineValue =
+                          math.sin(_shakeController.value * 4 * math.pi);
+                      return Transform.translate(
+                        offset: Offset(sineValue * 8, 0),
+                        child: child,
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: _failed ? Colors.red : Colors.grey.shade300,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: CustomPaint(
-                      painter: _TracePainter(
-                        letter: letter,
-                        points: _points,
-                        failed: _failed,
+                      child: CustomPaint(
+                        painter: _TracePainter(
+                          letter: letter,
+                          points: _points,
+                          failed: _failed,
+                        ),
+                        size: size,
                       ),
-                      size: size,
                     ),
                   ),
                 );

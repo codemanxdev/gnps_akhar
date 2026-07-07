@@ -1,11 +1,16 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
 import '../common/task_speaker_button.dart';
 import '../common/task_check_button.dart';
 import '../common/task_header.dart';
+import '../common/task_bank_tile.dart';
+import '../common/task_built_tile.dart';
+import '../common/task_build_area.dart';
+import '../common/task_result_preview.dart';
 
 class ArrangeSentenceTaskWidget extends ConsumerStatefulWidget {
   final Task task;
@@ -17,18 +22,31 @@ class ArrangeSentenceTaskWidget extends ConsumerStatefulWidget {
   ConsumerState<ArrangeSentenceTaskWidget> createState() => _ArrangeSentenceTaskWidgetState();
 }
 
-class _ArrangeSentenceTaskWidgetState extends ConsumerState<ArrangeSentenceTaskWidget> {
+class _ArrangeSentenceTaskWidgetState extends ConsumerState<ArrangeSentenceTaskWidget>
+    with SingleTickerProviderStateMixin {
   late List<_WordTile> _bankTiles;
   final List<_WordTile> _builtTiles = [];
   bool? _lastCheckCorrect;
+
+  late final AnimationController _shakeController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 400),
+  );
 
   @override
   void initState() {
     super.initState();
     final words = List<String>.from(widget.task.content['words'] as List);
     _bankTiles = [
-      for (int i = 0; i < words.length; i++) _WordTile(originalIndex: i, text: words[i]),
+      for (int i = 0; i < words.length; i++)
+        _WordTile(originalIndex: i, text: words[i]),
     ]..shuffle(Random());
+  }
+
+  @override
+  void dispose() {
+    _shakeController.dispose();
+    super.dispose();
   }
 
   void _moveToBuilt(_WordTile tile) {
@@ -48,39 +66,27 @@ class _ArrangeSentenceTaskWidgetState extends ConsumerState<ArrangeSentenceTaskW
   }
 
   void _check() {
-    final correctOrder = List<int>.from(widget.task.content['correctOrder'] as List);
+    final correctOrder =
+        List<int>.from(widget.task.content['correctOrder'] as List);
     final builtOrder = _builtTiles.map((t) => t.originalIndex).toList();
     final isCorrect = builtOrder.length == correctOrder.length &&
-        List.generate(builtOrder.length, (i) => builtOrder[i] == correctOrder[i]).every((b) => b);
+        List.generate(builtOrder.length, (i) => builtOrder[i] == correctOrder[i])
+            .every((b) => b);
 
     setState(() => _lastCheckCorrect = isCorrect);
     if (isCorrect) {
       Future.delayed(const Duration(milliseconds: 600), widget.onComplete);
+    } else {
+      HapticFeedback.heavyImpact();
+      _shakeController.forward(from: 0.0);
     }
-  }
-
-  Widget _buildTile(_WordTile tile, {required bool inBank}) {
-    final chip = Card(
-      color: inBank ? null : Colors.blue.shade50,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Text(tile.text, style: const TextStyle(fontSize: 20)),
-      ),
-    );
-    return Draggable<_WordTile>(
-      data: tile,
-      feedback: Material(color: Colors.transparent, child: chip),
-      childWhenDragging: Opacity(opacity: 0.3, child: chip),
-      child: GestureDetector(
-        onTap: () => inBank ? _moveToBuilt(tile) : _moveToBank(tile),
-        child: chip,
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final fullSentence = (List<String>.from(widget.task.content['words'] as List)).join(' ');
+    final fullSentence =
+        (List<String>.from(widget.task.content['words'] as List)).join(' ');
+    final builtSentence = _builtTiles.map((t) => t.text).join(' ');
 
     return Padding(
       padding: const EdgeInsets.all(24),
@@ -95,37 +101,43 @@ class _ArrangeSentenceTaskWidgetState extends ConsumerState<ArrangeSentenceTaskW
             ],
           ),
           const SizedBox(height: 24),
+          
+          // Sentence Preview
+          if (_builtTiles.isNotEmpty)
+            TaskResultPreview(
+              text: builtSentence,
+              isCorrect: _lastCheckCorrect,
+            ),
+          
+          const SizedBox(height: 24),
+
           DragTarget<_WordTile>(
             onAcceptWithDetails: (details) => _moveToBuilt(details.data),
             builder: (context, candidateData, rejectedData) {
-              return Container(
-                width: double.infinity,
-                constraints: const BoxConstraints(minHeight: 72),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: _lastCheckCorrect == null
-                        ? Colors.grey.shade400
-                        : (_lastCheckCorrect! ? Colors.green : Colors.red),
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: _builtTiles.map((t) => _buildTile(t, inBank: false)).toList(),
-                ),
+              return TaskBuildArea(
+                isCorrect: _lastCheckCorrect,
+                shakeController: _shakeController,
+                hintText: 'Drag words here in order',
+                children: _builtTiles.map((t) => TaskBuiltTile(
+                  text: t.text,
+                  fontSize: 24,
+                  onTap: () => _moveToBank(t),
+                )).toList(),
               );
             },
           ),
-          const SizedBox(height: 24),
-          Text('Drag words here in order', style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 8),
+          const SizedBox(height: 32),
+          
+          // Word bank
           Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _bankTiles.map((t) => _buildTile(t, inBank: true)).toList(),
+            spacing: 12,
+            runSpacing: 12,
+            alignment: WrapAlignment.center,
+            children: _bankTiles.map((t) => TaskBankTile(
+              text: t.text,
+              data: t,
+              onTap: () => _moveToBuilt(t),
+            )).toList(),
           ),
           const Spacer(),
           TaskCheckButton(
