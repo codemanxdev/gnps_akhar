@@ -9,7 +9,11 @@ import 'services/progress_service.dart';
 
 final contentRepositoryProvider = Provider((ref) => ContentRepository());
 final progressRepositoryProvider = Provider((ref) => ProgressRepository());
-final audioServiceProvider = Provider((ref) => AudioService());
+final audioServiceProvider = Provider((ref) {
+  final service = AudioService();
+  ref.onDispose(() => service.dispose());
+  return service;
+});
 
 final progressServiceProvider = Provider((ref) {
   return ProgressService(ref.read(progressRepositoryProvider));

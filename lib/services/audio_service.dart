@@ -11,16 +11,18 @@ import 'package:flutter_tts/flutter_tts.dart';
 class AudioService {
   final FlutterTts _tts = FlutterTts();
   final AudioPlayer _sfxPlayer = AudioPlayer();
-  bool _initialized = false;
+  Future<void>? _initFuture;
 
   Future<void> _init() async {
-    if (_initialized) return;
+    _initFuture ??= _doInit();
+    return _initFuture;
+  }
+
+  Future<void> _doInit() async {
     await _tts.setLanguage('pa-IN');
     await _tts.setSpeechRate(0.4);
     await _tts.setPitch(1.0);
     await _sfxPlayer.setPlayerMode(PlayerMode.lowLatency);
-
-    _initialized = true;
   }
 
   Future<bool> isPunjabiAvailable() async {
@@ -34,6 +36,7 @@ class AudioService {
 
   Future<void> speak(String text) async {
     await _init();
+    await _tts.stop(); // Stop any current speech
     await _tts.speak(text);
   }
 
@@ -45,10 +48,9 @@ class AudioService {
   Future<void> playSuccess() async {
     await _init();
     try {
-      // Try custom asset first
+      await _sfxPlayer.stop(); // Ensure player is ready to start fresh
       await _sfxPlayer.play(AssetSource('sounds/success.wav'));
     } catch (e) {
-      // Fallback to system sound if asset fails or is missing
       await SystemSound.play(SystemSoundType.click);
     }
     await HapticFeedback.mediumImpact();
@@ -58,10 +60,9 @@ class AudioService {
   Future<void> playFailure() async {
     await _init();
     try {
-      // Try custom asset first
+      await _sfxPlayer.stop(); // Ensure player is ready to start fresh
       await _sfxPlayer.play(AssetSource('sounds/failure.wav'));
     } catch (e) {
-      // Fallback to system haptic/selection click
       await HapticFeedback.heavyImpact();
     }
     await HapticFeedback.selectionClick();
