@@ -8,11 +8,13 @@ import '../models/journey.dart';
 /// 7 lessons of 5 letters each following the traditional phonetic groups
 /// (vargas) — foundation sounds, then guttural/palatal/retroflex/dental/
 /// labial groups, then semivowels. Vocabulary lessons come after, since
-/// they build on letters the child has already traced. Fill-in-the-blank
-/// tasks are grouped into their own dedicated lesson (rather than mixed
-/// into letter/vocabulary lessons) so the task type gets focused practice
-/// once the child has the vocabulary to draw on. Sentence-arrangement
-/// lessons come last, as the most advanced task type.
+/// they build on letters the child has already traced. Word-selection
+/// (picture matching) tasks follow immediately after, reinforcing the
+/// same vocabulary through recognition rather than recall. Fill-in-the-
+/// blank tasks are grouped into their own dedicated lesson (rather than
+/// mixed into letter/vocabulary lessons) so the task type gets focused
+/// practice once the child has the vocabulary to draw on. Sentence-
+/// arrangement lessons come last, as the most advanced task type.
 ///
 /// Each lesson carries a `visible` flag (default true) and an `order`
 /// used for journey-map placement. Set `visible: false` to hide a lesson
@@ -347,9 +349,67 @@ final Journey mockJourney = Journey.fromJson({
       ],
     },
     {
+      'id': 'lesson_word_selection',
+      'title': 'Match the Word',
+      'order': 9,
+      'visible': true,
+      'tasks': [
+        {
+          'id': 'wordSelect_01',
+          'type': 'wordSelection',
+          'pointsAwarded': 15,
+          'content': {
+            'word': 'ਬਿੱਲੀ',
+            'correctEmoji': '🐈',
+            'distractorEmojis': ['🐕', '📖', '☀️'],
+          },
+        },
+        {
+          'id': 'wordSelect_02',
+          'type': 'wordSelection',
+          'pointsAwarded': 15,
+          'content': {
+            'word': 'ਕੁੱਤਾ',
+            'correctEmoji': '🐕',
+            'distractorEmojis': ['🐈', '🐦', '☀️'],
+          },
+        },
+        {
+          'id': 'wordSelect_03',
+          'type': 'wordSelection',
+          'pointsAwarded': 15,
+          'content': {
+            'word': 'ਕਿਤਾਬ',
+            'correctEmoji': '📖',
+            'distractorEmojis': ['🐈', '🐕', '🐦'],
+          },
+        },
+        {
+          'id': 'wordSelect_04',
+          'type': 'wordSelection',
+          'pointsAwarded': 15,
+          'content': {
+            'word': 'ਸੂਰਜ',
+            'correctEmoji': '☀️',
+            'distractorEmojis': ['🐦', '📖', '🐕'],
+          },
+        },
+        {
+          'id': 'wordSelect_05',
+          'type': 'wordSelection',
+          'pointsAwarded': 15,
+          'content': {
+            'word': 'ਕਾਂ',
+            'correctEmoji': '🐦',
+            'distractorEmojis': ['🐈', '☀️', '📖'],
+          },
+        },
+      ],
+    },
+    {
       'id': 'lesson_fill_in_blanks',
       'title': 'Fill in the Blanks',
-      'order': 9,
+      'order': 10,
       'visible': true,
       'tasks': [
         {
@@ -387,7 +447,7 @@ final Journey mockJourney = Journey.fromJson({
     {
       'id': 'lesson_003',
       'title': 'Simple Sentences',
-      'order': 10,
+      'order': 11,
       'visible': true,
       'tasks': [
         {

@@ -38,9 +38,9 @@ class _WordSelectionTaskWidgetState
   @override
   void initState() {
     super.initState();
-    final correct = widget.task.content['correctImageUrl'] as String;
+    final correct = widget.task.content['correctEmoji'] as String;
     final distractors = List<String>.from(
-      widget.task.content['distractorImageUrls'] as List,
+      widget.task.content['distractorEmojis'] as List,
     );
     _options = [correct, ...distractors]..shuffle(Random());
   }
@@ -52,7 +52,7 @@ class _WordSelectionTaskWidgetState
   }
 
   void _select(String option) {
-    final correct = widget.task.content['correctImageUrl'] as String;
+    final correct = widget.task.content['correctEmoji'] as String;
     setState(() {
       _selected = option;
       _isCorrect = option == correct;
@@ -74,7 +74,7 @@ class _WordSelectionTaskWidgetState
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          const TaskHeader(title: 'Select the correct image'),
+          const TaskHeader(title: 'Select the correct picture'),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -99,8 +99,8 @@ class _WordSelectionTaskWidgetState
                 crossAxisCount: 2,
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
-                children: _options.map((imageUrl) {
-                  final isSelected = _selected == imageUrl;
+                children: _options.map((emoji) {
+                  final isSelected = _selected == emoji;
                   Color? borderColor;
                   if (isSelected) {
                     borderColor = (_isCorrect ?? false)
@@ -108,24 +108,22 @@ class _WordSelectionTaskWidgetState
                         : Colors.red;
                   }
                   return GestureDetector(
-                    onTap: () => _select(imageUrl),
+                    onTap: () => _select(emoji),
                     child: Container(
                       decoration: BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerHighest,
                         border: Border.all(
                           color: borderColor ?? Colors.grey.shade300,
                           width: 3,
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        // Assumes assets for mock data; swap to Image.network
-                        // once images are served from Firestore/Storage URLs.
-                        child: Image.asset(
-                          imageUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) =>
-                              const Icon(Icons.image_not_supported, size: 48),
+                      child: Center(
+                        child: Text(
+                          emoji,
+                          style: const TextStyle(fontSize: 64),
                         ),
                       ),
                     ),
