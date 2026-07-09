@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gnps_akhar/config/reward_config.dart';
 
+import '../../screens/streak_screen.dart';
+
 /// A compact strip on the Journey screen: a friendly greeting on the left,
 /// streak + points at a glance on the right.
 class JourneyBanner extends StatelessWidget {
@@ -8,6 +10,12 @@ class JourneyBanner extends StatelessWidget {
   final int points;
 
   const JourneyBanner({super.key, required this.streak, required this.points});
+
+  void _openStreakScreen(BuildContext context) {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const StreakScreen()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +32,13 @@ class JourneyBanner extends StatelessWidget {
           ),
           Row(
             children: [
-              _StatPill(
-                icon: Icons.local_fire_department,
-                color: Colors.orange,
-                value: '$streak',
+              GestureDetector(
+                onTap: () => _openStreakScreen(context),
+                child: _StatPill(
+                  icon: Icons.local_fire_department,
+                  color: Colors.orange,
+                  value: '$streak',
+                ),
               ),
               const SizedBox(width: 12),
               _StatPill(
