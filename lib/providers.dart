@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'models/journey.dart';
 import 'models/progress.dart';
+import 'models/shop_item.dart';
 import 'repositories/content_repository.dart';
 import 'repositories/progress_repository.dart';
 import 'services/audio_service.dart';
@@ -70,6 +71,21 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
       pointsEarned: points,
     );
     state = AsyncValue.data(LocalProgress.fromJson(updated.toJson()));
+  }
+
+  /// Attempts to purchase [item] with the user's gems. Returns the result
+  /// so the UI can show appropriate feedback (success / can't afford /
+  /// already owned).
+  Future<PurchaseResult> purchaseItem(ShopItem item) async {
+    await _initialLoad;
+    final current = state.value;
+    if (current == null) return PurchaseResult.insufficientGems;
+    final (updated, result) = await _service.purchaseItem(
+      progress: current,
+      item: item,
+    );
+    state = AsyncValue.data(LocalProgress.fromJson(updated.toJson()));
+    return result;
   }
 
   /// Wipes progress and resets to a fresh default. Used by the

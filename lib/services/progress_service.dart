@@ -1,6 +1,9 @@
 import '../models/journey.dart';
 import '../models/progress.dart';
+import '../models/shop_item.dart';
 import '../repositories/progress_repository.dart';
+
+enum PurchaseResult { success, insufficientGems, alreadyOwned }
 
 class ProgressService {
   final ProgressRepository _repository;
@@ -73,5 +76,41 @@ class ProgressService {
 
     await _repository.save(progress);
     return progress;
+  }
+
+  /// How many of [itemId] the user currently owns (0 if none).
+  int itemQuantity(LocalProgress progress, String itemId) =>
+      progress.ownedItemQuantities[itemId] ?? 0;
+
+  /// Whether the user owns at least one of [itemId].
+  bool isItemOwned(LocalProgress progress, String itemId) =>
+      itemQuantity(progress, itemId) > 0;
+
+  /// Attempts to buy [item] with gems from [progress.totalPoints].
+  ///
+  /// Non-stackable items (e.g. cosmetic avatars) can only be bought once;
+  /// stackable items (e.g. streak freezes) can be bought repeatedly to
+  /// build up a quantity. Does not mutate [progress] on failure.
+  ///
+  /// NOTE: this only records ownership/quantity — it doesn't yet wire the
+  /// streak freeze into registerAppOpen's streak-reset logic, so owning
+  /// one doesn't actually protect a missed day yet. That's a separate
+  /// change to registerAppOpen if/when you want it to consume one.
+  Future<(LocalProgress, PurchaseResult)> purchaseItem({
+    required LocalProgress progress,
+    required ShopItem item,
+  }) async {
+    if (!item.stackable && isItemOwned(progress, item.id)) {
+      return (progress, PurchaseResult.alreadyOwned);
+    }
+    if (progress.totalPoints < item.price) {
+      return (progress, PurchaseResult.insufficientGems);
+    }
+
+    progress.totalPoints -= item.price;
+    progress.ownedItemQuantities[item.id] = itemQuantity(progress, item.id) + 1;
+
+    await _repository.save(progress);
+    return (progress, PurchaseResult.success);
   }
 }

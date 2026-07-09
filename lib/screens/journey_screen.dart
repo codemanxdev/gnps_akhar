@@ -9,6 +9,7 @@ import '../widgets/journey/lesson_path.dart';
 import '../widgets/journey/journey_banner.dart';
 import 'lesson_screen.dart';
 import 'profile_screen.dart';
+import 'shop_screen.dart';
 
 class JourneyScreen extends ConsumerStatefulWidget {
   const JourneyScreen({super.key});
@@ -53,6 +54,7 @@ class _JourneyScreenState extends ConsumerState<JourneyScreen> {
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(child: Text('Error loading lessons: $e')),
             ),
+            const ShopScreen(),
             const ProfileScreen(),
           ],
         ),
@@ -64,6 +66,10 @@ class _JourneyScreenState extends ConsumerState<JourneyScreen> {
           NavigationDestination(
             icon: Icon(Icons.map_outlined),
             label: 'Journey',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.storefront_outlined),
+            label: 'Shop',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),

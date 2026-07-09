@@ -4,6 +4,7 @@ class LocalProgress {
   DateTime? lastActiveDate;
   Set<String> completedLessonIds;
   Set<String> unlockedLessonIds;
+  Map<String, int> ownedItemQuantities;
 
   LocalProgress({
     this.totalPoints = 0,
@@ -11,8 +12,10 @@ class LocalProgress {
     this.lastActiveDate,
     Set<String>? completedLessonIds,
     Set<String>? unlockedLessonIds,
-  })  : completedLessonIds = completedLessonIds ?? {},
-        unlockedLessonIds = unlockedLessonIds ?? {};
+    Map<String, int>? ownedItemQuantities,
+  }) : completedLessonIds = completedLessonIds ?? {},
+       unlockedLessonIds = unlockedLessonIds ?? {},
+       ownedItemQuantities = ownedItemQuantities ?? {};
 
   factory LocalProgress.fromJson(Map<String, dynamic> json) {
     return LocalProgress(
@@ -21,18 +24,27 @@ class LocalProgress {
       lastActiveDate: json['lastActiveDate'] != null
           ? DateTime.tryParse(json['lastActiveDate'] as String)
           : null,
-      completedLessonIds:
-          Set<String>.from(json['completedLessonIds'] as List? ?? []),
-      unlockedLessonIds:
-          Set<String>.from(json['unlockedLessonIds'] as List? ?? []),
+      completedLessonIds: Set<String>.from(
+        json['completedLessonIds'] as List? ?? [],
+      ),
+      unlockedLessonIds: Set<String>.from(
+        json['unlockedLessonIds'] as List? ?? [],
+      ),
+      ownedItemQuantities: Map<String, int>.from(
+        (json['ownedItemQuantities'] as Map?)?.map(
+              (key, value) => MapEntry(key as String, (value as num).toInt()),
+            ) ??
+            {},
+      ),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'totalPoints': totalPoints,
-        'currentStreak': currentStreak,
-        'lastActiveDate': lastActiveDate?.toIso8601String(),
-        'completedLessonIds': completedLessonIds.toList(),
-        'unlockedLessonIds': unlockedLessonIds.toList(),
-      };
+    'totalPoints': totalPoints,
+    'currentStreak': currentStreak,
+    'lastActiveDate': lastActiveDate?.toIso8601String(),
+    'completedLessonIds': completedLessonIds.toList(),
+    'unlockedLessonIds': unlockedLessonIds.toList(),
+    'ownedItemQuantities': ownedItemQuantities,
+  };
 }
