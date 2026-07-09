@@ -73,8 +73,10 @@ class _RewardBurstState extends State<_RewardBurst>
   late final AnimationController _controller;
   late final List<_Particle> _particles;
 
-  static const _totalDuration = Duration(milliseconds: 1100);
-  static const _staggerFraction = 0.35;
+  static const _totalDuration = Duration(milliseconds: 1700);
+  static const _staggerFraction = 0.45;
+  static const _popInEnd = 0.18;
+  static const _holdEnd = 0.82;
 
   @override
   void initState() {
@@ -83,14 +85,14 @@ class _RewardBurstState extends State<_RewardBurst>
 
     _particles = List.generate(widget.count, (i) {
       final angle = random.nextDouble() * 2 * pi;
-      final scatterDistance = 30 + random.nextDouble() * 40;
+      final scatterDistance = 50 + random.nextDouble() * 70;
       final control =
           widget.origin + Offset(cos(angle), sin(angle)) * scatterDistance;
       final startDelay = (i / widget.count) * _staggerFraction;
       return _Particle(
         control: control,
         startDelay: startDelay,
-        size: 16 + random.nextDouble() * 10,
+        size: 26 + random.nextDouble() * 18,
       );
     });
 
@@ -122,9 +124,9 @@ class _RewardBurstState extends State<_RewardBurst>
               animation: _controller,
               builder: (context, child) {
                 final localT =
-                    ((_controller.value - particle.startDelay) /
-                            (1 - particle.startDelay))
-                        .clamp(0.0, 1.0);
+                ((_controller.value - particle.startDelay) /
+                    (1 - particle.startDelay))
+                    .clamp(0.0, 1.0);
                 final eased = Curves.easeInOutCubic.transform(localT);
                 final position = _quadraticBezier(
                   widget.origin,
@@ -133,12 +135,18 @@ class _RewardBurstState extends State<_RewardBurst>
                   eased,
                 );
 
-                final scale = localT < 0.15
-                    ? (localT / 0.15)
-                    : (localT > 0.8 ? (1 - (localT - 0.8) / 0.2) : 1.0);
-                final opacity = localT > 0.85
-                    ? (1 - (localT - 0.85) / 0.15)
-                    : 1.0;
+                double scale;
+                if (localT < _popInEnd) {
+                  final popT = localT / _popInEnd;
+                  scale = Curves.easeOutBack.transform(popT);
+                } else if (localT < _holdEnd) {
+                  scale = 1.0;
+                } else {
+                  final shrinkT = (localT - _holdEnd) / (1 - _holdEnd);
+                  scale = 1.0 - shrinkT;
+                }
+
+                final opacity = localT > 0.9 ? (1 - (localT - 0.9) / 0.1) : 1.0;
 
                 return Positioned(
                   left: position.dx - particle.size / 2,
@@ -146,7 +154,7 @@ class _RewardBurstState extends State<_RewardBurst>
                   child: Opacity(
                     opacity: opacity.clamp(0.0, 1.0),
                     child: Transform.scale(
-                      scale: scale.clamp(0.0, 1.2),
+                      scale: scale.clamp(0.0, 1.3),
                       child: Icon(
                         widget.icon,
                         color: widget.color,
