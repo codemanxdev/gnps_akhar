@@ -33,7 +33,7 @@ class JourneyBanner extends StatelessWidget {
               _StatPill(
                 icon: RewardConfig.icon,
                 color: RewardConfig.color,
-                value: RewardConfig.labelPlural[0].toUpperCase() + RewardConfig.labelPlural.substring(1),
+                value: '$points',
               ),
             ],
           ),
