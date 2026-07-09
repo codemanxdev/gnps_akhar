@@ -6,10 +6,9 @@ import '../../models/task.dart';
 import '../common/task_speaker_button.dart';
 import '../common/task_check_button.dart';
 import '../common/task_header.dart';
-import '../common/task_bank_tile.dart';
+import '../common/task_letter_bank.dart';
 import '../common/task_built_tile.dart';
-import '../common/task_build_area.dart';
-import '../common/task_result_preview.dart';
+import '../common/task_interactive_build_area.dart';
 
 class ArrangeSentenceTaskWidget extends ConsumerStatefulWidget {
   final Task task;
@@ -98,7 +97,6 @@ class _ArrangeSentenceTaskWidgetState
     final fullSentence = (List<String>.from(
       widget.task.content['words'] as List,
     )).join(' ');
-    final builtSentence = _builtTiles.map((t) => t.text).join(' ');
 
     return Padding(
       padding: const EdgeInsets.all(24),
@@ -114,34 +112,25 @@ class _ArrangeSentenceTaskWidgetState
           ),
           const SizedBox(height: 24),
 
-          // Sentence Preview
-          if (_builtTiles.isNotEmpty)
-            TaskResultPreview(
-              text: builtSentence,
-              isCorrect: _lastCheckCorrect,
-            ),
-
-          const SizedBox(height: 24),
-
-          DragTarget<_WordTile>(
-            onAcceptWithDetails: (details) => _moveToBuilt(details.data),
-            builder: (context, candidateData, rejectedData) {
-              return TaskBuildArea(
-                isCorrect: _lastCheckCorrect,
-                shakeController: _shakeController,
-                hintText: 'Drag words here in order',
-                children: _builtTiles
-                    .map(
-                      (t) => TaskBuiltTile(
-                        text: t.text,
-                        fontSize: 24,
-                        onTap: () => _moveToBank(t),
-                      ),
-                    )
-                    .toList(),
-              );
-            },
+          TaskInteractiveBuildArea<_WordTile>(
+            onAccept: _moveToBuilt,
+            isCorrect: _lastCheckCorrect,
+            shakeController: _shakeController,
+            hintText: 'Drag words here in order',
+            children: _builtTiles
+                .map(
+                  (t) => TaskBuiltTile(
+                    text: t.text,
+                    fontSize: 36,
+                    onTap: () => _moveToBank(t),
+                    color: _lastCheckCorrect == null
+                        ? Colors.blue.shade700
+                        : (_lastCheckCorrect! ? Colors.green : Colors.red),
+                  ),
+                )
+                .toList(),
           ),
+
           const SizedBox(height: 32),
 
           // Word bank
@@ -151,7 +140,7 @@ class _ArrangeSentenceTaskWidgetState
             alignment: WrapAlignment.center,
             children: _bankTiles
                 .map(
-                  (t) => TaskBankTile(
+                  (t) => TaskLetterBank(
                     text: t.text,
                     data: t,
                     onTap: () => _moveToBuilt(t),

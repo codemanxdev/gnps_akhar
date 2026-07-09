@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class TaskBankTile extends StatelessWidget {
+class TaskLetterBank extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
   final Widget? feedback;
   final Object? data;
 
-  const TaskBankTile({
+  const TaskLetterBank({
     super.key,
     required this.text,
     required this.onTap,

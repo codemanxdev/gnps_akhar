@@ -1,19 +1,18 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
 import '../common/task_speaker_button.dart';
 import '../common/task_check_button.dart';
 import '../common/task_header.dart';
-import '../common/task_bank_tile.dart';
+import '../common/task_letter_bank.dart';
 import '../common/task_built_tile.dart';
-import '../common/task_build_area.dart';
-import '../common/task_result_preview.dart';
+import '../common/task_interactive_build_area.dart';
 
 /// Presents an emoji + word bank; the child drags letter/syllable tiles
-/// from the bank into a build area to spell the target word. The bank
-/// includes distractor tiles that don't belong in the answer.
+/// from the bank into a build area to spell the target word.
 class SpellingTaskWidget extends ConsumerStatefulWidget {
   final Task task;
   final VoidCallback onComplete;
@@ -84,6 +83,7 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
     if (isCorrect) {
       Future.delayed(const Duration(milliseconds: 600), widget.onComplete);
     } else {
+      HapticFeedback.heavyImpact();
       _shakeController.forward(from: 0.0);
       widget.onIncorrect?.call();
     }
@@ -93,7 +93,6 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
   Widget build(BuildContext context) {
     final emoji = widget.task.content['emoji'] as String;
     final targetWord = widget.task.content['targetWord'] as String;
-    final builtWord = _builtTiles.map((t) => t.text).join();
 
     return Padding(
       padding: const EdgeInsets.all(24),
@@ -109,36 +108,25 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
           ),
           const SizedBox(height: 12),
           TaskSpeakerButton(textToSpeak: targetWord),
-          const SizedBox(height: 20),
+          const SizedBox(height: 32),
 
-          // Resulting Word Preview (This makes matras look correct)
-          if (_builtTiles.isNotEmpty)
-            TaskResultPreview(
-              text: builtWord,
-              isCorrect: _lastCheckCorrect,
-              fontSize: 40,
-            ),
-
-          const SizedBox(height: 24),
-
-          // Build Area (Slots)
-          DragTarget<_Tile>(
-            onAcceptWithDetails: (details) => _moveToBuilt(details.data),
-            builder: (context, candidateData, rejectedData) {
-              return TaskBuildArea(
-                isCorrect: _lastCheckCorrect,
-                shakeController: _shakeController,
-                hintText: 'Drag letters here',
-                children: _builtTiles
-                    .map(
-                      (t) => TaskBuiltTile(
-                        text: t.text,
-                        onTap: () => _moveToBank(t),
-                      ),
-                    )
-                    .toList(),
-              );
-            },
+          // Integrated Build Area + Preview
+          TaskInteractiveBuildArea<_Tile>(
+            onAccept: _moveToBuilt,
+            isCorrect: _lastCheckCorrect,
+            shakeController: _shakeController,
+            hintText: 'Drag letters here',
+            children: [
+              if (_builtTiles.isNotEmpty)
+                TaskBuiltTile(
+                  text: _builtTiles.map((t) => t.text).join(),
+                  fontSize: 36,
+                  onTap: () => _moveToBank(_builtTiles.last),
+                  color: _lastCheckCorrect == null
+                      ? null
+                      : (_lastCheckCorrect! ? Colors.green : Colors.red),
+                ),
+            ],
           ),
 
           const SizedBox(height: 32),
@@ -150,7 +138,7 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
             alignment: WrapAlignment.center,
             children: _bankTiles
                 .map(
-                  (t) => TaskBankTile(
+                  (t) => TaskLetterBank(
                     text: t.text,
                     data: t,
                     onTap: () => _moveToBuilt(t),

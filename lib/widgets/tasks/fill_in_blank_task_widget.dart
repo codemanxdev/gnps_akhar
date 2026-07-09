@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/task.dart';
 import '../common/task_speaker_button.dart';
 import '../common/task_header.dart';
-import '../common/task_bank_tile.dart';
+import '../common/task_letter_bank.dart';
 import '../common/task_built_tile.dart';
-import '../common/task_build_area.dart';
+import '../common/task_interactive_build_area.dart';
 
 class FillInBlankTaskWidget extends ConsumerStatefulWidget {
   final Task task;
@@ -75,29 +75,41 @@ class _FillInBlankTaskWidgetState extends ConsumerState<FillInBlankTaskWidget>
                 .join(' '),
           ),
           const SizedBox(height: 24),
-          TaskBuildArea(
+
+          TaskInteractiveBuildArea<String>(
+            onAccept: _select,
             isCorrect: _isCorrect,
             shakeController: _shakeController,
             hintText: '',
             children: parts.map((p) {
               final isBlank = p == '___';
+              Color? tileColor;
+              if (isBlank) {
+                tileColor = _isCorrect == null
+                    ? Colors.blue.shade700
+                    : (_isCorrect! ? Colors.green : Colors.red);
+              } else {
+                tileColor = Colors.black87;
+              }
+
               return TaskBuiltTile(
                 text: isBlank ? (_selected ?? '___') : p,
                 onTap: () {
                   if (isBlank) setState(() => _selected = null);
                 },
-                color: isBlank ? Colors.blue : Colors.black87,
-                fontSize: 24,
+                color: tileColor,
+                fontSize: 36,
               );
             }).toList(),
           ),
+
           const SizedBox(height: 48),
           Wrap(
             spacing: 12,
             runSpacing: 12,
             alignment: WrapAlignment.center,
             children: options.map((option) {
-              return TaskBankTile(text: option, onTap: () => _select(option));
+              return TaskLetterBank(text: option, onTap: () => _select(option));
             }).toList(),
           ),
         ],
