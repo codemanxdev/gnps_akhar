@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../config/reward_config.dart';
 import '../models/journey.dart';
 import '../models/lesson.dart';
 import '../models/task.dart';
 import '../providers.dart';
 import '../widgets/journey/current_lesson_banner.dart';
+import '../widgets/journey/reward_burst_overlay.dart';
 import '../widgets/tasks/arrange_sentence_task_widget.dart';
 import '../widgets/tasks/fill_in_blank_task_widget.dart';
 import '../widgets/tasks/spelling_task_widget.dart';
@@ -28,29 +30,48 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   int _pointsEarned = 0;
   bool _showingSuccess = false;
 
+  final GlobalKey _starIconKey = GlobalKey();
+
   void _onTaskComplete(Task task) async {
     _pointsEarned += task.pointsAwarded;
 
-    // Play success sound
     ref.read(audioServiceProvider).playSuccess();
 
-    // Show success feedback
     setState(() => _showingSuccess = true);
-
-    // Wait for feedback to be visible
     await Future.delayed(const Duration(milliseconds: 1200));
 
     if (!mounted) return;
     setState(() => _showingSuccess = false);
 
-    if (_taskIndex + 1 < widget.lesson.tasks.length) {
+    final isLastTask = _taskIndex + 1 >= widget.lesson.tasks.length;
+
+    if (!isLastTask) {
       setState(() => _taskIndex++);
-    } else {
-      await ref
-          .read(progressProvider.notifier)
-          .completeLesson(widget.journey, widget.lesson.id, _pointsEarned);
-      if (mounted) _showCompletionDialog();
+      return;
     }
+
+    // Lesson complete: burst reward icons from the center of the screen
+    // toward the banner's points chip, then commit progress once they've
+    // landed — so the points counter's count-up animation starts right
+    // as the icons arrive.
+    final screenSize = MediaQuery.sizeOf(context);
+    final origin = Offset(screenSize.width / 2, screenSize.height / 2);
+
+    await showRewardBurst(
+      context: context,
+      origin: origin,
+      targetKey: _starIconKey,
+      icon: RewardConfig.icon,
+      color: RewardConfig.color,
+      count: (_pointsEarned / 5).clamp(4, 12).round(),
+    );
+
+    if (!mounted) return;
+
+    await ref
+        .read(progressProvider.notifier)
+        .completeLesson(widget.journey, widget.lesson.id, _pointsEarned);
+    if (mounted) _showCompletionDialog();
   }
 
   void _onTaskIncorrect() {
@@ -64,14 +85,14 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       barrierDismissible: false,
       builder: (_) => AlertDialog(
         title: const Text('Lesson complete! 🎉'),
-        content: Text('You earned $_pointsEarned points.'),
+        content: Text('You earned $_pointsEarned ${RewardConfig.labelPlural}'),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // close dialog
-              Navigator.of(context).pop(); // back to journey
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
-            child: const Text('Continue'),
+            child: const Text('Continue', ),
           ),
         ],
       ),
@@ -131,6 +152,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                 streak: progress.currentStreak,
                 points: progress.totalPoints,
                 onBack: () => Navigator.of(context).pop(),
+                iconKey: _starIconKey,
               ),
               loading: () => const SizedBox.shrink(),
               error: (_, _) => const SizedBox.shrink(),

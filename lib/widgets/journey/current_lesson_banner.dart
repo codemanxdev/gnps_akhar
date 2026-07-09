@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../../config/reward_config.dart';
+
 class CurrentLessonBanner extends StatelessWidget {
   final String lessonTitle;
-  final int taskIndex; // 0-based
+  final int taskIndex;
   final int totalTasks;
   final int streak;
   final int points;
   final VoidCallback onBack;
+  final GlobalKey? iconKey;
 
   const CurrentLessonBanner({
     super.key,
@@ -16,6 +19,7 @@ class CurrentLessonBanner extends StatelessWidget {
     required this.streak,
     required this.points,
     required this.onBack,
+    this.iconKey,
   });
 
   @override
@@ -49,11 +53,7 @@ class CurrentLessonBanner extends StatelessWidget {
                 value: '$streak',
               ),
               const SizedBox(width: 8),
-              _StatChip(
-                icon: Icons.star_rounded,
-                color: Colors.amberAccent,
-                value: '$points',
-              ),
+              _PointsChip(chipKey: iconKey, value: points),
             ],
           ),
           const SizedBox(height: 8),
@@ -128,6 +128,49 @@ class _StatChip extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The points/reward chip. Split out from _StatChip because it needs an
+/// attachable [chipKey] (the burst animation's landing target) and a
+/// smooth count-up when [value] changes rather than jumping straight to
+/// the new number — TweenAnimationBuilder animates from whatever's
+/// currently on screen to the new end value automatically.
+class _PointsChip extends StatelessWidget {
+  final GlobalKey? chipKey;
+  final int value;
+
+  const _PointsChip({this.chipKey, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: chipKey,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(RewardConfig.icon, color: RewardConfig.color, size: 20),
+          const SizedBox(width: 6),
+          TweenAnimationBuilder<double>(
+            tween: Tween<double>(begin: 0, end: value.toDouble()),
+            duration: const Duration(milliseconds: 900),
+            curve: Curves.easeOutCubic,
+            builder: (context, animatedValue, child) => Text(
+              '${animatedValue.round()}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],

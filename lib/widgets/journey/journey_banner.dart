@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gnps_akhar/config/reward_config.dart';
 
 /// A compact strip on the Journey screen: a friendly greeting on the left,
 /// streak + points at a glance on the right.
@@ -30,9 +31,9 @@ class JourneyBanner extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               _StatPill(
-                icon: Icons.star_rounded,
-                color: Colors.amber,
-                value: '$points',
+                icon: RewardConfig.icon,
+                color: RewardConfig.color,
+                value: RewardConfig.labelPlural[0].toUpperCase() + RewardConfig.labelPlural.substring(1),
               ),
             ],
           ),

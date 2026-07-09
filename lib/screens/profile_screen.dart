@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../config/reward_config.dart';
 import '../providers.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -77,9 +78,11 @@ class ProfileScreen extends ConsumerWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     child: _StatCard(
-                      icon: Icons.star,
-                      color: Colors.amber,
-                      label: 'Points',
+                      icon: RewardConfig.icon,
+                      color: RewardConfig.color,
+                      label:
+                          RewardConfig.labelPlural[0].toUpperCase() +
+                          RewardConfig.labelPlural.substring(1),
                       value: '${progress.totalPoints}',
                     ),
                   ),
