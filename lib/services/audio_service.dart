@@ -49,7 +49,7 @@ class AudioService {
     await _init();
     try {
       await _sfxPlayer.stop(); // Ensure player is ready to start fresh
-      await _sfxPlayer.play(AssetSource('sounds/success.wav'));
+      await _sfxPlayer.play(AssetSource('sounds/success.mp3'));
     } catch (e) {
       await SystemSound.play(SystemSoundType.click);
     }
@@ -61,7 +61,7 @@ class AudioService {
     await _init();
     try {
       await _sfxPlayer.stop(); // Ensure player is ready to start fresh
-      await _sfxPlayer.play(AssetSource('sounds/failure.wav'));
+      await _sfxPlayer.play(AssetSource('sounds/failure.mp3'));
     } catch (e) {
       await HapticFeedback.heavyImpact();
     }
