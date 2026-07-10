@@ -342,8 +342,8 @@ final Journey mockJourney = Journey.fromJson({
           'pointsAwarded': 15,
           'content': {
             'emoji': '🐦',
-            'targetWord': 'ਕਾਂ',
-            'letterBank': ['ਕਾਂ', 'ਗ', 'ਖ', 'ਘ'],
+            'targetWord': 'ਚਿੜੀ',
+            'letterBank': ['ਚ', 'ਿ', 'ੜ', 'ੀ', 'ਗ', 'ਖ', 'ਘ'],
           },
         },
       ],
@@ -399,7 +399,7 @@ final Journey mockJourney = Journey.fromJson({
           'type': 'wordSelection',
           'pointsAwarded': 15,
           'content': {
-            'word': 'ਕਾਂ',
+            'word': 'ਚਿੜੀ',
             'correctEmoji': '🐦',
             'distractorEmojis': ['🐈', '☀️', '📖'],
           },

@@ -223,11 +223,10 @@ class _TraceTaskWidgetState extends ConsumerState<TraceTaskWidget>
         children: [
           const TaskHeader(title: 'Trace the letter'),
           const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Column(
             children: [
               TaskSpeakerButton(textToSpeak: letter),
-              const SizedBox(width: 8),
+              const SizedBox(height: 8),
               Text(
                 transliteration,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(

@@ -102,12 +102,11 @@ class _ArrangeSentenceTaskWidgetState
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Column(
             children: [
-              TaskSpeakerButton(textToSpeak: fullSentence),
-              const SizedBox(width: 12),
               const TaskHeader(title: 'Arrange the sentence'),
+              const SizedBox(height: 12),
+              TaskSpeakerButton(textToSpeak: fullSentence),
             ],
           ),
           const SizedBox(height: 24),

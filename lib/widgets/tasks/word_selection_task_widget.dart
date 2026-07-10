@@ -52,6 +52,8 @@ class _WordSelectionTaskWidgetState
   }
 
   void _select(String option) {
+    if (_isCorrect == true) return; // already completed, ignore further taps
+
     final correct = widget.task.content['correctEmoji'] as String;
     setState(() {
       _selected = option;
@@ -76,11 +78,10 @@ class _WordSelectionTaskWidgetState
         children: [
           const TaskHeader(title: 'Select the correct picture'),
           const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Column(
             children: [
               TaskSpeakerButton(textToSpeak: word),
-              const SizedBox(width: 12),
+              const SizedBox(height: 12),
               Text(word, style: Theme.of(context).textTheme.displaySmall),
             ],
           ),
