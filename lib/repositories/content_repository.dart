@@ -24,16 +24,23 @@ class ContentRepository {
       return mockJourney;
     }
 
-    final cachedJourney = Journey.fromJson(
-      jsonDecode(cached) as Map<String, dynamic>,
-    );
+    try {
+      final cachedJourney = Journey.fromJson(
+        jsonDecode(cached) as Map<String, dynamic>,
+      );
 
-    if (mockJourney.version > cachedJourney.version) {
+      if (mockJourney.version > cachedJourney.version) {
+        await _cacheJourney(mockJourney);
+        return mockJourney;
+      }
+
+      return cachedJourney;
+    } catch (e) {
+      // If cached data is corrupted or incompatible with new models,
+      // overwrite it with the fresh mock data.
       await _cacheJourney(mockJourney);
       return mockJourney;
     }
-
-    return cachedJourney;
   }
 
   Future<void> _cacheJourney(Journey journey) async {

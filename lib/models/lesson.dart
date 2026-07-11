@@ -1,10 +1,39 @@
 import 'task.dart';
 
+class LessonSection {
+  final String id;
+  final String title;
+  final List<Task> tasks;
+
+  const LessonSection({
+    required this.id,
+    required this.title,
+    required this.tasks,
+  });
+
+  factory LessonSection.fromJson(Map<String, dynamic> json) {
+    final rawTasks = (json['tasks'] as List?) ?? [];
+    return LessonSection(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      tasks: rawTasks
+          .map((t) => Task.fromJson(Map<String, dynamic>.from(t as Map)))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'tasks': tasks.map((t) => t.toJson()).toList(),
+  };
+}
+
 class Lesson {
   final String id;
   final String title;
   final int order;
-  final List<Task> tasks;
+  final List<LessonSection> sections;
 
   /// When false, this lesson is excluded from `Journey.activeLessons` —
   /// hidden from the journey map entirely, as if it doesn't exist yet.
@@ -15,18 +44,18 @@ class Lesson {
     required this.id,
     required this.title,
     required this.order,
-    required this.tasks,
+    required this.sections,
     this.visible = true,
   });
 
   factory Lesson.fromJson(Map<String, dynamic> json) {
-    final rawTasks = (json['tasks'] as List).cast<Map>();
+    final rawSections = (json['sections'] as List?) ?? [];
     return Lesson(
       id: json['id'] as String,
       title: json['title'] as String,
       order: (json['order'] as num).toInt(),
-      tasks: rawTasks
-          .map((t) => Task.fromJson(Map<String, dynamic>.from(t)))
+      sections: rawSections
+          .map((s) => LessonSection.fromJson(Map<String, dynamic>.from(s as Map)))
           .toList(),
       visible: json['visible'] as bool? ?? true,
     );
@@ -36,7 +65,10 @@ class Lesson {
     'id': id,
     'title': title,
     'order': order,
-    'tasks': tasks.map((t) => t.toJson()).toList(),
+    'sections': sections.map((s) => s.toJson()).toList(),
     'visible': visible,
   };
+
+  /// Helper to get all tasks across all sections in order.
+  List<Task> get allTasks => sections.expand((s) => s.tasks).toList();
 }

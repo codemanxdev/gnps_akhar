@@ -32,6 +32,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
 
   final GlobalKey _starIconKey = GlobalKey();
 
+  List<Task> get _allTasks => widget.lesson.allTasks;
+
   void _onTaskComplete(Task task) async {
     _pointsEarned += task.pointsAwarded;
 
@@ -43,7 +45,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     if (!mounted) return;
     setState(() => _showingSuccess = false);
 
-    final isLastTask = _taskIndex + 1 >= widget.lesson.tasks.length;
+    final isLastTask = _taskIndex + 1 >= _allTasks.length;
 
     if (!isLastTask) {
       setState(() => _taskIndex++);
@@ -136,8 +138,25 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final task = widget.lesson.tasks[_taskIndex];
+    final allTasks = _allTasks;
+    if (allTasks.isEmpty) {
+      return const Scaffold(
+        body: Center(child: Text('No tasks in this lesson')),
+      );
+    }
+
+    final task = allTasks[_taskIndex];
     final progressAsync = ref.watch(progressProvider);
+
+    String? currentSectionTitle;
+    int accumulatedTasks = 0;
+    for (final section in widget.lesson.sections) {
+      if (_taskIndex < accumulatedTasks + section.tasks.length) {
+        currentSectionTitle = section.title;
+        break;
+      }
+      accumulatedTasks += section.tasks.length;
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -147,8 +166,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
             progressAsync.when(
               data: (progress) => CurrentLessonBanner(
                 lessonTitle: widget.lesson.title,
+                sectionTitle: currentSectionTitle,
                 taskIndex: _taskIndex,
-                totalTasks: widget.lesson.tasks.length,
+                totalTasks: allTasks.length,
                 streak: progress.currentStreak,
                 points: progress.totalPoints,
                 onBack: () => Navigator.of(context).pop(),

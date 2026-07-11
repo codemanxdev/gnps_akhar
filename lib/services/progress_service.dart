@@ -38,15 +38,20 @@ class ProgressService {
     return progress;
   }
 
-  /// Ensures the first lesson is unlocked on a fresh install.
+  /// Ensures the first lesson is unlocked.
   Future<LocalProgress> ensureFirstLessonUnlocked(
     LocalProgress progress,
     Journey journey,
   ) async {
     final activeLessons = journey.activeLessons;
-    if (progress.unlockedLessonIds.isEmpty && activeLessons.isNotEmpty) {
-      progress.unlockedLessonIds.add(activeLessons.first.id);
-      await _repository.save(progress);
+    if (activeLessons.isNotEmpty) {
+      final firstLessonId = activeLessons.first.id;
+      // Unlock the first lesson if nothing is unlocked yet,
+      // or if the current journey's first lesson is missing from progress.
+      if (!progress.unlockedLessonIds.contains(firstLessonId)) {
+        progress.unlockedLessonIds.add(firstLessonId);
+        await _repository.save(progress);
+      }
     }
     return progress;
   }

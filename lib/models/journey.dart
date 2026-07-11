@@ -12,13 +12,16 @@ class Journey {
   List<Lesson> get activeLessons => lessons.where((l) => l.visible).toList();
 
   factory Journey.fromJson(Map<String, dynamic> json) {
-    final rawLessons = (json['lessons'] as List).cast<Map>();
+    final rawLessons = (json['lessons'] as List?) ?? [];
     final lessons =
         rawLessons
-            .map((l) => Lesson.fromJson(Map<String, dynamic>.from(l)))
+            .map((l) => Lesson.fromJson(Map<String, dynamic>.from(l as Map)))
             .toList()
           ..sort((a, b) => a.order.compareTo(b.order));
-    return Journey(version: (json['version'] as num).toInt(), lessons: lessons);
+    return Journey(
+      version: (json['version'] as num? ?? 0).toInt(),
+      lessons: lessons,
+    );
   }
 
   Map<String, dynamic> toJson() => {

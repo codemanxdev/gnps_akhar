@@ -4,6 +4,7 @@ import '../../config/reward_config.dart';
 
 class CurrentLessonBanner extends StatelessWidget {
   final String lessonTitle;
+  final String? sectionTitle;
   final int taskIndex;
   final int totalTasks;
   final int streak;
@@ -14,6 +15,7 @@ class CurrentLessonBanner extends StatelessWidget {
   const CurrentLessonBanner({
     super.key,
     required this.lessonTitle,
+    this.sectionTitle,
     required this.taskIndex,
     required this.totalTasks,
     required this.streak,
@@ -59,12 +61,26 @@ class CurrentLessonBanner extends StatelessWidget {
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Text(
-              lessonTitle,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: scheme.onPrimary,
-                fontWeight: FontWeight.bold,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  lessonTitle,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: scheme.onPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (sectionTitle != null)
+                  Text(
+                    sectionTitle!,
+                    style: TextStyle(
+                      color: scheme.onPrimary.withValues(alpha: 0.8),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+              ],
             ),
           ),
           const SizedBox(height: 12),
