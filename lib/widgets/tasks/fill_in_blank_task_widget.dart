@@ -42,6 +42,8 @@ class _FillInBlankTaskWidgetState extends ConsumerState<FillInBlankTaskWidget>
   }
 
   void _select(String option) {
+    if (_isCorrect == true) return; // already completed, ignore further taps
+
     final correctWord = widget.task.content['correctWord'] as String;
     setState(() {
       _selected = option;
@@ -95,7 +97,9 @@ class _FillInBlankTaskWidgetState extends ConsumerState<FillInBlankTaskWidget>
               return TaskBuiltTile(
                 text: isBlank ? (_selected ?? '___') : p,
                 onTap: () {
-                  if (isBlank) setState(() => _selected = null);
+                  if (isBlank && _isCorrect != true) {
+                    setState(() => _selected = null);
+                  }
                 },
                 color: tileColor,
                 fontSize: 36,
