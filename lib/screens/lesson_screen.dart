@@ -109,20 +109,24 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     if (!mounted) return;
 
     // Persist progress for this section
-    await ref.read(progressProvider.notifier).completeSection(
-      journey: widget.journey,
-      lessonId: widget.lesson.id,
-      sectionId: section.id,
-      points: _pointsEarned,
-    );
+    await ref
+        .read(progressProvider.notifier)
+        .completeSection(
+          journey: widget.journey,
+          lessonId: widget.lesson.id,
+          sectionId: section.id,
+          points: _pointsEarned,
+        );
 
-    // Reset points earned for the next section
+    // Capture this section's points before resetting for the next one,
+    // so the dialogs below always show the right number.
+    final sectionPoints = _pointsEarned;
     _pointsEarned = 0;
 
     if (isLastInLesson) {
-      if (mounted) _showCompletionDialog();
+      if (mounted) _showCompletionDialog(sectionPoints);
     } else {
-      if (mounted) _showSectionCompletionDialog(section);
+      if (mounted) _showSectionCompletionDialog(section, sectionPoints);
     }
   }
 
@@ -131,14 +135,15 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     ref.read(audioServiceProvider).playFailure();
   }
 
-  void _showSectionCompletionDialog(LessonSection section) {
+  void _showSectionCompletionDialog(LessonSection section, int pointsEarned) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
         title: Text('${section.title} Complete! 🏆'),
-        content: const Text(
-          'Great job! You finished this chapter. Ready for the next one?',
+        content: Text(
+          'Great job! You earned $pointsEarned ${RewardConfig.labelPlural}. '
+          'Ready for the next chapter?',
         ),
         actions: [
           TextButton(
@@ -151,7 +156,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
           FilledButton(
             onPressed: () {
               Navigator.of(context).pop(); // close dialog
-              setState(() => _taskIndex++); // move to next task (start of next section)
+              setState(
+                () => _taskIndex++,
+              ); // move to next task (start of next section)
             },
             child: const Text('Continue'),
           ),
@@ -160,20 +167,20 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     );
   }
 
-  void _showCompletionDialog() {
+  void _showCompletionDialog(int pointsEarned) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
         title: const Text('Lesson complete! 🎉'),
-        content: Text('You earned $_pointsEarned ${RewardConfig.labelPlural}'),
+        content: Text('You earned $pointsEarned ${RewardConfig.labelPlural}'),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).pop();
             },
-            child: const Text('Continue', ),
+            child: const Text('Continue'),
           ),
         ],
       ),
