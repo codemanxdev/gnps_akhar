@@ -117,6 +117,20 @@ class AudioService {
     await HapticFeedback.lightImpact();
   }
 
+  Future<void> playLessonCompleted() async {
+    await _init();
+    try {
+      await _sfxPlayer.stop();
+      await _sfxPlayer.play(AssetSource('sounds/lesson-completed.mp3'));
+    } catch (e) {
+      debugPrint('SFX Error: $e');
+      if (!kIsWeb) {
+        await SystemSound.play(SystemSoundType.click);
+      }
+    }
+    await HapticFeedback.mediumImpact();
+  }
+
   /// Call from provider dispose to release resources.
   void dispose() {
     _sfxPlayer.dispose();

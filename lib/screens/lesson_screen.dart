@@ -7,6 +7,7 @@ import '../models/journey.dart';
 import '../models/lesson.dart';
 import '../models/task.dart';
 import '../providers.dart';
+import '../widgets/confetti/confetti_overlay.dart';
 import '../widgets/journey/current_lesson_banner.dart';
 import '../widgets/journey/reward_burst_overlay.dart';
 import '../widgets/tasks/arrange_sentence_task_widget.dart';
@@ -31,6 +32,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   bool _showingSuccess = false;
 
   final GlobalKey _starIconKey = GlobalKey();
+  final GlobalKey<ConfettiOverlayState> _confettiKey = GlobalKey();
 
   List<Task> get _allTasks => widget.lesson.allTasks;
 
@@ -125,6 +127,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     _pointsEarned = 0;
 
     if (isLastInLesson) {
+      ref.read(audioServiceProvider).playLessonCompleted();
+      _confettiKey.currentState?.play();
       if (mounted) _showCompletionDialog(sectionPoints);
     } else {
       if (mounted) _showSectionCompletionDialog(section, sectionPoints);
@@ -307,6 +311,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                         ),
                       ),
                     ),
+                  Positioned.fill(child: ConfettiOverlay(key: _confettiKey)),
                 ],
               ),
             ),
