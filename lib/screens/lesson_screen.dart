@@ -93,6 +93,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     LessonSection section,
     bool isLastInLesson,
   ) async {
+    ref.read(audioServiceProvider).playGemEarned();
     // Burst reward icons from the center of the screen
     final screenSize = MediaQuery.sizeOf(context);
     final origin = Offset(screenSize.width / 2, screenSize.height / 2);

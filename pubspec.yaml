@@ -34,7 +34,7 @@ flutter:
     - assets/sounds/success.mp3
     - assets/sounds/failure.mp3
     - assets/sounds/lesson-completed.mp3
-    - assets/sounds/gems.mp3
+    - assets/sounds/gem_earned.mp3
     - assets/avatars/boy1.svg
     - assets/avatars/boy2.svg
     - assets/avatars/girl1.svg

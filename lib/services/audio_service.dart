@@ -101,6 +101,22 @@ class AudioService {
     await HapticFeedback.selectionClick();
   }
 
+  /// Gem-earned SFX. Call whenever the user is awarded gems (e.g. on task
+  /// completion, alongside `pointsAwarded`).
+  Future<void> playGemEarned() async {
+    await _init();
+    try {
+      await _sfxPlayer.stop();
+      await _sfxPlayer.play(AssetSource('sounds/gem_earned.mp3'));
+    } catch (e) {
+      debugPrint('SFX Error: $e');
+      if (!kIsWeb) {
+        await SystemSound.play(SystemSoundType.click);
+      }
+    }
+    await HapticFeedback.lightImpact();
+  }
+
   /// Call from provider dispose to release resources.
   void dispose() {
     _sfxPlayer.dispose();
