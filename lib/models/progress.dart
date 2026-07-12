@@ -10,6 +10,9 @@ class LocalProgress {
   Set<String> unlockedLessonIds;
   Map<String, int> ownedItemQuantities;
   Map<String, String> equippedItemIds;
+  bool soundEnabled;
+  bool hapticsEnabled;
+  int themeSeedColor;
 
   static const Map<AvatarSlot, String> defaultEquippedItemIds = {
     AvatarSlot.base: 'avatar_base_default',
@@ -28,6 +31,9 @@ class LocalProgress {
     Set<String>? unlockedLessonIds,
     Map<String, int>? ownedItemQuantities,
     Map<String, String>? equippedItemIds,
+    this.soundEnabled = true,
+    this.hapticsEnabled = true,
+    this.themeSeedColor = 0xFF2196F3, // Colors.blue
   }) : completedLessonIds = completedLessonIds ?? {},
        completedSectionIds = completedSectionIds ?? {},
        unlockedLessonIds = unlockedLessonIds ?? {},
@@ -72,6 +78,9 @@ class LocalProgress {
               {},
         ),
       },
+      soundEnabled: json['soundEnabled'] as bool? ?? true,
+      hapticsEnabled: json['hapticsEnabled'] as bool? ?? true,
+      themeSeedColor: (json['themeSeedColor'] as num?)?.toInt() ?? 0xFF2196F3,
     );
   }
 
@@ -85,5 +94,8 @@ class LocalProgress {
     'unlockedLessonIds': unlockedLessonIds.toList(),
     'ownedItemQuantities': ownedItemQuantities,
     'equippedItemIds': equippedItemIds,
+    'soundEnabled': soundEnabled,
+    'hapticsEnabled': hapticsEnabled,
+    'themeSeedColor': themeSeedColor,
   };
 }

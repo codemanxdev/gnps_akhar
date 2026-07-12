@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'providers.dart';
 import 'screens/splash_screen.dart';
 
 // Uncomment once you've run `flutterfire configure` — it generates this file.
@@ -11,9 +12,7 @@ import 'screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Hive.initFlutter();
 
   // Firebase is optional for local development: if it isn't configured yet,
@@ -29,16 +28,22 @@ void main() async {
   runApp(const ProviderScope(child: PunjabiJourneyApp()));
 }
 
-class PunjabiJourneyApp extends StatelessWidget {
+class PunjabiJourneyApp extends ConsumerWidget {
   const PunjabiJourneyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progressAsync = ref.watch(progressProvider);
+    final seedColor = progressAsync.maybeWhen(
+      data: (progress) => Color(progress.themeSeedColor),
+      orElse: () => Colors.deepOrange,
+    );
+
     return MaterialApp(
       title: 'Punjabi Journey',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+        colorScheme: ColorScheme.fromSeed(seedColor: seedColor),
         useMaterial3: true,
       ),
       home: const SplashScreen(),

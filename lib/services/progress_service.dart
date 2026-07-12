@@ -106,6 +106,33 @@ class ProgressService {
     return progress;
   }
 
+  Future<LocalProgress> updateSoundEnabled(
+    LocalProgress progress,
+    bool enabled,
+  ) async {
+    progress.soundEnabled = enabled;
+    await _repository.save(progress);
+    return progress;
+  }
+
+  Future<LocalProgress> updateHapticsEnabled(
+    LocalProgress progress,
+    bool enabled,
+  ) async {
+    progress.hapticsEnabled = enabled;
+    await _repository.save(progress);
+    return progress;
+  }
+
+  Future<LocalProgress> updateThemeSeedColor(
+    LocalProgress progress,
+    int colorValue,
+  ) async {
+    progress.themeSeedColor = colorValue;
+    await _repository.save(progress);
+    return progress;
+  }
+
   /// How many of [itemId] the user currently owns (0 if none).
   int itemQuantity(LocalProgress progress, String itemId) =>
       progress.ownedItemQuantities[itemId] ?? 0;

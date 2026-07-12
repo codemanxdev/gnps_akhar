@@ -5,53 +5,13 @@ import '../config/reward_config.dart';
 import '../models/shop_item.dart';
 import '../providers.dart';
 import 'avatar_customization_screen.dart';
+import 'settings_screen.dart';
 import 'streak_screen.dart';
 import 'shop_screen.dart';
 import '../widgets/avatar/avatar_preview.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
-
-  Future<void> _confirmAndReset(BuildContext context, WidgetRef ref) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Reset progress?'),
-        content: const Text(
-          'This clears all points, streaks, and lesson progress, and reloads '
-          'lesson content fresh. This can\'t be undone.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Reset'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed != true) return;
-
-    await ref.read(progressProvider.notifier).reset();
-    await ref.read(contentRepositoryProvider).clearCache();
-    ref.invalidate(journeyProvider);
-
-    final journey = await ref.read(journeyProvider.future);
-    await ref
-        .read(progressProvider.notifier)
-        .ensureFirstLessonUnlocked(journey);
-
-    if (context.mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Progress reset.')));
-    }
-  }
 
   void _openStreakScreen(BuildContext context) {
     Navigator.of(
@@ -63,6 +23,12 @@ class ProfileScreen extends ConsumerWidget {
     Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (_) => const ShopScreen()));
+  }
+
+  void _openSettingsScreen(BuildContext context) {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
   }
 
   @override
@@ -77,9 +43,18 @@ class ProfileScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'Profile',
-                style: Theme.of(context).textTheme.headlineMedium,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Profile',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  IconButton(
+                    onPressed: () => _openSettingsScreen(context),
+                    icon: const Icon(Icons.settings_outlined),
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
               Center(
@@ -93,8 +68,9 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               _NameField(currentName: progress.userName),
+              const SizedBox(height: 24),
               Row(
                 children: [
                   Expanded(
@@ -131,17 +107,6 @@ class ProfileScreen extends ConsumerWidget {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const Spacer(),
-              OutlinedButton.icon(
-                onPressed: () => _confirmAndReset(context, ref),
-                icon: const Icon(Icons.restart_alt, color: Colors.red),
-                label: const Text(
-                  'Reset Progress',
-                  style: TextStyle(color: Colors.red),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Colors.red),
-                ),
-              ),
             ],
           ),
         ),
@@ -198,37 +163,6 @@ class _AvatarWithEditBadge extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _StatCard extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final String label;
-  final String value;
-
-  const _StatCard({
-    required this.icon,
-    required this.color,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(height: 8),
-            Text(value, style: Theme.of(context).textTheme.headlineSmall),
-            Text(label, style: Theme.of(context).textTheme.bodyMedium),
-          ],
-        ),
       ),
     );
   }
@@ -313,6 +247,37 @@ class _NameFieldState extends ConsumerState<_NameField> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final String label;
+  final String value;
+
+  const _StatCard({
+    required this.icon,
+    required this.color,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 32),
+            const SizedBox(height: 8),
+            Text(value, style: Theme.of(context).textTheme.headlineSmall),
+            Text(label, style: Theme.of(context).textTheme.bodyMedium),
+          ],
+        ),
+      ),
     );
   }
 }

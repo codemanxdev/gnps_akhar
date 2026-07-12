@@ -136,7 +136,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   }
 
   void _onTaskIncorrect() {
-    HapticFeedback.heavyImpact();
+    final progress = ref.read(progressProvider).value;
+    if (progress?.hapticsEnabled ?? true) {
+      HapticFeedback.heavyImpact();
+    }
     ref.read(audioServiceProvider).playFailure();
   }
 

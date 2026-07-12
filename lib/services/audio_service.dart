@@ -9,6 +9,9 @@ class AudioService {
   final AudioPlayer _sfxPlayer = AudioPlayer();
   Future<void>? _initFuture;
 
+  bool soundEnabled = true;
+  bool hapticsEnabled = true;
+
   Future<void> _init() async {
     _initFuture ??= _doInit();
     return _initFuture;
@@ -50,6 +53,7 @@ class AudioService {
   }
 
   Future<void> speak(String text) async {
+    if (!soundEnabled) return;
     await _init();
     try {
       if (kIsWeb) {
@@ -73,6 +77,7 @@ class AudioService {
 
   /// Success SFX
   Future<void> playSuccess() async {
+    if (!soundEnabled) return;
     await _init();
     try {
       await _sfxPlayer.stop();
@@ -83,11 +88,12 @@ class AudioService {
         await SystemSound.play(SystemSoundType.click);
       }
     }
-    await HapticFeedback.mediumImpact();
+    if (hapticsEnabled) await HapticFeedback.mediumImpact();
   }
 
   /// Failure SFX
   Future<void> playFailure() async {
+    if (!soundEnabled) return;
     await _init();
     try {
       await _sfxPlayer.stop();
@@ -98,12 +104,13 @@ class AudioService {
         await HapticFeedback.heavyImpact();
       }
     }
-    await HapticFeedback.selectionClick();
+    if (hapticsEnabled) await HapticFeedback.selectionClick();
   }
 
   /// Gem-earned SFX. Call whenever the user is awarded gems (e.g. on task
   /// completion, alongside `pointsAwarded`).
   Future<void> playGemEarned() async {
+    if (!soundEnabled) return;
     await _init();
     try {
       await _sfxPlayer.stop();
@@ -114,10 +121,13 @@ class AudioService {
         await SystemSound.play(SystemSoundType.click);
       }
     }
-    await HapticFeedback.lightImpact();
+    if (hapticsEnabled) await HapticFeedback.lightImpact();
   }
 
+  /// Lesson-completed SFX. Call when the final section of a lesson is
+  /// finished, alongside the confetti celebration.
   Future<void> playLessonCompleted() async {
+    if (!soundEnabled) return;
     await _init();
     try {
       await _sfxPlayer.stop();
@@ -128,7 +138,7 @@ class AudioService {
         await SystemSound.play(SystemSoundType.click);
       }
     }
-    await HapticFeedback.mediumImpact();
+    if (hapticsEnabled) await HapticFeedback.mediumImpact();
   }
 
   /// Call from provider dispose to release resources.

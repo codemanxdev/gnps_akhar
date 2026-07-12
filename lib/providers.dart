@@ -35,15 +35,18 @@ final shopCatalogProvider = Provider<List<ShopItem>>((ref) {
 class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
   final ProgressRepository _repository;
   final ProgressService _service;
+  final AudioService _audioService;
   late final Future<void> _initialLoad;
 
-  ProgressNotifier(this._repository, this._service)
+  ProgressNotifier(this._repository, this._service, this._audioService)
     : super(const AsyncValue.loading()) {
     _initialLoad = _load();
   }
 
   Future<void> _load() async {
     final progress = await _repository.load();
+    _audioService.soundEnabled = progress.soundEnabled;
+    _audioService.hapticsEnabled = progress.hapticsEnabled;
     state = AsyncValue.data(progress);
   }
 
@@ -131,6 +134,32 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
     final updated = await _service.updateUserName(current, name);
     state = AsyncValue.data(updated);
   }
+
+  Future<void> updateSoundEnabled(bool enabled) async {
+    await _initialLoad;
+    final current = state.value;
+    if (current == null) return;
+    final updated = await _service.updateSoundEnabled(current, enabled);
+    _audioService.soundEnabled = enabled;
+    state = AsyncValue.data(updated);
+  }
+
+  Future<void> updateHapticsEnabled(bool enabled) async {
+    await _initialLoad;
+    final current = state.value;
+    if (current == null) return;
+    final updated = await _service.updateHapticsEnabled(current, enabled);
+    _audioService.hapticsEnabled = enabled;
+    state = AsyncValue.data(updated);
+  }
+
+  Future<void> updateThemeSeedColor(int colorValue) async {
+    await _initialLoad;
+    final current = state.value;
+    if (current == null) return;
+    final updated = await _service.updateThemeSeedColor(current, colorValue);
+    state = AsyncValue.data(updated);
+  }
 }
 
 final progressProvider =
@@ -138,5 +167,6 @@ final progressProvider =
       return ProgressNotifier(
         ref.read(progressRepositoryProvider),
         ref.read(progressServiceProvider),
+        ref.read(audioServiceProvider),
       );
     });
