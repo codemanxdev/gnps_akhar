@@ -1,5 +1,11 @@
 /// Lesson data for "Spelling".
 /// Part of the app's bundled content store (see `lib/data/journey_data.dart`).
+///
+/// Reviewed & validated: every `letterBank` was checked so its correct pieces
+/// concatenate exactly to `targetWord`, and so no bank contains a duplicate tile
+/// (duplicates found in the original Colors section — ਲਾਲ/ਨੀਲਾ/ਪੀਲਾ each had a
+/// repeated 'ਲਾ' tile — have been fixed). New sections added: Household Items,
+/// Travel & Transport, School, and Weather.
 final Map<String, dynamic> lessonSpelling = {
   'id': 'lesson_spelling',
   'title': 'Spelling',
@@ -185,7 +191,7 @@ final Map<String, dynamic> lessonSpelling = {
           'content': {
             'emoji': '🔴',
             'targetWord': 'ਲਾਲ',
-            'letterBank': ['ਲਾ', 'ਲ', 'ਨੀ', 'ਲਾ', 'ਹ'],
+            'letterBank': ['ਲਾ', 'ਲ', 'ਨੀ', 'ਪੀ', 'ਹ'],
           },
         },
         {
@@ -195,7 +201,7 @@ final Map<String, dynamic> lessonSpelling = {
           'content': {
             'emoji': '🔵',
             'targetWord': 'ਨੀਲਾ',
-            'letterBank': ['ਨੀ', 'ਲਾ', 'ਪੀ', 'ਲਾ', 'ਹ'],
+            'letterBank': ['ਨੀ', 'ਲਾ', 'ਪੀ', 'ਲ', 'ਹ'],
           },
         },
         {
@@ -205,7 +211,7 @@ final Map<String, dynamic> lessonSpelling = {
           'content': {
             'emoji': '🟡',
             'targetWord': 'ਪੀਲਾ',
-            'letterBank': ['ਪੀ', 'ਲਾ', 'ਹ', 'ਲਾ', 'ਲ'],
+            'letterBank': ['ਪੀ', 'ਲਾ', 'ਹ', 'ਨੀ', 'ਲ'],
           },
         },
         {
@@ -236,6 +242,230 @@ final Map<String, dynamic> lessonSpelling = {
             'emoji': '⚪',
             'targetWord': 'ਚਿੱਟਾ',
             'letterBank': ['ਚਿ', 'ੱ', 'ਟਾ', 'ਕਾ', 'ਲਾ'],
+          },
+        },
+      ],
+    },
+    {
+      'id': 'section_household',
+      'title': 'Household Items',
+      'tasks': [
+        {
+          'id': 'household_01',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🪑',
+            'targetWord': 'ਕੁਰਸੀ',
+            'letterBank': ['ਕੁ', 'ਰ', 'ਸੀ', 'ਵਾ', 'ਜ਼ਾ'],
+          },
+        },
+        {
+          'id': 'household_02',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🚪',
+            'targetWord': 'ਦਰਵਾਜ਼ਾ',
+            'letterBank': ['ਦਰ', 'ਵਾ', 'ਜ਼ਾ', 'ਖਿ', 'ਕੀ'],
+          },
+        },
+        {
+          'id': 'household_03',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🪟',
+            'targetWord': 'ਖਿੜਕੀ',
+            'letterBank': ['ਖਿ', 'ੜ', 'ਕੀ', 'ਮੰ', 'ਜਾ'],
+          },
+        },
+        {
+          'id': 'household_04',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🛏️',
+            'targetWord': 'ਮੰਜਾ',
+            'letterBank': ['ਮੰ', 'ਜਾ', 'ਸੋ', 'ਫ਼ਾ', 'ਕੁ'],
+          },
+        },
+        {
+          'id': 'household_05',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🛋️',
+            'targetWord': 'ਸੋਫ਼ਾ',
+            'letterBank': ['ਸੋ', 'ਫ਼ਾ', 'ਦਰ', 'ਖਿ', 'ੜ'],
+          },
+        },
+      ],
+    },
+    {
+      'id': 'section_travel',
+      'title': 'Travel & Transport',
+      'tasks': [
+        {
+          'id': 'travel_01',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🚗',
+            'targetWord': 'ਕਾਰ',
+            'letterBank': ['ਕਾ', 'ਰ', 'ਬ', 'ੱ', 'ਸ'],
+          },
+        },
+        {
+          'id': 'travel_02',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🚌',
+            'targetWord': 'ਬੱਸ',
+            'letterBank': ['ਬ', 'ੱ', 'ਸ', 'ਕਾ', 'ਰ'],
+          },
+        },
+        {
+          'id': 'travel_03',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🚆',
+            'targetWord': 'ਰੇਲਗੱਡੀ',
+            'letterBank': ['ਰੇਲ', 'ਗੱ', 'ਡੀ', 'ਜ', 'ਹਾ'],
+          },
+        },
+        {
+          'id': 'travel_04',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '✈️',
+            'targetWord': 'ਜਹਾਜ਼',
+            'letterBank': ['ਜ', 'ਹਾ', 'ਜ਼', 'ਸਾਈ', 'ਕਲ'],
+          },
+        },
+        {
+          'id': 'travel_05',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🚲',
+            'targetWord': 'ਸਾਈਕਲ',
+            'letterBank': ['ਸਾਈ', 'ਕਲ', 'ਰੇਲ', 'ਗੱ', 'ਡੀ'],
+          },
+        },
+      ],
+    },
+    {
+      'id': 'section_school',
+      'title': 'School',
+      'tasks': [
+        {
+          'id': 'school_01',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '✏️',
+            'targetWord': 'ਪੈਨਸਿਲ',
+            'letterBank': ['ਪੈਨ', 'ਸਿ', 'ਲ', 'ਬ', 'ਤਾ'],
+          },
+        },
+        {
+          'id': 'school_02',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🖊️',
+            'targetWord': 'ਕਲਮ',
+            'letterBank': ['ਕ', 'ਲ', 'ਮ', 'ਗੁ', 'ਰੂ'],
+          },
+        },
+        {
+          'id': 'school_03',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🎒',
+            'targetWord': 'ਬਸਤਾ',
+            'letterBank': ['ਬ', 'ਸ', 'ਤਾ', 'ਤ', 'ਖ'],
+          },
+        },
+        {
+          'id': 'school_04',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🧑‍🏫',
+            'targetWord': 'ਗੁਰੂ',
+            'letterBank': ['ਗੁ', 'ਰੂ', 'ਪੈਨ', 'ਸਿ', 'ਬ'],
+          },
+        },
+        {
+          'id': 'school_05',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '📝',
+            'targetWord': 'ਤਖਤੀ',
+            'letterBank': ['ਤ', 'ਖ', 'ਤੀ', 'ਕ', 'ਮ'],
+          },
+        },
+      ],
+    },
+    {
+      'id': 'section_weather',
+      'title': 'Weather',
+      'tasks': [
+        {
+          'id': 'weather_01',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🌧️',
+            'targetWord': 'ਮੀਂਹ',
+            'letterBank': ['ਮੀਂ', 'ਹ', 'ਬ', 'ੱ', 'ਦਲ'],
+          },
+        },
+        {
+          'id': 'weather_02',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '☁️',
+            'targetWord': 'ਬੱਦਲ',
+            'letterBank': ['ਬ', 'ੱ', 'ਦਲ', 'ਹ', 'ਵਾ'],
+          },
+        },
+        {
+          'id': 'weather_03',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '💨',
+            'targetWord': 'ਹਵਾ',
+            'letterBank': ['ਹ', 'ਵਾ', 'ਬ', 'ਰ', 'ਫ਼'],
+          },
+        },
+        {
+          'id': 'weather_04',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '❄️',
+            'targetWord': 'ਬਰਫ਼',
+            'letterBank': ['ਬ', 'ਰ', 'ਫ਼', 'ਧੁੰ', 'ਦ'],
+          },
+        },
+        {
+          'id': 'weather_05',
+          'type': 'spelling',
+          'pointsAwarded': 15,
+          'content': {
+            'emoji': '🌫️',
+            'targetWord': 'ਧੁੰਦ',
+            'letterBank': ['ਧੁੰ', 'ਦ', 'ਮੀਂ', 'ਹ', 'ਬ'],
           },
         },
       ],
