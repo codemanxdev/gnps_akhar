@@ -1,4 +1,4 @@
-package com.example.gnps_akhar
+package com.gnps.learning_hub
 
 import io.flutter.embedding.android.FlutterActivity
 

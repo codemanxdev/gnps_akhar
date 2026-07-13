@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:gnps_akhar/main.dart';
+import 'package:gnps_learning_hub/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const PunjabiJourneyApp());
+    await tester.pumpWidget(const LearningHubApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

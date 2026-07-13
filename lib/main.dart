@@ -25,11 +25,11 @@ void main() async {
     // Not configured yet — app continues to run on mock/local data.
   }
 
-  runApp(const ProviderScope(child: PunjabiJourneyApp()));
+  runApp(const ProviderScope(child: LearningHubApp()));
 }
 
-class PunjabiJourneyApp extends ConsumerWidget {
-  const PunjabiJourneyApp({super.key});
+class LearningHubApp extends ConsumerWidget {
+  const LearningHubApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +40,7 @@ class PunjabiJourneyApp extends ConsumerWidget {
     );
 
     return MaterialApp(
-      title: 'Punjabi Journey',
+      title: 'GNPS Learning Hub',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: seedColor),

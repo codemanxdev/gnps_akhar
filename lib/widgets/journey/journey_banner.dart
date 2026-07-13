@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gnps_akhar/config/reward_config.dart';
+import '../../config/reward_config.dart';
 
 import '../../providers.dart';
 import '../../screens/streak_screen.dart';

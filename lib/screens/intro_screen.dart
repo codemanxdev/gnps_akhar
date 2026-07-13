@@ -19,8 +19,8 @@ class IntroScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Learn Punjabi through short, game-like lessons — '
-                'earn gems, build streaks, and customize your own avatar '
+                'Learn Punjabi through short lessons — '
+                'earn gems, build streaks, unlock and play word games and customize your own avatar '
                 'along the way.',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge,

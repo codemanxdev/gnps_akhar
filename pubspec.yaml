@@ -1,5 +1,5 @@
-name: gnps_akhar
-description: "Guru Nanak Punjabi School - GNPS School Learning Platform. A Game based Punjabi learning app for kids."
+name: gnps_learning_hub
+description: "GNPS Learning Hub - A gamified Punjabi learning app for kids."
 publish_to: 'none'
 version: 1.0.0+1
 
