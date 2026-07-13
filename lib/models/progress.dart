@@ -13,12 +13,14 @@ class LocalProgress {
   bool soundEnabled;
   bool hapticsEnabled;
   int themeSeedColor;
+  bool hasCompletedOnboarding;
+  int dailyGoalMinutes;
 
   static const Map<AvatarSlot, String> defaultEquippedItemIds = {
-    AvatarSlot.base: 'avatar_base_default',
-    AvatarSlot.turban: 'turban_none',
-    AvatarSlot.clothes: 'clothes_default',
-    AvatarSlot.accessory: 'accessory_none',
+    AvatarSlot.base: DefaultItemIds.avatarBoy,
+    AvatarSlot.turban: DefaultItemIds.turbanNone,
+    AvatarSlot.clothes: DefaultItemIds.clothesDefault,
+    AvatarSlot.accessory: DefaultItemIds.accessoryNone,
   };
 
   LocalProgress({
@@ -34,6 +36,8 @@ class LocalProgress {
     this.soundEnabled = true,
     this.hapticsEnabled = true,
     this.themeSeedColor = 0xFF2196F3, // Colors.blue
+    this.hasCompletedOnboarding = false,
+    this.dailyGoalMinutes = 10,
   }) : completedLessonIds = completedLessonIds ?? {},
        completedSectionIds = completedSectionIds ?? {},
        unlockedLessonIds = unlockedLessonIds ?? {},
@@ -81,6 +85,8 @@ class LocalProgress {
       soundEnabled: json['soundEnabled'] as bool? ?? true,
       hapticsEnabled: json['hapticsEnabled'] as bool? ?? true,
       themeSeedColor: (json['themeSeedColor'] as num?)?.toInt() ?? 0xFF2196F3,
+      hasCompletedOnboarding: json['hasCompletedOnboarding'] as bool? ?? false,
+      dailyGoalMinutes: (json['dailyGoalMinutes'] as num?)?.toInt() ?? 10,
     );
   }
 
@@ -97,5 +103,7 @@ class LocalProgress {
     'soundEnabled': soundEnabled,
     'hapticsEnabled': hapticsEnabled,
     'themeSeedColor': themeSeedColor,
+    'hasCompletedOnboarding': hasCompletedOnboarding,
+    'dailyGoalMinutes': dailyGoalMinutes,
   };
 }

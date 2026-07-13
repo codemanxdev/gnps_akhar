@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 
 import '../providers.dart';
+import 'intro_screen.dart';
 
 const List<Color> _themeColorOptions = [
   Colors.blue,
@@ -54,10 +55,14 @@ class SettingsScreen extends ConsumerWidget {
         .read(progressProvider.notifier)
         .ensureFirstLessonUnlocked(journey);
 
+    // reset() leaves hasCompletedOnboarding = false, so send the user back
+    // through onboarding and clear the stack so back-navigation can't
+    // return them to a screen built against the now-wiped state.
     if (context.mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Progress reset.')));
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const IntroScreen()),
+        (route) => false,
+      );
     }
   }
 

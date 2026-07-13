@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers.dart';
+import 'intro_screen.dart';
 import 'journey_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -35,9 +36,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     await minimumSplashTime;
 
     if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const JourneyScreen()),
-      );
+      final progress = ref.read(progressProvider).value;
+      final nextScreen = (progress?.hasCompletedOnboarding ?? false)
+          ? const JourneyScreen()
+          : const IntroScreen();
+
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => nextScreen));
     }
   }
 

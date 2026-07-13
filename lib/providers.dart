@@ -172,6 +172,26 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
     final updated = await _service.updateThemeSeedColor(current, colorValue);
     state = AsyncValue.data(updated);
   }
+
+  Future<void> updateDailyGoal(int minutes) async {
+    await _initialLoad;
+    final current = state.value;
+    if (current == null) return;
+    final updated = LocalProgress.fromJson(current.toJson())
+      ..dailyGoalMinutes = minutes;
+    await _repository.save(updated);
+    state = AsyncValue.data(updated);
+  }
+
+  Future<void> completeOnboarding() async {
+    await _initialLoad;
+    final current = state.value;
+    if (current == null) return;
+    final updated = LocalProgress.fromJson(current.toJson())
+      ..hasCompletedOnboarding = true;
+    await _repository.save(updated);
+    state = AsyncValue.data(updated);
+  }
 }
 
 final progressProvider =
