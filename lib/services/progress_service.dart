@@ -2,6 +2,7 @@ import '../models/journey.dart';
 import '../models/progress.dart';
 import '../models/shop_item.dart';
 import '../repositories/progress_repository.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 
 enum PurchaseResult { success, insufficientGems, alreadyOwned }
 
@@ -91,6 +92,35 @@ class ProgressService {
       if (index != -1 && index + 1 < activeLessons.length) {
         progress.unlockedLessonIds.add(activeLessons[index + 1].id);
       }
+    }
+
+    await _repository.save(progress);
+    return progress;
+  }
+
+  /// DEBUG ONLY. Marks every section and lesson in [journey.activeLessons]
+  /// as complete, unlocks them all, and awards the same points a real
+  /// completion would (sum of `pointsAwarded` across each section's tasks).
+  /// Testing shortcut to jump straight to "journey finished" state.
+  /// No-op outside debug builds.
+  Future<LocalProgress> debugCompleteAllLessons({
+    required LocalProgress progress,
+    required Journey journey,
+  }) async {
+    if (!kDebugMode) return progress;
+
+    for (final lesson in journey.activeLessons) {
+      for (final section in lesson.sections) {
+        if (progress.completedSectionIds.add(section.id)) {
+          final sectionPoints = section.tasks.fold<int>(
+            0,
+            (sum, task) => sum + task.pointsAwarded,
+          );
+          progress.totalPoints += sectionPoints;
+        }
+      }
+      progress.completedLessonIds.add(lesson.id);
+      progress.unlockedLessonIds.add(lesson.id);
     }
 
     await _repository.save(progress);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 
 import '../providers.dart';
 
@@ -57,6 +58,20 @@ class SettingsScreen extends ConsumerWidget {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Progress reset.')));
+    }
+  }
+
+  Future<void> _debugCompleteAllLessons(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final journey = await ref.read(journeyProvider.future);
+    await ref.read(progressProvider.notifier).debugCompleteAllLessons(journey);
+
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('All lessons marked complete (debug).')),
+      );
     }
   }
 
@@ -142,6 +157,25 @@ class SettingsScreen extends ConsumerWidget {
                 side: const BorderSide(color: Colors.red),
               ),
             ),
+            if (kDebugMode) ...[
+              const Divider(height: 32),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Debug Tools',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: () => _debugCompleteAllLessons(context, ref),
+                icon: const Icon(Icons.developer_mode),
+                label: const Text('Mark All Lessons Complete'),
+              ),
+            ],
           ],
         ),
         loading: () => const Center(child: CircularProgressIndicator()),

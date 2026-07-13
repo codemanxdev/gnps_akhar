@@ -85,6 +85,18 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
     state = AsyncValue.data(LocalProgress.fromJson(updated.toJson()));
   }
 
+  /// DEBUG ONLY. See ProgressService.debugCompleteAllLessons.
+  Future<void> debugCompleteAllLessons(Journey journey) async {
+    await _initialLoad;
+    final current = state.value;
+    if (current == null) return;
+    final updated = await _service.debugCompleteAllLessons(
+      progress: current,
+      journey: journey,
+    );
+    state = AsyncValue.data(LocalProgress.fromJson(updated.toJson()));
+  }
+
   Future<PurchaseResult> purchaseItem(ShopItem item) async {
     await _initialLoad;
     final current = state.value;

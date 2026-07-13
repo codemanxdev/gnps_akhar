@@ -4,7 +4,7 @@ final Map<String, dynamic> lessonTracing = {
   'id': 'lesson_tracing',
   'title': 'Alphabet Tracing',
   'order': 1,
-  'visible': false,
+  'visible': true,
   'sections': [
     {
       'id': 'section_foundation',

@@ -4,7 +4,7 @@ final Map<String, dynamic> lessonMatching = {
   'id': 'lesson_matching',
   'title': 'Match the Word',
   'order': 3,
-  'visible': false,
+  'visible': true,
   'sections': [
     {
       'id': 'section_matching_animals',
