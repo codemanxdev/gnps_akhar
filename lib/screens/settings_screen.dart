@@ -152,16 +152,11 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
             const Divider(height: 32),
-            OutlinedButton.icon(
+            _SettingsActionButton(
               onPressed: () => _confirmAndReset(context, ref),
-              icon: const Icon(Icons.restart_alt, color: Colors.red),
-              label: const Text(
-                'Reset Progress',
-                style: TextStyle(color: Colors.red),
-              ),
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.red),
-              ),
+              icon: Icons.restart_alt,
+              label: 'Reset Progress',
+              isDestructive: true,
             ),
             if (kDebugMode) ...[
               const Divider(height: 32),
@@ -176,25 +171,70 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              OutlinedButton.icon(
+              _SettingsActionButton(
                 onPressed: () => _debugCompleteAllLessons(context, ref),
-                icon: const Icon(Icons.developer_mode),
-                label: const Text('Mark All Lessons Complete'),
+                icon: Icons.done_all,
+                label: 'Mark All Lessons Complete',
               ),
-              ListTile(
-                leading: const Icon(Icons.developer_mode),
-                title: const Text('Checkpoint Recorder'),
-                onTap: () => Navigator.of(context).push(
+              const SizedBox(height: 12),
+              _SettingsActionButton(
+                onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => const CheckpointRecorderScreen(),
                   ),
                 ),
+                icon: Icons.edit_road,
+                label: 'Checkpoint Recorder',
               ),
             ],
           ],
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error loading settings: $e')),
+      ),
+    );
+  }
+}
+
+class _SettingsActionButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final IconData icon;
+  final String label;
+  final bool isDestructive;
+
+  const _SettingsActionButton({
+    required this.onPressed,
+    required this.icon,
+    required this.label,
+    this.isDestructive = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isDestructive ? Colors.red : null;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: OutlinedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, color: color),
+        label: Text(
+          label,
+          style: TextStyle(
+            color: color,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        style: OutlinedButton.styleFrom(
+          side: color != null ? BorderSide(color: color) : null,
+          minimumSize: const Size(double.infinity, 52),
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
       ),
     );
   }
