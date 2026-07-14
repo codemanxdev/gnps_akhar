@@ -32,9 +32,11 @@ class GameConfig {
       content: Map<String, dynamic>.from(json['content'] as Map? ?? {}),
       mapXOffset: (json['mapXOffset'] as num?)?.toDouble(),
       mapYOffset: (json['mapYOffset'] as num?)?.toDouble(),
-      icon: json['icon'] as IconData?,
-      color: json['color'] is int 
-          ? Color(json['color'] as int) 
+      icon: json['icon'] is int
+          ? IconData(json['icon'] as int, fontFamily: 'MaterialIcons')
+          : json['icon'] as IconData?,
+      color: json['color'] is int
+          ? Color(json['color'] as int)
           : json['color'] as Color?,
     );
   }
@@ -47,7 +49,7 @@ class GameConfig {
     'content': content,
     'mapXOffset': mapXOffset,
     'mapYOffset': mapYOffset,
-    'icon': icon,
-    'color': color,
+    'icon': icon?.codePoint,
+    'color': color?.value,
   };
 }

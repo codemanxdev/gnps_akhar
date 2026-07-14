@@ -15,6 +15,7 @@ class DefaultItemIds {
   static const turbanNone = 'turban_none';
   static const clothesDefault = 'clothes_default';
   static const accessoryNone = 'accessory_none';
+  static const extraLife = 'powerup_extra_life';
 }
 
 class ShopItem {

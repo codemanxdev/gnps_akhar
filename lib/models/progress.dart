@@ -23,6 +23,10 @@ class LocalProgress {
     AvatarSlot.accessory: DefaultItemIds.accessoryNone,
   };
 
+  static const Map<String, int> defaultOwnedItemQuantities = {
+    DefaultItemIds.extraLife: 3,
+  };
+
   LocalProgress({
     this.userName,
     this.totalPoints = 0,
@@ -41,7 +45,7 @@ class LocalProgress {
   }) : completedLessonIds = completedLessonIds ?? {},
        completedSectionIds = completedSectionIds ?? {},
        unlockedLessonIds = unlockedLessonIds ?? {},
-       ownedItemQuantities = ownedItemQuantities ?? {},
+       ownedItemQuantities = ownedItemQuantities ?? Map.from(defaultOwnedItemQuantities),
        equippedItemIds =
            equippedItemIds ??
            defaultEquippedItemIds.map(
@@ -69,7 +73,7 @@ class LocalProgress {
         (json['ownedItemQuantities'] as Map?)?.map(
               (key, value) => MapEntry(key as String, (value as num).toInt()),
             ) ??
-            {},
+            defaultOwnedItemQuantities,
       ),
       equippedItemIds: {
         ...defaultEquippedItemIds.map(
