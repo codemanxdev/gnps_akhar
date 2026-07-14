@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../models/lesson.dart';
+import '../../models/game_config.dart';
 import './props/flying_butterfly.dart';
 import './props/firefly_sparkle.dart';
 import './props/floating_leaf.dart';
@@ -9,13 +10,16 @@ import './props/flying_bird.dart';
 import 'forest_background_painter.dart';
 import './props/hopping_squirrel.dart';
 import 'lesson_node.dart';
+import 'game_node.dart';
 
 class LessonPath extends StatelessWidget {
   final List<Lesson> lessons;
+  final List<GameConfig> games;
   final Set<String> unlockedIds;
   final Set<String> completedIds;
   final Set<String> completedSectionIds;
   final void Function(Lesson lesson) onTapLesson;
+  final void Function(GameConfig game)? onTapGame;
 
   static const double _verticalSpacing = 150;
   static const double _nodeSize = 76;
@@ -25,10 +29,12 @@ class LessonPath extends StatelessWidget {
   const LessonPath({
     super.key,
     required this.lessons,
+    this.games = const [],
     required this.unlockedIds,
     required this.completedIds,
     required this.completedSectionIds,
     required this.onTapLesson,
+    this.onTapGame,
   });
 
   String? get _currentLessonId {
@@ -235,11 +241,39 @@ class LessonPath extends StatelessWidget {
                       size: _nodeSize,
                       chapterCount: lessons[i].sections.length,
                       completedChapters: _completedSectionsFor(lessons[i]),
-                      onTap: unlockedIds.contains(lessons[i].id)
-                          ? () => onTapLesson(lessons[i])
-                          : null,
+                      onTap:
+                          unlockedIds.contains(lessons[i].id)
+                              ? () => onTapLesson(lessons[i])
+                              : null,
                     ),
                   ),
+                ...games.map((game) {
+                  final lessonIndex = lessons.indexWhere(
+                    (l) => l.id == game.unlockAfterLessonId,
+                  );
+                  if (lessonIndex == -1) return const SizedBox.shrink();
+
+                  // Position game slightly after and to the side of the lesson that unlocks it
+                  final lessonCenter = nodeCenters[lessonIndex];
+                  final isUnlocked = completedIds.contains(
+                    game.unlockAfterLessonId,
+                  );
+
+                  if (!isUnlocked) return const SizedBox.shrink();
+
+                  // Alternate sides
+                  final side = lessonIndex % 2 == 0 ? 1 : -1;
+
+                  return Positioned(
+                    left: lessonCenter.dx + (side * 100) - 30,
+                    top: lessonCenter.dy + 40,
+                    child: GameNode(
+                      title: game.title,
+                      isLocked: !isUnlocked,
+                      onTap: () => onTapGame?.call(game),
+                    ),
+                  );
+                }),
               ],
             ),
           ),

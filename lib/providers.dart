@@ -183,6 +183,16 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
     state = AsyncValue.data(updated);
   }
 
+  Future<void> addPoints(int points) async {
+    await _initialLoad;
+    final current = state.value;
+    if (current == null) return;
+    final updated = LocalProgress.fromJson(current.toJson())
+      ..totalPoints += points;
+    await _repository.save(updated);
+    state = AsyncValue.data(updated);
+  }
+
   Future<void> completeOnboarding() async {
     await _initialLoad;
     final current = state.value;

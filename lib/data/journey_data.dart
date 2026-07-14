@@ -37,4 +37,15 @@ final Journey journeyData = Journey.fromJson({
     lessonFillInBlank,
     lessonArrangeSentence,
   ],
+  'games': [
+    {
+      'id': 'bubble_pop_letters',
+      'title': 'Letter Bubbles',
+      'unlockAfterLessonId': 'lesson_tracing',
+      'type': 'bubble_pop',
+      'content': {
+        'pool': 'lessons', // will use letters from completed lessons
+      },
+    },
+  ],
 });

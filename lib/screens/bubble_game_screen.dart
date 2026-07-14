@@ -49,9 +49,13 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
     for (final lesson in journey.lessons) {
       if (progress.completedLessonIds.contains(lesson.id)) {
         for (final section in lesson.sections) {
-          for (final task in section['tasks'] ?? []) {
-            if (task['content'] != null && task['content']['letter'] != null) {
-              pool.add(task['content']['letter'] as String);
+          for (final task in section.tasks) {
+            if (task.content['letter'] != null) {
+              pool.add(task.content['letter'] as String);
+            } else if (task.content['targetWord'] != null) {
+              // Add individual characters from the word
+              final word = task.content['targetWord'] as String;
+              pool.addAll(word.split(''));
             }
           }
         }

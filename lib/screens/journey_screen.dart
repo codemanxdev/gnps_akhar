@@ -11,6 +11,9 @@ import 'lesson_screen.dart';
 import 'profile_screen.dart';
 import 'shop_screen.dart';
 
+import '../models/game_config.dart';
+import 'bubble_game_screen.dart';
+
 class JourneyScreen extends ConsumerStatefulWidget {
   const JourneyScreen({super.key});
 
@@ -26,6 +29,12 @@ class _JourneyScreenState extends ConsumerState<JourneyScreen> {
       MaterialPageRoute(
         builder: (_) => LessonScreen(lesson: lesson, journey: journey),
       ),
+    );
+  }
+
+  void _openGame(GameConfig game, Journey journey) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => BubbleGameScreen(game: game)),
     );
   }
 
@@ -46,6 +55,7 @@ class _JourneyScreenState extends ConsumerState<JourneyScreen> {
                   journey: journey,
                   progress: progress,
                   onTapLesson: (lesson) => _openLesson(lesson, journey),
+                  onTapGame: (game) => _openGame(game, journey),
                 ),
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, _) =>
@@ -85,11 +95,13 @@ class _JourneyContent extends StatelessWidget {
   final Journey journey;
   final LocalProgress progress;
   final void Function(Lesson lesson) onTapLesson;
+  final void Function(GameConfig game) onTapGame;
 
   const _JourneyContent({
     required this.journey,
     required this.progress,
     required this.onTapLesson,
+    required this.onTapGame,
   });
 
   @override
@@ -103,10 +115,12 @@ class _JourneyContent extends StatelessWidget {
         Expanded(
           child: LessonPath(
             lessons: journey.activeLessons,
+            games: journey.games,
             unlockedIds: progress.unlockedLessonIds,
             completedIds: progress.completedLessonIds,
             completedSectionIds: progress.completedSectionIds,
             onTapLesson: onTapLesson,
+            onTapGame: onTapGame,
           ),
         ),
       ],
