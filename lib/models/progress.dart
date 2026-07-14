@@ -45,7 +45,10 @@ class LocalProgress {
   }) : completedLessonIds = completedLessonIds ?? {},
        completedSectionIds = completedSectionIds ?? {},
        unlockedLessonIds = unlockedLessonIds ?? {},
-       ownedItemQuantities = ownedItemQuantities ?? Map.from(defaultOwnedItemQuantities),
+       ownedItemQuantities = {
+         ...defaultOwnedItemQuantities,
+         ...(ownedItemQuantities ?? {}),
+       },
        equippedItemIds =
            equippedItemIds ??
            defaultEquippedItemIds.map(
@@ -69,12 +72,15 @@ class LocalProgress {
       unlockedLessonIds: Set<String>.from(
         json['unlockedLessonIds'] as List? ?? [],
       ),
-      ownedItemQuantities: Map<String, int>.from(
-        (json['ownedItemQuantities'] as Map?)?.map(
-              (key, value) => MapEntry(key as String, (value as num).toInt()),
-            ) ??
-            defaultOwnedItemQuantities,
-      ),
+      ownedItemQuantities: {
+        ...defaultOwnedItemQuantities,
+        ...Map<String, int>.from(
+          (json['ownedItemQuantities'] as Map?)?.map(
+                (key, value) => MapEntry(key as String, (value as num).toInt()),
+              ) ??
+              {},
+        ),
+      },
       equippedItemIds: {
         ...defaultEquippedItemIds.map(
           (slot, itemId) => MapEntry(slot.name, itemId),
