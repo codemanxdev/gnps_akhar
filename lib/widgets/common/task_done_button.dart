@@ -15,9 +15,14 @@ class TaskDoneButton extends StatelessWidget {
     return FilledButton(
       onPressed: onPressed,
       style: FilledButton.styleFrom(
-        minimumSize: const Size(100, 48),
+        minimumSize: const Size(140, 56),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        textStyle: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.1,
         ),
       ),
       child: Text(label),

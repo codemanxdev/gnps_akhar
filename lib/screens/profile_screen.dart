@@ -52,7 +52,8 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                   IconButton(
                     onPressed: () => _openSettingsScreen(context),
-                    icon: const Icon(Icons.settings_outlined),
+                    icon: const Icon(Icons.settings, size: 40),
+                    tooltip: 'Settings',
                   ),
                 ],
               ),

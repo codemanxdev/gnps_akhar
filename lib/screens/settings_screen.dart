@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 
 import '../providers.dart';
+import '../tools/checkpoint_recorder_screen.dart';
 import 'intro_screen.dart';
 
 const List<Color> _themeColorOptions = [
@@ -179,6 +180,15 @@ class SettingsScreen extends ConsumerWidget {
                 onPressed: () => _debugCompleteAllLessons(context, ref),
                 icon: const Icon(Icons.developer_mode),
                 label: const Text('Mark All Lessons Complete'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.developer_mode),
+                title: const Text('Checkpoint Recorder'),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const CheckpointRecorderScreen(),
+                  ),
+                ),
               ),
             ],
           ],

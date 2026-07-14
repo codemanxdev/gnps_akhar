@@ -12,12 +12,20 @@ class TaskClearButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton.icon(
+    return FilledButton.icon(
       onPressed: onPressed,
-      icon: const Icon(Icons.refresh),
+      icon: const Icon(Icons.refresh, size: 24),
       label: Text(label),
-      style: TextButton.styleFrom(
-        foregroundColor: Colors.grey.shade700,
+      style: FilledButton.styleFrom(
+        minimumSize: const Size(140, 56),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        textStyle: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.1,
+        ),
       ),
     );
   }
