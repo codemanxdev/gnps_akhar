@@ -12,7 +12,7 @@ import 'profile_screen.dart';
 import 'shop_screen.dart';
 
 import '../models/game_config.dart';
-import 'bubble_game_screen.dart';
+import '../games/bubble_game_screen.dart';
 
 class JourneyScreen extends ConsumerStatefulWidget {
   const JourneyScreen({super.key});

@@ -10,7 +10,7 @@ import './props/flying_bird.dart';
 import 'forest_background_painter.dart';
 import './props/hopping_squirrel.dart';
 import 'lesson_node.dart';
-import 'game_node.dart';
+import '../games/game_node.dart';
 
 class LessonPath extends StatelessWidget {
   final List<Lesson> lessons;
@@ -253,7 +253,6 @@ class LessonPath extends StatelessWidget {
                   );
                   if (lessonIndex == -1) return const SizedBox.shrink();
 
-                  // Position game slightly after and to the side of the lesson that unlocks it
                   final lessonCenter = nodeCenters[lessonIndex];
                   final isUnlocked = completedIds.contains(
                     game.unlockAfterLessonId,
@@ -261,16 +260,21 @@ class LessonPath extends StatelessWidget {
 
                   if (!isUnlocked) return const SizedBox.shrink();
 
-                  // Alternate sides
+                  // If offsets are provided in JSON, use them. 
+                  // Otherwise, default to a "tree-line" position far from the path.
                   final side = lessonIndex % 2 == 0 ? 1 : -1;
+                  final xOffset = game.mapXOffset ?? (side * 140.0);
+                  final yOffset = game.mapYOffset ?? 60.0;
 
                   return Positioned(
-                    left: lessonCenter.dx + (side * 100) - 30,
-                    top: lessonCenter.dy + 40,
+                    left: lessonCenter.dx + xOffset - 30,
+                    top: lessonCenter.dy + yOffset,
                     child: GameNode(
                       title: game.title,
                       isLocked: !isUnlocked,
                       onTap: () => onTapGame?.call(game),
+                      icon: _getIconFor(game.iconName),
+                      color: game.colorValue != null ? Color(game.colorValue!) : Colors.amber,
                     ),
                   );
                 }),
@@ -280,5 +284,15 @@ class LessonPath extends StatelessWidget {
         );
       },
     );
+  }
+
+  IconData _getIconFor(String? name) {
+    switch (name) {
+      case 'bubble': return Icons.blur_on;
+      case 'spell': return Icons.abc;
+      case 'match': return Icons.extension;
+      case 'game': return Icons.videogame_asset;
+      default: return Icons.videogame_asset;
+    }
   }
 }

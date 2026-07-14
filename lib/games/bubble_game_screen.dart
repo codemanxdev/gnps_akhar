@@ -30,11 +30,25 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
   bool _gameOver = false;
   bool _gameWon = false;
 
+  // Configurable parameters from game.content
+  late int _spawnRateMs;
+  late double _minSpeed;
+  late double _maxSpeed;
+  late double _baseBubbleSize;
+
   @override
   void initState() {
     super.initState();
     _tts = FlutterTts();
     _tts.setLanguage("pa-IN");
+    
+    // Initialize config with defaults
+    final content = widget.game.content;
+    _spawnRateMs = (content['spawnRateMs'] as num? ?? 1500).toInt();
+    _minSpeed = (content['minSpeed'] as num? ?? 2.0).toDouble();
+    _maxSpeed = (content['maxSpeed'] as num? ?? 4.0).toDouble();
+    _baseBubbleSize = (content['bubbleSize'] as num? ?? 70.0).toDouble();
+
     _initGame();
   }
 
@@ -44,7 +58,6 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
 
     if (progress == null) return;
 
-    // Collect all letters from completed lessons
     final List<String> pool = [];
     for (final lesson in journey.lessons) {
       if (progress.completedLessonIds.contains(lesson.id)) {
@@ -53,7 +66,6 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
             if (task.content['letter'] != null) {
               pool.add(task.content['letter'] as String);
             } else if (task.content['targetWord'] != null) {
-              // Add individual characters from the word
               final word = task.content['targetWord'] as String;
               pool.addAll(word.split(''));
             }
@@ -67,7 +79,7 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
       _nextRound();
     });
 
-    _spawnTimer = Timer.periodic(const Duration(milliseconds: 1500), (timer) {
+    _spawnTimer = Timer.periodic(Duration(milliseconds: _spawnRateMs), (timer) {
       if (!_gameOver) _spawnBubble();
     });
 
@@ -77,6 +89,7 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
   }
 
   void _nextRound() {
+    if (_letterPool.isEmpty) return;
     _targetLetter = _letterPool[_random.nextInt(_letterPool.length)];
     _speakTarget();
   }
@@ -97,8 +110,8 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
         x: x,
         y: MediaQuery.of(context).size.height,
         letter: letter,
-        speed: 2.0 + _random.nextDouble() * 2.0,
-        size: 60.0 + _random.nextDouble() * 20.0,
+        speed: _minSpeed + _random.nextDouble() * (_maxSpeed - _minSpeed),
+        size: _baseBubbleSize * (0.8 + _random.nextDouble() * 0.4),
         color: Colors.primaries[_random.nextInt(Colors.primaries.length)].withValues(alpha: 0.6),
       ));
     });
