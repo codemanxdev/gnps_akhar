@@ -5,7 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../config/reward_config.dart';
 import '../models/progress.dart';
 import '../models/shop_item.dart';
-import '../providers.dart';
+import '../providers/progress_providers.dart';
+import '../providers/shop_providers.dart';
 import '../services/progress_service.dart';
 
 class ShopScreen extends ConsumerWidget {

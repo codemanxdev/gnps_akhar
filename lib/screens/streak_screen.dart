@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/progress.dart';
-import '../providers.dart';
+import '../providers/progress_providers.dart';
 
 const _monthNames = [
   'January',

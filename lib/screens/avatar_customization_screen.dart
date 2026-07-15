@@ -4,7 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../models/progress.dart';
 import '../models/shop_item.dart';
-import '../providers.dart';
+import '../providers/progress_providers.dart';
+import '../providers/shop_providers.dart';
 import '../widgets/avatar/avatar_preview.dart';
 
 class AvatarCustomizationScreen extends ConsumerStatefulWidget {

@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import '../models/game_config.dart';
-import '../providers.dart';
+import '../providers/progress_providers.dart';
 
 class BubbleGameScreen extends ConsumerStatefulWidget {
   final GameConfig game;

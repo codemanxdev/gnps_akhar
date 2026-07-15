@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:package_info_plus/package_info_plus.dart';
 
-import '../providers.dart';
+import '../providers/content_providers.dart';
+import '../providers/progress_providers.dart';
 import '../tools/checkpoint_recorder_screen.dart';
 import 'intro_screen.dart';
 
@@ -49,9 +51,18 @@ class SettingsScreen extends ConsumerWidget {
 
     await ref.read(progressProvider.notifier).reset();
     await ref.read(contentRepositoryProvider).clearCache();
-    ref.invalidate(journeyProvider);
 
-    final journey = await ref.read(journeyProvider.future);
+    // Fetch fresh content directly from the repository (bypassing the
+    // journeySyncProvider state machine, which is meant for the one-time
+    // splash-screen sync, not for ad-hoc reloads like this).
+    final journey = await ref
+        .read(contentRepositoryProvider)
+        .checkForUpdatesAndSync();
+
+    // Keep journeyProvider/journeySyncProvider in sync with the new content
+    // in case any still-mounted screen watches them.
+    ref.invalidate(journeySyncProvider);
+
     await ref
         .read(progressProvider.notifier)
         .ensureFirstLessonUnlocked(journey);
@@ -71,7 +82,12 @@ class SettingsScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) async {
-    final journey = await ref.read(journeyProvider.future);
+    // journeyProvider should already hold data by the time settings is
+    // reachable; fall back to a direct repository read just in case.
+    final journey =
+        ref.read(journeyProvider).value ??
+        await ref.read(contentRepositoryProvider).getLocalJourney();
+
     await ref.read(progressProvider.notifier).debugCompleteAllLessons(journey);
 
     if (context.mounted) {
@@ -150,6 +166,50 @@ class SettingsScreen extends ConsumerWidget {
                   );
                 }).toList(),
               ),
+            ),
+            const Divider(height: 32),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'About',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            FutureBuilder<PackageInfo>(
+              future: PackageInfo.fromPlatform(),
+              builder: (context, snapshot) {
+                final appVersion = snapshot.hasData
+                    ? '${snapshot.data!.version} (${snapshot.data!.buildNumber})'
+                    : '—';
+                final journeyVersion = ref
+                    .watch(journeyProvider)
+                    .maybeWhen(data: (j) => '${j.version}', orElse: () => '—');
+
+                return Column(
+                  children: [
+                    ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
+                      leading: const Icon(Icons.info_outline),
+                      title: const Text('App version'),
+                      trailing: Text(appVersion),
+                    ),
+                    ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
+                      leading: const Icon(Icons.menu_book_outlined),
+                      title: const Text('Lesson content version'),
+                      trailing: Text(journeyVersion),
+                    ),
+                  ],
+                );
+              },
             ),
             const Divider(height: 32),
             _SettingsActionButton(

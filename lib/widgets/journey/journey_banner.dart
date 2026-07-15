@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../config/reward_config.dart';
 
-import '../../providers.dart';
+import '../../providers/progress_providers.dart';
+import '../../providers/shop_providers.dart';
 import '../../screens/streak_screen.dart';
 import '../../widgets/avatar/avatar_preview.dart';
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gnps_learning_hub/providers/progress_providers.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'providers.dart';
 import 'screens/splash_screen.dart';
 
 // Uncomment once you've run `flutterfire configure` — it generates this file.

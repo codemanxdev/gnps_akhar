@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers.dart';
+import '../providers/content_providers.dart';
+import '../providers/progress_providers.dart';
 import 'intro_screen.dart';
 import 'journey_screen.dart';
 
@@ -24,8 +25,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       const Duration(milliseconds: 2400),
     );
 
-    // Kick off content + progress loading in parallel.
-    final journeyFuture = ref.read(journeyProvider.future);
+    // Kick off content sync + progress loading in parallel.
+    final journeyFuture = ref.read(journeySyncProvider.notifier).ready;
     await ref.read(progressProvider.notifier).registerAppOpen();
 
     final journey = await journeyFuture;
@@ -47,8 +48,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     }
   }
 
+  String _statusText(JourneySyncState syncState) {
+    return switch (syncState) {
+      JourneyChecking() => 'Checking for updates…',
+      JourneyInstallingUpdate(:final toVersion) =>
+        'Installing new content (v$toVersion)…',
+      JourneyReady() => 'Ready!',
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
+    final syncState = ref.watch(journeySyncProvider);
+    final onPrimary = Theme.of(context).colorScheme.onPrimary;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Center(
@@ -58,7 +71,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             Text(
               'GNPS',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: onPrimary,
                 letterSpacing: 4,
                 fontWeight: FontWeight.w600,
               ),
@@ -76,13 +89,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             const SizedBox(height: 16),
             Text(
               'ਪੰਜਾਬੀ ਸਿੱਖੋ',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(color: onPrimary),
             ),
             const SizedBox(height: 32),
-            CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.onPrimary,
+            CircularProgressIndicator(color: onPrimary),
+            const SizedBox(height: 16),
+            Text(
+              _statusText(syncState),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: onPrimary.withValues(alpha: 0.8),
+              ),
             ),
           ],
         ),

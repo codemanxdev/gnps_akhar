@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/reward_config.dart';
 import '../models/shop_item.dart';
-import '../providers.dart';
+import '../providers/progress_providers.dart';
+import '../providers/shop_providers.dart';
 import 'avatar_customization_screen.dart';
 import 'settings_screen.dart';
 import 'streak_screen.dart';

@@ -116,4 +116,6 @@ class LocalProgress {
     'hasCompletedOnboarding': hasCompletedOnboarding,
     'dailyGoalMinutes': dailyGoalMinutes,
   };
+
+  LocalProgress clone() => LocalProgress.fromJson(toJson());
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers.dart';
+import '../providers/progress_providers.dart';
 import 'avatar_selection_screen.dart';
 
 class GoalSetupScreen extends ConsumerStatefulWidget {

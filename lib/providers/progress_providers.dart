@@ -1,35 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'models/journey.dart';
-import 'models/progress.dart';
-import 'models/shop_item.dart';
-import 'repositories/content_repository.dart';
-import 'repositories/progress_repository.dart';
-import 'services/audio_service.dart';
-import 'services/progress_service.dart';
-import 'repositories/shop_repository.dart';
+import '../models/journey.dart';
+import '../models/progress.dart';
+import '../models/shop_item.dart';
+import '../repositories/progress_repository.dart';
+import '../services/audio_service.dart';
+import '../services/progress_service.dart';
+import 'audio_providers.dart';
 
-final contentRepositoryProvider = Provider((ref) => ContentRepository());
 final progressRepositoryProvider = Provider((ref) => ProgressRepository());
-final audioServiceProvider = Provider((ref) {
-  final service = AudioService();
-  ref.onDispose(() => service.dispose());
-  return service;
-});
 
 final progressServiceProvider = Provider((ref) {
   return ProgressService(ref.read(progressRepositoryProvider));
-});
-
-final journeyProvider = FutureProvider<Journey>((ref) async {
-  final repo = ref.read(contentRepositoryProvider);
-  return repo.checkForUpdatesAndSync();
-});
-
-final shopRepositoryProvider = Provider((ref) => ShopRepository());
-
-final shopCatalogProvider = Provider<List<ShopItem>>((ref) {
-  return ref.read(shopRepositoryProvider).getCatalog();
 });
 
 class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
@@ -44,10 +26,14 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
   }
 
   Future<void> _load() async {
-    final progress = await _repository.load();
-    _audioService.soundEnabled = progress.soundEnabled;
-    _audioService.hapticsEnabled = progress.hapticsEnabled;
-    state = AsyncValue.data(progress);
+    try {
+      final progress = await _repository.load();
+      _audioService.soundEnabled = progress.soundEnabled;
+      _audioService.hapticsEnabled = progress.hapticsEnabled;
+      state = AsyncValue.data(progress);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
   }
 
   Future<void> registerAppOpen() async {
@@ -82,7 +68,7 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
       sectionId: sectionId,
       pointsEarned: points,
     );
-    state = AsyncValue.data(LocalProgress.fromJson(updated.toJson()));
+    state = AsyncValue.data(updated);
   }
 
   /// DEBUG ONLY. See ProgressService.debugCompleteAllLessons.
@@ -94,7 +80,7 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
       progress: current,
       journey: journey,
     );
-    state = AsyncValue.data(LocalProgress.fromJson(updated.toJson()));
+    state = AsyncValue.data(updated);
   }
 
   Future<PurchaseResult> purchaseItem(ShopItem item) async {
@@ -105,29 +91,15 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
       progress: current,
       item: item,
     );
-    state = AsyncValue.data(LocalProgress.fromJson(updated.toJson()));
+    state = AsyncValue.data(updated);
     return result;
   }
 
-  /// Equips [item] into its avatar slot. [item] must already be owned
-  /// (or free/default) — callers should only offer owned items in the
-  /// customization UI. No-ops if the item has no avatarSlot.
   Future<void> equipItem(ShopItem item) async {
     await _initialLoad;
     final current = state.value;
-    if (current == null || item.avatarSlot == null) return;
-
-    final owned =
-        item.price == 0 || (current.ownedItemQuantities[item.id] ?? 0) > 0;
-    if (!owned) return;
-
-    final updatedEquipped = Map<String, String>.from(current.equippedItemIds)
-      ..[item.avatarSlot!.name] = item.id;
-
-    final updated = LocalProgress.fromJson(current.toJson())
-      ..equippedItemIds = updatedEquipped;
-
-    await _repository.save(updated);
+    if (current == null) return;
+    final updated = await _service.equipItem(current, item);
     state = AsyncValue.data(updated);
   }
 
@@ -177,9 +149,7 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
     await _initialLoad;
     final current = state.value;
     if (current == null) return;
-    final updated = LocalProgress.fromJson(current.toJson())
-      ..dailyGoalMinutes = minutes;
-    await _repository.save(updated);
+    final updated = await _service.updateDailyGoal(current, minutes);
     state = AsyncValue.data(updated);
   }
 
@@ -187,9 +157,7 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
     await _initialLoad;
     final current = state.value;
     if (current == null) return;
-    final updated = LocalProgress.fromJson(current.toJson())
-      ..totalPoints += points;
-    await _repository.save(updated);
+    final updated = await _service.addPoints(current, points);
     state = AsyncValue.data(updated);
   }
 
@@ -197,14 +165,7 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
     await _initialLoad;
     final current = state.value;
     if (current == null) return;
-
-    final count = current.ownedItemQuantities[itemId] ?? 0;
-    if (count <= 0) return;
-
-    final updated = LocalProgress.fromJson(current.toJson());
-    updated.ownedItemQuantities[itemId] = count - 1;
-
-    await _repository.save(updated);
+    final updated = await _service.consumeItem(current, itemId);
     state = AsyncValue.data(updated);
   }
 
@@ -212,9 +173,7 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
     await _initialLoad;
     final current = state.value;
     if (current == null) return;
-    final updated = LocalProgress.fromJson(current.toJson())
-      ..hasCompletedOnboarding = true;
-    await _repository.save(updated);
+    final updated = await _service.completeOnboarding(current);
     state = AsyncValue.data(updated);
   }
 }

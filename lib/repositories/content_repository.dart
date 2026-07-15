@@ -48,32 +48,52 @@ class ContentRepository {
     await _box!.put(_journeyKey, jsonEncode(journey.toJson()));
   }
 
-  Future<Journey> checkForUpdatesAndSync() async {
-    final local = await getLocalJourney();
+  /// Cheap check: just asks Firestore what the latest version number is,
+  /// without downloading lesson content. Returns null if the check fails
+  /// (offline, etc.) so callers can treat that the same as "no update".
+  Future<int?> fetchRemoteVersion() async {
     try {
       final firestore = FirebaseFirestore.instance;
-
       final metaDoc = await firestore.collection('journey').doc('meta').get();
-      final remoteVersion = (metaDoc.data()?['version'] as num?)?.toInt();
+      return (metaDoc.data()?['version'] as num?)?.toInt();
+    } catch (_) {
+      return null;
+    }
+  }
 
-      if (remoteVersion == null || remoteVersion <= local.version) {
-        return local;
-      }
+  /// Downloads and caches the full lesson set for [remoteVersion]. Only
+  /// call this after `fetchRemoteVersion` has confirmed there's a newer
+  /// version — this is the "slow" part callers may want to show UI for.
+  Future<Journey> fetchAndCacheRemoteJourney(int remoteVersion) async {
+    final firestore = FirebaseFirestore.instance;
+    final lessonsSnapshot = await firestore
+        .collection('journey')
+        .doc('meta')
+        .collection('lessons')
+        .orderBy('order')
+        .get();
 
-      final lessonsSnapshot = await firestore
-          .collection('journey')
-          .doc('meta')
-          .collection('lessons')
-          .orderBy('order')
-          .get();
+    final remoteJourney = Journey.fromJson({
+      'version': remoteVersion,
+      'lessons': lessonsSnapshot.docs.map((d) => d.data()).toList(),
+    });
 
-      final remoteJourney = Journey.fromJson({
-        'version': remoteVersion,
-        'lessons': lessonsSnapshot.docs.map((d) => d.data()).toList(),
-      });
+    await _cacheJourney(remoteJourney);
+    return remoteJourney;
+  }
 
-      await _cacheJourney(remoteJourney);
-      return remoteJourney;
+  /// Convenience wrapper for callers that just want the end result and
+  /// don't care about the intermediate "checking" / "installing" steps.
+  Future<Journey> checkForUpdatesAndSync() async {
+    final local = await getLocalJourney();
+    final remoteVersion = await fetchRemoteVersion();
+
+    if (remoteVersion == null || remoteVersion <= local.version) {
+      return local;
+    }
+
+    try {
+      return await fetchAndCacheRemoteJourney(remoteVersion);
     } catch (_) {
       return local;
     }
