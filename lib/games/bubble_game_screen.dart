@@ -178,7 +178,7 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
             FilledButton(
               onPressed: () async {
                 await ref.read(progressProvider.notifier).consumeItem('powerup_extra_life');
-                if (mounted) {
+                if (context.mounted) {
                   Navigator.of(context).pop();
                   setState(() {
                     _lives = 3;

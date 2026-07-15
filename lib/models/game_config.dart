@@ -33,7 +33,12 @@ class GameConfig {
       mapXOffset: (json['mapXOffset'] as num?)?.toDouble(),
       mapYOffset: (json['mapYOffset'] as num?)?.toDouble(),
       icon: json['icon'] is int
-          ? IconData(json['icon'] as int, fontFamily: 'MaterialIcons')
+          ? IconData(
+            // ignore: non_const_argument_for_const_parameter
+            json['icon'] as int,
+            fontFamily: 'MaterialIcons',
+            matchTextDirection: true,
+          )
           : json['icon'] as IconData?,
       color: json['color'] is int
           ? Color(json['color'] as int)
@@ -50,6 +55,6 @@ class GameConfig {
     'mapXOffset': mapXOffset,
     'mapYOffset': mapYOffset,
     'icon': icon?.codePoint,
-    'color': color?.value,
+    'color': color?.toARGB32(),
   };
 }

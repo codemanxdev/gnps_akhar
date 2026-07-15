@@ -26,7 +26,7 @@ class SettingsScreen extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Reset progress?'),
+        title: const Text('Factory Reset?'),
         content: const Text(
           'This clears all points, streaks, and lesson progress, and reloads '
           'lesson content fresh. This can\'t be undone.',
@@ -39,7 +39,7 @@ class SettingsScreen extends ConsumerWidget {
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Reset'),
+            child: const Text('Reset Everything'),
           ),
         ],
       ),
@@ -155,7 +155,7 @@ class SettingsScreen extends ConsumerWidget {
             _SettingsActionButton(
               onPressed: () => _confirmAndReset(context, ref),
               icon: Icons.restart_alt,
-              label: 'Reset Progress',
+              label: 'Factory Reset',
               isDestructive: true,
             ),
             if (kDebugMode) ...[
