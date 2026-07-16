@@ -94,7 +94,7 @@ class _AvatarCustomizationScreenState
           data: (progress) {
             _preview ??= Map<String, String>.from(progress.equippedItemIds);
             final avatarItems = catalog
-                .where((i) => i.category == ShopItemCategory.avatar)
+                .where((i) => i.category == ShopItemCategory.item)
                 .toList();
             final slotItems = avatarItems
                 .where((i) => i.avatarSlot == _selectedSlot)

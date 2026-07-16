@@ -11,7 +11,7 @@ class ShopRepository {
       description: 'Boy',
       imageAssetPath: 'assets/avatars/boy.svg',
       price: 0,
-      category: ShopItemCategory.avatar,
+      category: ShopItemCategory.item,
       avatarSlot: AvatarSlot.base,
     ),
     ShopItem(
@@ -20,7 +20,7 @@ class ShopRepository {
       description: 'Girl',
       imageAssetPath: 'assets/avatars/girl.svg',
       price: 0,
-      category: ShopItemCategory.avatar,
+      category: ShopItemCategory.item,
       avatarSlot: AvatarSlot.base,
     ),
     ShopItem(
@@ -30,7 +30,7 @@ class ShopRepository {
       icon: Icons.circle_outlined,
       color: Colors.grey,
       price: 0,
-      category: ShopItemCategory.avatar,
+      category: ShopItemCategory.item,
       avatarSlot: AvatarSlot.turban,
     ),
     ShopItem(
@@ -40,7 +40,7 @@ class ShopRepository {
       icon: Icons.circle,
       color: Colors.deepOrange,
       price: 100,
-      category: ShopItemCategory.avatar,
+      category: ShopItemCategory.item,
       avatarSlot: AvatarSlot.turban,
     ),
     ShopItem(
@@ -50,7 +50,7 @@ class ShopRepository {
       icon: Icons.checkroom,
       color: Colors.brown,
       price: 0,
-      category: ShopItemCategory.avatar,
+      category: ShopItemCategory.item,
       avatarSlot: AvatarSlot.clothes,
     ),
     ShopItem(
@@ -60,7 +60,7 @@ class ShopRepository {
       icon: Icons.checkroom,
       color: Colors.black87,
       price: 120,
-      category: ShopItemCategory.avatar,
+      category: ShopItemCategory.item,
       avatarSlot: AvatarSlot.clothes,
     ),
     ShopItem(
@@ -70,7 +70,7 @@ class ShopRepository {
       icon: Icons.circle_outlined,
       color: Colors.grey,
       price: 0,
-      category: ShopItemCategory.avatar,
+      category: ShopItemCategory.item,
       avatarSlot: AvatarSlot.accessory,
     ),
     ShopItem(
@@ -80,7 +80,7 @@ class ShopRepository {
       icon: Icons.visibility,
       color: Colors.teal,
       price: 80,
-      category: ShopItemCategory.avatar,
+      category: ShopItemCategory.item,
       avatarSlot: AvatarSlot.accessory,
     ),
     ShopItem(

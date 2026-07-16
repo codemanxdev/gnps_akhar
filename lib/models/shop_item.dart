@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum ShopItemCategory { avatar, powerUp }
+enum ShopItemCategory { item, powerUp }
 
 enum AvatarSlot { base, turban, clothes, accessory }
 
@@ -42,7 +42,7 @@ class ShopItem {
     this.stackable = false,
     this.avatarSlot,
   }) : assert(
-         category != ShopItemCategory.avatar || avatarSlot != null,
+         category != ShopItemCategory.item || avatarSlot != null,
          'Avatar items must specify an avatarSlot',
        ),
        assert(
