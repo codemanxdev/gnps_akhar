@@ -48,22 +48,22 @@ class JourneySyncNotifier extends StateNotifier<JourneySyncState> {
 
   Future<void> _sync() async {
     // Add a small artificial delay so the "Checking for updates" status is actually visible.
-    final minimumCheckingTime = Future.delayed(const Duration(milliseconds: 2400));
+    final checkingDelay = Future.delayed(const Duration(milliseconds: 2400));
 
     var local = await _repository.getLocalJourney();
 
     // If the bundled code has a newer version than the cache (e.g. after an app update),
     // show the "Installing" status and migrate the cache.
     if (journeyData.version > local.version) {
-      await minimumCheckingTime;
+      await checkingDelay;
       state = JourneyInstallingUpdate(
         fromVersion: local.version,
         toVersion: journeyData.version,
       );
 
-      final minInstalling = Future.delayed(const Duration(milliseconds: 400));
+      final bundledInstallDelay = Future.delayed(const Duration(milliseconds: 800));
       await _repository.cacheJourney(journeyData);
-      await minInstalling;
+      await bundledInstallDelay;
 
       local = journeyData;
     }
@@ -71,31 +71,31 @@ class JourneySyncNotifier extends StateNotifier<JourneySyncState> {
     final remoteVersion = await _repository.fetchRemoteVersion();
 
     if (remoteVersion == null || remoteVersion <= local.version) {
-      await minimumCheckingTime;
+      await checkingDelay;
       state = JourneyReady(journey: local, wasUpdated: false);
       _readyCompleter.complete(local);
       return;
     }
 
-    await minimumCheckingTime;
+    await checkingDelay;
     state = JourneyInstallingUpdate(
       fromVersion: local.version,
       toVersion: remoteVersion,
     );
 
-    final minimumInstallingTime = Future.delayed(
-      const Duration(milliseconds: 400),
+    final remoteInstallDelay = Future.delayed(
+      const Duration(milliseconds: 200),
     );
 
     try {
       final installed = await _repository.fetchAndCacheRemoteJourney(
         remoteVersion,
       );
-      await minimumInstallingTime;
+      await remoteInstallDelay;
       state = JourneyReady(journey: installed, wasUpdated: true);
       _readyCompleter.complete(installed);
     } catch (_) {
-      await minimumInstallingTime;
+      await remoteInstallDelay;
       state = JourneyReady(journey: local, wasUpdated: false);
       _readyCompleter.complete(local);
     }
