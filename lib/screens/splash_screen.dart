@@ -21,10 +21,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _bootstrap() async {
-    final minimumSplashTime = Future.delayed(
-      const Duration(milliseconds: 2400),
-    );
-
     // Kick off content sync + progress loading in parallel.
     final journeyFuture = ref.read(journeySyncProvider.notifier).ready;
     await ref.read(progressProvider.notifier).registerAppOpen();
@@ -34,7 +30,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         .read(progressProvider.notifier)
         .ensureFirstLessonUnlocked(journey);
 
-    await minimumSplashTime;
+    // After "Ready!" is shown (via JourneyReady state), wait a brief moment before transitioning.
+    await Future.delayed(const Duration(milliseconds: 800));
 
     if (mounted) {
       final progress = ref.read(progressProvider).value;

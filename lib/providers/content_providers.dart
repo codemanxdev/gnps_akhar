@@ -46,15 +46,20 @@ class JourneySyncNotifier extends StateNotifier<JourneySyncState> {
   }
 
   Future<void> _sync() async {
+    // Add a small artificial delay so the "Checking for updates" status is actually visible.
+    final minimumCheckingTime = Future.delayed(const Duration(milliseconds: 2400));
+
     final local = await _repository.getLocalJourney();
     final remoteVersion = await _repository.fetchRemoteVersion();
 
     if (remoteVersion == null || remoteVersion <= local.version) {
+      await minimumCheckingTime;
       state = JourneyReady(journey: local, wasUpdated: false);
       _readyCompleter.complete(local);
       return;
     }
 
+    await minimumCheckingTime;
     state = JourneyInstallingUpdate(
       fromVersion: local.version,
       toVersion: remoteVersion,
