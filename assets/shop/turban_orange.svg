@@ -1,32 +1,24 @@
-<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- The Fifty (Small triangle at the forehead) -->
-  <path d="M42 85L50 72L58 85H42Z" fill="#2E608C"/>
+<svg width="400" height="500" viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- The Fifty (Slightly larger/shifted to cover) -->
+  <path d="M180 110L200 75L220 110H180Z" fill="#2E608C"/>
 
-  <!-- Base Silhouette (Back layers) -->
-  <path d="M22 82C22 50 35 25 50 25C65 25 78 50 78 82L78 88H22V82Z" fill="#E67E00"/>
+  <!-- Base Silhouette (Slightly broader than default to ensure mask) -->
+  <path d="M80 104C80 20 130 -10 200 -10C270 -10 320 20 320 104V134H80V104Z" fill="#E67E00"/>
 
   <!-- Layer 1 (Bottom Pecha) -->
-  <path d="M22 82C22 82 35 70 50 70C65 70 78 82 78 82L78 88H22V82Z" fill="#FF8C00"/>
+  <path d="M80 104C80 104 130 65 200 65C270 65 320 104 320 104V134H80V104Z" fill="#FF8C00"/>
 
-  <!-- Layer 2 (Diagonal Pecha Right) -->
-  <path d="M78 82C78 82 75 55 50 55C35 55 25 65 25 75L22 82L50 70L78 82Z" fill="#FFA500"/>
+  <!-- Diagonal Layers (Lars) -->
+  <path d="M320 104C320 104 300 35 200 35C140 35 90 65 90 95L80 104L200 65L320 104Z" fill="#FFA500"/>
+  <path d="M80 104C80 104 100 35 200 35C260 35 310 65 310 95L320 104L200 65L80 104Z" fill="#FF8C00"/>
 
-  <!-- Layer 3 (Diagonal Pecha Left) -->
-  <path d="M22 82C22 82 25 55 50 55C65 55 75 65 75 75L78 82L50 70L22 82Z" fill="#FF8C00"/>
+  <!-- Upper Layers -->
+  <path d="M310 120C310 120 290 65 200 65C140 65 96 95 96 115L200 90L310 120Z" fill="#FFA500"/>
+  <path d="M90 120C90 120 110 65 200 65C260 65 304 95 304 115L200 90L90 120Z" fill="#FF8C00"/>
 
-  <!-- Layer 4 (Upper Pecha Right) -->
-  <path d="M75 65C75 65 70 42 50 42C35 42 28 50 28 60L50 50L75 65Z" fill="#FFA500"/>
+  <!-- The Nok (Peak) -->
+  <path d="M200 -10C200 -10 176 -4 176 16C176 36 200 55 200 55C200 55 224 36 224 16C224 -4 200 -10 200 -10Z" fill="#FFB347"/>
 
-  <!-- Layer 5 (Upper Pecha Left) -->
-  <path d="M25 65C25 65 30 42 50 42C65 42 72 50 72 60L50 50L25 65Z" fill="#FF8C00"/>
-
-  <!-- The Nok (Peak) and Top Detail -->
-  <path d="M50 25C50 25 42 28 42 35C42 42 50 48 50 48C50 48 58 42 58 35C58 28 50 25 50 25Z" fill="#FFB347"/>
-
-  <!-- Central Fold Shadow (Organic) -->
-  <path d="M50 42C48 55 48 75 50 88H51C53 75 53 55 51 42L50 42Z" fill="black" fill-opacity="0.15"/>
-
-  <!-- Subtle Highlight on edges -->
-  <path d="M28 60C30 55 45 42 50 42" stroke="white" stroke-opacity="0.2" stroke-width="0.5"/>
-  <path d="M72 60C70 55 55 42 50 42" stroke="white" stroke-opacity="0.2" stroke-width="0.5"/>
+  <!-- Central Shadow -->
+  <path d="M200 55C196 75 196 115 200 154H202C206 115 206 75 202 55L200 55Z" fill="black" fill-opacity="0.15"/>
 </svg>

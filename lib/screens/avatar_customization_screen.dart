@@ -105,8 +105,8 @@ class _AvatarCustomizationScreenState
               children: [
                 const SizedBox(height: 16),
                 SizedBox(
-                  width: 240,
-                  height: 320,
+                  width: 300,
+                  height: 375,
                   child: AvatarPreview(
                     equippedItemIds: _preview!,
                     catalog: catalog,

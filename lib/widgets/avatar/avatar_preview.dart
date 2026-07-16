@@ -40,91 +40,58 @@ class AvatarPreview extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
-        final height = constraints.maxHeight;
-        final bodySize = width * 0.85;
-        final turbanSize = width * 0.4;
-        final clothesSize = width * 0.4;
-        final accessorySize = width * 0.3;
+        final height = width * 1.25; // 4:5 ratio (e.g. 200x250)
 
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            Positioned(
-              top: height * 0.14,
-              child: base?.imageAssetPath != null
-                  ? SizedBox(
-                      width: bodySize,
-                      height: bodySize,
-                      child: SvgPicture.asset(
-                        base!.imageAssetPath!,
-                        fit: BoxFit.contain,
-                      ),
-                    )
-                  : Container(
-                      width: bodySize,
-                      height: bodySize,
-                      decoration: BoxDecoration(
-                        color: (base?.color ?? Colors.grey.shade300).withValues(
-                          alpha: 0.18,
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        base?.icon ?? Icons.person,
-                        size: bodySize * 0.68,
-                        color: base?.color ?? Colors.grey.shade600,
-                      ),
-                    ),
-            ),
-            if (_isVisible(turban))
-              Positioned(
-                top: 0,
-                child: _SlotBadge(item: turban!, size: turbanSize),
-              ),
-            // clothes_default is a real garment, not a "none" sentinel —
-            // it's meant to always render, so no visibility check here.
-            if (clothes != null)
-              Positioned(
-                bottom: height * 0.06,
-                child: _SlotBadge(item: clothes, size: clothesSize),
-              ),
-            if (_isVisible(accessory))
-              Positioned(
-                top: height * 0.32,
-                right: width * 0.02,
-                child: _SlotBadge(item: accessory!, size: accessorySize),
-              ),
-          ],
+        return SizedBox(
+          width: width,
+          height: height,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // 1. Base Body
+              if (base?.imageAssetPath != null)
+                SvgPicture.asset(base!.imageAssetPath!, fit: BoxFit.contain)
+              else
+                Center(
+                  child: Icon(
+                    base?.icon ?? Icons.person,
+                    size: width * 0.6,
+                    color: base?.color ?? Colors.grey.shade600,
+                  ),
+                ),
+
+              // 2. Clothes
+              if (clothes != null)
+                _Layer(item: clothes),
+
+              // 3. Accessory (Glasses, etc.)
+              if (_isVisible(accessory))
+                _Layer(item: accessory!),
+
+              // 4. Turban (On top)
+              if (_isVisible(turban))
+                _Layer(item: turban!),
+            ],
+          ),
         );
       },
     );
   }
 }
 
-class _SlotBadge extends StatelessWidget {
+class _Layer extends StatelessWidget {
   final ShopItem item;
-  final double size;
 
-  const _SlotBadge({required this.item, required this.size});
+  const _Layer({required this.item});
 
   @override
   Widget build(BuildContext context) {
     if (item.imageAssetPath != null) {
-      return SizedBox(
-        width: size,
-        height: size,
-        child: SvgPicture.asset(item.imageAssetPath!, fit: BoxFit.contain),
-      );
+      return SvgPicture.asset(item.imageAssetPath!, fit: BoxFit.contain);
     }
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: item.color,
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.white, width: 3),
-      ),
-      child: Icon(item.icon, size: size * 0.6, color: Colors.white),
+    // Fallback for non-SVG items (unlikely for layers, but kept for safety)
+    return Center(
+      child: Icon(item.icon, size: 40, color: item.color),
     );
   }
 }

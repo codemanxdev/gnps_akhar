@@ -1,15 +1,17 @@
-<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Left Lens Frame -->
-  <rect x="20" y="42" width="25" height="18" rx="4" stroke="#333" stroke-width="4"/>
-  <!-- Right Lens Frame -->
-  <rect x="55" y="42" width="25" height="18" rx="4" stroke="#333" stroke-width="4"/>
-  <!-- Bridge -->
-  <path d="M45 48C45 46 55 46 55 48" stroke="#333" stroke-width="4" stroke-linecap="round"/>
-  <!-- Left Temple -->
-  <path d="M20 48L10 48" stroke="#333" stroke-width="4" stroke-linecap="round"/>
-  <!-- Right Temple -->
-  <path d="M80 48L90 48" stroke="#333" stroke-width="4" stroke-linecap="round"/>
-  <!-- Lenses (slight tint) -->
-  <rect x="22" y="44" width="21" height="14" rx="2" fill="#E0F7FA" fill-opacity="0.4"/>
-  <rect x="57" y="44" width="21" height="14" rx="2" fill="#E0F7FA" fill-opacity="0.4"/>
+<svg width="400" height="500" viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Frame Color: Charcoal -->
+  <g stroke="#333333" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left Lens Frame (centered at 160, 164) -->
+    <rect x="126" y="140" width="68" height="48" rx="12"/>
+    <!-- Right Lens Frame (centered at 240, 164) -->
+    <rect x="206" y="140" width="68" height="48" rx="12"/>
+    <!-- Bridge -->
+    <path d="M194 164C194 156 206 156 206 164"/>
+    <!-- Temples -->
+    <path d="M126 164H90"/>
+    <path d="M274 164H310"/>
+  </g>
+  <!-- Lenses -->
+  <rect x="130" y="144" width="60" height="40" rx="8" fill="#B2EBF2" fill-opacity="0.3"/>
+  <rect x="210" y="144" width="60" height="40" rx="8" fill="#B2EBF2" fill-opacity="0.3"/>
 </svg>

@@ -1,17 +1,28 @@
-<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img">
-<title>Sikh girl avatar with orange chunni</title>
-<desc>Cartoon avatar of a young Sikh girl with her head covered by an orange chunni, smiling</desc>
-<circle cx="100" cy="150" r="46" fill="#D4537E"/>
-<path d="M30 90 Q20 150 38 178 Q46 182 44 160 Q40 130 42 95 Z" fill="#EF9F27"/>
-<path d="M170 90 Q180 150 162 178 Q154 182 156 160 Q160 130 158 95 Z" fill="#EF9F27"/>
-<circle cx="40" cy="112" r="9" fill="#F2C9A0"/>
-<circle cx="160" cy="112" r="9" fill="#F2C9A0"/>
-<circle cx="100" cy="112" r="62" fill="#F2C9A0"/>
-<path d="M36 106 Q30 44 100 38 Q170 44 164 106 Q168 60 100 52 Q32 60 36 106 Z" fill="#EF9F27"/>
-<path d="M36 92 Q100 62 164 92 L164 80 Q100 52 36 80 Z" fill="#BA7517"/>
-<circle cx="80" cy="112" r="8" fill="#fff" stroke="#2B2118" stroke-width="1.5"/>
-<circle cx="80" cy="112" r="4" fill="#2B2118"/>
-<circle cx="120" cy="112" r="8" fill="#fff" stroke="#2B2118" stroke-width="1.5"/>
-<circle cx="120" cy="112" r="4" fill="#2B2118"/>
-<path d="M78 139 Q100 155 122 139" fill="none" stroke="#8D4B3B" stroke-width="4" stroke-linecap="round"/>
+<svg width="400" height="500" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Sikh girl avatar (Default)</title>
+
+  <!-- DEFAULT: Pink Dress (torso) -->
+  <path d="M108 240C108 190 150 150 200 150C250 150 292 190 292 240V480H108V240Z" fill="#D4537E"/>
+
+  <!-- Base: Skin & Face -->
+  <circle cx="80" cy="164" r="18" fill="#F2C9A0"/> <!-- Left Ear -->
+  <circle cx="320" cy="164" r="18" fill="#F2C9A0"/> <!-- Right Ear -->
+  <circle cx="200" cy="164" r="124" fill="#F2C9A0"/> <!-- Face Circle -->
+
+  <!-- DEFAULT: Orange Chunni (Built-in) -->
+  <g>
+    <!-- Side Drapes -->
+    <path d="M60 120 Q40 240 76 296 Q92 304 88 260 Q80 200 84 130 Z" fill="#EF9F27"/>
+    <path d="M340 120 Q360 240 324 296 Q308 304 312 260 Q320 200 316 130 Z" fill="#EF9F27"/>
+    <!-- Top Cover -->
+    <path d="M72 152 Q60 28 200 16 Q340 28 328 152 Q336 60 200 44 Q64 60 72 152 Z" fill="#EF9F27"/>
+    <path d="M72 124 Q200 64 328 124 L328 100 Q200 44 72 100 Z" fill="#BA7517"/>
+  </g>
+
+  <!-- Features -->
+  <circle cx="160" cy="164" r="16" fill="#fff" stroke="#2B2118" stroke-width="3"/> <!-- Left Eye -->
+  <circle cx="160" cy="164" r="8" fill="#2B2118"/>
+  <circle cx="240" cy="164" r="16" fill="#fff" stroke="#2B2118" stroke-width="3"/> <!-- Right Eye -->
+  <circle cx="240" cy="164" r="8" fill="#2B2118"/>
+  <path d="M156 218 Q200 250 244 218" fill="none" stroke="#8D4B3B" stroke-width="8" stroke-linecap="round"/> <!-- Mouth -->
 </svg>
