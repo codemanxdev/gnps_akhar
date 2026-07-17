@@ -7,6 +7,7 @@ import '../models/game_config.dart';
 import '../providers/progress_providers.dart';
 import '../providers/audio_providers.dart';
 import '../widgets/common/task_speaker_button.dart';
+import '../widgets/confetti/confetti_overlay.dart';
 
 class BubbleGameScreen extends ConsumerStatefulWidget {
   final GameConfig game;
@@ -23,6 +24,7 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
   final List<_Bubble> _bubbles = [];
   late Timer _spawnTimer;
   late Timer _gameLoop;
+  final GlobalKey<ConfettiOverlayState> _confettiKey = GlobalKey();
 
   int _lives = 3;
   int _score = 0;
@@ -59,13 +61,10 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
 
     setState(() {
       _letterPool = letters.isEmpty ? ['ੳ', 'ਅ', 'ੲ', 'ਸ', 'ਹ'] : letters;
+      // Pick first target immediately so bubbles can spawn with it,
+      // but we wait to speak it.
+      _targetLetter = _letterPool[_random.nextInt(_letterPool.length)];
     });
-
-    // Add a small initial pause before starting the first round/audio.
-    await Future.delayed(const Duration(milliseconds: 2000));
-    if (!mounted) return;
-
-    _nextRound();
 
     _spawnTimer = Timer.periodic(Duration(milliseconds: _spawnRateMs), (timer) {
       if (!_gameOver) _spawnBubble();
@@ -74,6 +73,12 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
     _gameLoop = Timer.periodic(const Duration(milliseconds: 16), (timer) {
       if (!_gameOver) _updateBubbles();
     });
+
+    // Wait 2 seconds after bubbles start spawning before speaking the first word.
+    await Future.delayed(const Duration(milliseconds: 2000));
+    if (!mounted) return;
+
+    _speakTarget();
   }
 
   void _nextRound() {
@@ -177,6 +182,7 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
     } else {
       // No extra hearts left, game over immediately.
       setState(() => _gameOver = true);
+      ref.read(audioServiceProvider).playGameOver();
     }
   }
 
@@ -185,6 +191,8 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
       _gameOver = true;
       _gameWon = true;
     });
+    _confettiKey.currentState?.play();
+    ref.read(audioServiceProvider).playGameWon();
     ref.read(progressProvider.notifier).addPoints(50);
   }
 
@@ -367,6 +375,8 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
                   ),
                 ),
               ),
+
+            Positioned.fill(child: ConfettiOverlay(key: _confettiKey)),
           ],
         ),
       ),

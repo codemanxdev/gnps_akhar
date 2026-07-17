@@ -141,6 +141,32 @@ class AudioService {
     if (hapticsEnabled) await HapticFeedback.mediumImpact();
   }
 
+  /// Game won SFX
+  Future<void> playGameWon() async {
+    if (!soundEnabled) return;
+    await _init();
+    try {
+      await _sfxPlayer.stop();
+      await _sfxPlayer.play(AssetSource('sounds/game_won.mp3'));
+    } catch (e) {
+      debugPrint('SFX Error: $e');
+    }
+    if (hapticsEnabled) await HapticFeedback.mediumImpact();
+  }
+
+  /// Game over SFX
+  Future<void> playGameOver() async {
+    if (!soundEnabled) return;
+    await _init();
+    try {
+      await _sfxPlayer.stop();
+      await _sfxPlayer.play(AssetSource('sounds/game_over.mp3'));
+    } catch (e) {
+      debugPrint('SFX Error: $e');
+    }
+    if (hapticsEnabled) await HapticFeedback.heavyImpact();
+  }
+
   /// Call from provider dispose to release resources.
   void dispose() {
     _sfxPlayer.dispose();

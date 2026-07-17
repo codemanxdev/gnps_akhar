@@ -32,10 +32,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/logo/logo.jpg
-    - assets/sounds/success.mp3
-    - assets/sounds/failure.mp3
-    - assets/sounds/lesson-completed.mp3
-    - assets/sounds/gem_earned.mp3
-    - assets/avatars/boy.svg
-    - assets/avatars/girl.svg
+    - assets/sounds/
+    - assets/avatars/
     - assets/shop/
