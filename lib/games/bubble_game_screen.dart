@@ -2,13 +2,15 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
 import '../models/game_config.dart';
 import '../providers/progress_providers.dart';
+import '../providers/audio_providers.dart';
+import '../widgets/common/task_speaker_button.dart';
 
 class BubbleGameScreen extends ConsumerStatefulWidget {
   final GameConfig game;
+
   const BubbleGameScreen({super.key, required this.game});
 
   @override
@@ -17,7 +19,6 @@ class BubbleGameScreen extends ConsumerStatefulWidget {
 
 class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
     with TickerProviderStateMixin {
-  late FlutterTts _tts;
   final Random _random = Random();
   final List<_Bubble> _bubbles = [];
   late Timer _spawnTimer;
@@ -39,9 +40,7 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
   @override
   void initState() {
     super.initState();
-    _tts = FlutterTts();
-    _tts.setLanguage("pa-IN");
-    
+
     // Initialize config with defaults
     final content = widget.game.content;
     _spawnRateMs = (content['spawnRateMs'] as num? ?? 1500).toInt();
@@ -60,8 +59,13 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
 
     setState(() {
       _letterPool = letters.isEmpty ? ['ੳ', 'ਅ', 'ੲ', 'ਸ', 'ਹ'] : letters;
-      _nextRound();
     });
+
+    // Add a small initial pause before starting the first round/audio.
+    await Future.delayed(const Duration(milliseconds: 2000));
+    if (!mounted) return;
+
+    _nextRound();
 
     _spawnTimer = Timer.periodic(Duration(milliseconds: _spawnRateMs), (timer) {
       if (!_gameOver) _spawnBubble();
@@ -79,25 +83,29 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
   }
 
   Future<void> _speakTarget() async {
-    await _tts.speak(_targetLetter);
+    ref.read(audioServiceProvider).speak(_targetLetter);
   }
 
   void _spawnBubble() {
-    final x = _random.nextDouble() * (MediaQuery.of(context).size.width - 80) + 40;
-    final letter = _random.nextDouble() > 0.7 
-        ? _targetLetter 
+    final x =
+        _random.nextDouble() * (MediaQuery.of(context).size.width - 80) + 40;
+    final letter = _random.nextDouble() > 0.7
+        ? _targetLetter
         : _letterPool[_random.nextInt(_letterPool.length)];
-    
+
     setState(() {
-      _bubbles.add(_Bubble(
-        id: DateTime.now().millisecondsSinceEpoch,
-        x: x,
-        y: MediaQuery.of(context).size.height,
-        letter: letter,
-        speed: _minSpeed + _random.nextDouble() * (_maxSpeed - _minSpeed),
-        size: _baseBubbleSize * (0.8 + _random.nextDouble() * 0.4),
-        color: Colors.primaries[_random.nextInt(Colors.primaries.length)].withValues(alpha: 0.6),
-      ));
+      _bubbles.add(
+        _Bubble(
+          id: DateTime.now().millisecondsSinceEpoch,
+          x: x,
+          y: MediaQuery.of(context).size.height,
+          letter: letter,
+          speed: _minSpeed + _random.nextDouble() * (_maxSpeed - _minSpeed),
+          size: _baseBubbleSize * (0.8 + _random.nextDouble() * 0.4),
+          color: Colors.primaries[_random.nextInt(Colors.primaries.length)]
+              .withValues(alpha: 0.6),
+        ),
+      );
     });
   }
 
@@ -124,7 +132,7 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
         _score += 10;
         bubble.status = _BubbleStatus.correct;
         if (_score >= 100) {
-           _winGame();
+          _winGame();
         } else {
           _nextRound();
         }
@@ -145,56 +153,29 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
     setState(() {
       _lives--;
       if (_lives <= 0) {
-        _showGameOverOrContinue();
+        _handleOutOfLives();
       }
     });
   }
 
-  void _showGameOverOrContinue() {
+  void _handleOutOfLives() async {
     final progress = ref.read(progressProvider).value;
-    final extraHearts = progress?.ownedItemQuantities['powerup_extra_life'] ?? 0;
+    final extraHearts =
+        progress?.ownedItemQuantities['powerup_extra_life'] ?? 0;
 
     if (extraHearts > 0) {
-      // Pause game
-      _spawnTimer.cancel();
-      // We don't cancel gameLoop to keep UI interactive if needed, 
-      // but we set _gameOver to true temporarily or use a different flag
-      _gameOver = true;
-      
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => AlertDialog(
-          title: const Text('Out of Hearts!'),
-          content: Text('You have $extraHearts Extra Hearts. Use one to get 3 more lives and continue?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                setState(() => _gameOver = true); // Final game over
-              },
-              child: const Text('No, Quit'),
-            ),
-            FilledButton(
-              onPressed: () async {
-                await ref.read(progressProvider.notifier).consumeItem('powerup_extra_life');
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    _lives = 3;
-                    _gameOver = false;
-                    _spawnTimer = Timer.periodic(Duration(milliseconds: _spawnRateMs), (timer) {
-                      if (!_gameOver) _spawnBubble();
-                    });
-                  });
-                }
-              },
-              child: const Text('Use 1 Heart'),
-            ),
-          ],
-        ),
-      );
+      // Automatically consume an extra heart and refill lives.
+      await ref
+          .read(progressProvider.notifier)
+          .consumeItem('powerup_extra_life');
+
+      if (mounted) {
+        setState(() {
+          _lives = 3;
+        });
+      }
     } else {
+      // No extra hearts left, game over immediately.
       setState(() => _gameOver = true);
     }
   }
@@ -211,7 +192,6 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
   void dispose() {
     _spawnTimer.cancel();
     _gameLoop.cancel();
-    _tts.stop();
     super.dispose();
   }
 
@@ -229,14 +209,16 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
         child: Stack(
           children: [
             // Game Area
-            ..._bubbles.map((bubble) => Positioned(
-                  left: bubble.x - bubble.size / 2,
-                  top: bubble.y - bubble.size / 2,
-                  child: GestureDetector(
-                    onTap: () => _popBubble(bubble),
-                    child: _BubbleWidget(bubble: bubble),
-                  ),
-                )),
+            ..._bubbles.map(
+              (bubble) => Positioned(
+                left: bubble.x - bubble.size / 2,
+                top: bubble.y - bubble.size / 2,
+                child: GestureDetector(
+                  onTap: () => _popBubble(bubble),
+                  child: _BubbleWidget(bubble: bubble),
+                ),
+              ),
+            ),
 
             // UI Overlay
             SafeArea(
@@ -253,24 +235,47 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
                         ),
                         Row(
                           children: [
-                            ...List.generate(3, (index) => Icon(
-                              index < _lives ? Icons.favorite : Icons.favorite_border,
-                              color: Colors.red,
-                              size: 32,
-                            )),
+                            ...List.generate(
+                              3,
+                              (index) => Icon(
+                                index < _lives
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Colors.red,
+                                size: 32,
+                              ),
+                            ),
                             const SizedBox(width: 8),
-                            if ((ref.watch(progressProvider).value?.ownedItemQuantities['powerup_extra_life'] ?? 0) > 0)
+                            if ((ref
+                                        .watch(progressProvider)
+                                        .value
+                                        ?.ownedItemQuantities['powerup_extra_life'] ??
+                                    0) >
+                                0)
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.red.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
+                                  border: Border.all(
+                                    color: Colors.red.withValues(alpha: 0.3),
+                                  ),
                                 ),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.add, size: 16, color: Colors.red),
-                                    const Icon(Icons.favorite, size: 16, color: Colors.red),
+                                    const Icon(
+                                      Icons.add,
+                                      size: 16,
+                                      color: Colors.red,
+                                    ),
+                                    const Icon(
+                                      Icons.favorite,
+                                      size: 16,
+                                      color: Colors.red,
+                                    ),
                                     const SizedBox(width: 4),
                                     Text(
                                       '${ref.watch(progressProvider).value?.ownedItemQuantities['powerup_extra_life']}',
@@ -286,13 +291,19 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
                         ),
                         Text(
                           'Score: $_score',
-                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.8),
                         borderRadius: BorderRadius.circular(20),
@@ -300,23 +311,15 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
                       child: Column(
                         children: [
                           Text(
-                            widget.game.id.contains('word') 
-                                ? 'Find the word:' 
-                                : 'Find the letter:', 
+                            widget.game.id.contains('word')
+                                ? 'Listen to the word:'
+                                : 'Listen to the letter:',
                             style: const TextStyle(fontSize: 18),
                           ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                _targetLetter,
-                                style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.volume_up),
-                                onPressed: _speakTarget,
-                              ),
-                            ],
+                          const SizedBox(height: 8),
+                          TaskSpeakerButton(
+                            textToSpeak: _targetLetter,
+                            iconSize: 40,
                           ),
                         ],
                       ),
@@ -344,13 +347,19 @@ class _BubbleGameScreenState extends ConsumerState<BubbleGameScreen>
                       const SizedBox(height: 16),
                       Text(
                         'Final Score: $_score',
-                        style: const TextStyle(color: Colors.white, fontSize: 24),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
                       ),
                       const SizedBox(height: 32),
                       ElevatedButton(
                         onPressed: () => Navigator.of(context).pop(),
                         style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 48,
+                            vertical: 16,
+                          ),
                         ),
                         child: const Text('Back to Journey'),
                       ),
@@ -391,6 +400,7 @@ class _Bubble {
 
 class _BubbleWidget extends StatelessWidget {
   final _Bubble bubble;
+
   const _BubbleWidget({required this.bubble});
 
   @override
@@ -408,7 +418,10 @@ class _BubbleWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: bubble.color,
         shape: BoxShape.circle,
-        border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 2),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.5),
+          width: 2,
+        ),
       ),
       child: Center(
         child: Padding(
@@ -418,11 +431,11 @@ class _BubbleWidget extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
-              fontSize: bubble.letter.length > 3 
-                  ? bubble.size * 0.25 
-                  : bubble.letter.length > 1 
-                      ? bubble.size * 0.35 
-                      : bubble.size * 0.5,
+              fontSize: bubble.letter.length > 3
+                  ? bubble.size * 0.25
+                  : bubble.letter.length > 1
+                  ? bubble.size * 0.35
+                  : bubble.size * 0.5,
               fontWeight: FontWeight.bold,
               shadows: const [Shadow(color: Colors.black26, blurRadius: 4)],
             ),
