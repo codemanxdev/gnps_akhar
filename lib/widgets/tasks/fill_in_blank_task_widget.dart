@@ -66,17 +66,17 @@ class _FillInBlankTaskWidgetState extends ConsumerState<FillInBlankTaskWidget>
     final correctWord = widget.task.content['correctWord'] as String;
 
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 24),
       child: Column(
         children: [
           const TaskHeader(title: 'Fill in the blank'),
-          const SizedBox(height: 32),
+          const SizedBox(height: 12),
           TaskSpeakerButton(
             textToSpeak: parts
                 .map((p) => p == '___' ? correctWord : p)
                 .join(' '),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
 
           TaskInteractiveBuildArea<String>(
             onAccept: _select,
@@ -107,7 +107,7 @@ class _FillInBlankTaskWidgetState extends ConsumerState<FillInBlankTaskWidget>
             }).toList(),
           ),
 
-          const SizedBox(height: 48),
+          const SizedBox(height: 16),
           Wrap(
             spacing: 12,
             runSpacing: 12,

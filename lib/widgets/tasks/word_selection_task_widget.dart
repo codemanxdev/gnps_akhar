@@ -73,19 +73,19 @@ class _WordSelectionTaskWidgetState
     final word = widget.task.content['word'] as String;
 
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 24),
       child: Column(
         children: [
           const TaskHeader(title: 'Select the correct picture'),
-          const SizedBox(height: 16),
+          const SizedBox(height: 4),
           Column(
             children: [
               TaskSpeakerButton(textToSpeak: word),
-              const SizedBox(height: 12),
+              const SizedBox(height: 4),
               Text(word, style: Theme.of(context).textTheme.displaySmall),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
           Expanded(
             child: AnimatedBuilder(
               animation: _shakeController,

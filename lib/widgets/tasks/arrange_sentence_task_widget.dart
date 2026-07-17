@@ -99,51 +99,60 @@ class _ArrangeSentenceTaskWidgetState
     )).join(' ');
 
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 24),
       child: Column(
         children: [
-          const TaskHeader(title: 'Arrange the sentence'),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const TaskHeader(title: 'Arrange the sentence'),
+                  const SizedBox(height: 4),
+                  TaskSpeakerButton(textToSpeak: fullSentence),
+                  const SizedBox(height: 12),
+
+                  TaskInteractiveBuildArea<_WordTile>(
+                    onAccept: _moveToBuilt,
+                    isCorrect: _lastCheckCorrect,
+                    shakeController: _shakeController,
+                    hintText: 'Drag words here in order',
+                    children: _builtTiles
+                        .map(
+                          (t) => TaskBuiltTile(
+                            text: t.text,
+                            fontSize: 36,
+                            onTap: () => _moveToBank(t),
+                            color: _lastCheckCorrect == null
+                                ? Colors.blue.shade700
+                                : (_lastCheckCorrect! ? Colors.green : Colors.red),
+                          ),
+                        )
+                        .toList(),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Word bank
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    alignment: WrapAlignment.center,
+                    children: _bankTiles
+                        .map(
+                          (t) => TaskLetterBank(
+                            text: t.text,
+                            data: t,
+                            onTap: () => _moveToBuilt(t),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+          ),
           const SizedBox(height: 8),
-          TaskSpeakerButton(textToSpeak: fullSentence),
-          const SizedBox(height: 24),
-
-          TaskInteractiveBuildArea<_WordTile>(
-            onAccept: _moveToBuilt,
-            isCorrect: _lastCheckCorrect,
-            shakeController: _shakeController,
-            hintText: 'Drag words here in order',
-            children: _builtTiles
-                .map(
-                  (t) => TaskBuiltTile(
-                    text: t.text,
-                    fontSize: 36,
-                    onTap: () => _moveToBank(t),
-                    color: _lastCheckCorrect == null
-                        ? Colors.blue.shade700
-                        : (_lastCheckCorrect! ? Colors.green : Colors.red),
-                  ),
-                )
-                .toList(),
-          ),
-
-          const SizedBox(height: 32),
-
-          // Word bank
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            alignment: WrapAlignment.center,
-            children: _bankTiles
-                .map(
-                  (t) => TaskLetterBank(
-                    text: t.text,
-                    data: t,
-                    onTap: () => _moveToBuilt(t),
-                  ),
-                )
-                .toList(),
-          ),
-          const Spacer(),
           TaskCheckButton(onPressed: _builtTiles.isEmpty ? null : _check),
         ],
       ),

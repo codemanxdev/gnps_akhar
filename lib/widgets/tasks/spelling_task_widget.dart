@@ -95,58 +95,67 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
     final targetWord = widget.task.content['targetWord'] as String;
 
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 24),
       child: Column(
         children: [
-          const TaskHeader(title: 'Spell the word'),
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 140,
-            child: Center(
-              child: Text(emoji, style: const TextStyle(fontSize: 96)),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const TaskHeader(title: 'Spell the word'),
+                  const SizedBox(height: 4),
+                  SizedBox(
+                    height: 140,
+                    child: Center(
+                      child: Text(emoji, style: const TextStyle(fontSize: 96)),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  TaskSpeakerButton(textToSpeak: targetWord),
+                  const SizedBox(height: 16),
+
+                  // Integrated Build Area + Preview
+                  TaskInteractiveBuildArea<_Tile>(
+                    onAccept: _moveToBuilt,
+                    isCorrect: _lastCheckCorrect,
+                    shakeController: _shakeController,
+                    hintText: 'Drag letters here',
+                    children: [
+                      if (_builtTiles.isNotEmpty)
+                        TaskBuiltTile(
+                          text: _builtTiles.map((t) => t.text).join(),
+                          fontSize: 36,
+                          onTap: () => _moveToBank(_builtTiles.last),
+                          color: _lastCheckCorrect == null
+                              ? null
+                              : (_lastCheckCorrect! ? Colors.green : Colors.red),
+                        ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Letter bank
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    alignment: WrapAlignment.center,
+                    children: _bankTiles
+                        .map(
+                          (t) => TaskLetterBank(
+                            text: t.text,
+                            data: t,
+                            onTap: () => _moveToBuilt(t),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 12),
-          TaskSpeakerButton(textToSpeak: targetWord),
-          const SizedBox(height: 32),
-
-          // Integrated Build Area + Preview
-          TaskInteractiveBuildArea<_Tile>(
-            onAccept: _moveToBuilt,
-            isCorrect: _lastCheckCorrect,
-            shakeController: _shakeController,
-            hintText: 'Drag letters here',
-            children: [
-              if (_builtTiles.isNotEmpty)
-                TaskBuiltTile(
-                  text: _builtTiles.map((t) => t.text).join(),
-                  fontSize: 36,
-                  onTap: () => _moveToBank(_builtTiles.last),
-                  color: _lastCheckCorrect == null
-                      ? null
-                      : (_lastCheckCorrect! ? Colors.green : Colors.red),
-                ),
-            ],
-          ),
-
-          const SizedBox(height: 32),
-
-          // Letter bank
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            alignment: WrapAlignment.center,
-            children: _bankTiles
-                .map(
-                  (t) => TaskLetterBank(
-                    text: t.text,
-                    data: t,
-                    onTap: () => _moveToBuilt(t),
-                  ),
-                )
-                .toList(),
-          ),
-          const Spacer(),
+          const SizedBox(height: 8),
           TaskCheckButton(onPressed: _builtTiles.isEmpty ? null : _check),
         ],
       ),
