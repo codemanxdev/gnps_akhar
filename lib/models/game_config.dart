@@ -32,13 +32,8 @@ class GameConfig {
       content: Map<String, dynamic>.from(json['content'] as Map? ?? {}),
       mapXOffset: (json['mapXOffset'] as num?)?.toDouble(),
       mapYOffset: (json['mapYOffset'] as num?)?.toDouble(),
-      icon: json['icon'] is int
-          ? IconData(
-            // ignore: non_const_argument_for_const_parameter
-            json['icon'] as int,
-            fontFamily: 'MaterialIcons',
-            matchTextDirection: true,
-          )
+      icon: json['icon'] is String
+          ? _iconMapping[json['icon'] as String]
           : json['icon'] as IconData?,
       color: json['color'] is int
           ? Color(json['color'] as int)
@@ -54,7 +49,17 @@ class GameConfig {
     'content': content,
     'mapXOffset': mapXOffset,
     'mapYOffset': mapYOffset,
-    'icon': icon?.codePoint,
+    'icon': _reverseIconMapping[icon],
     'color': color?.toARGB32(),
   };
+
+  /// Mapping of string keys to IconData constants to allow for icon
+  /// tree-shaking while still supporting serialization.
+  static const Map<String, IconData> _iconMapping = {
+    'videogame_asset': Icons.videogame_asset,
+    'menu_book': Icons.menu_book,
+  };
+
+  static final Map<IconData?, String?> _reverseIconMapping =
+      _iconMapping.map((key, value) => MapEntry(value, key));
 }

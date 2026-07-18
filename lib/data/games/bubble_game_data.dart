@@ -8,7 +8,7 @@ final Map<String, dynamic> bubbleGameConfig = {
   'type': 'bubble_pop',
   'mapXOffset': 150.0,
   'mapYOffset': 80.0,
-  'icon': Icons.videogame_asset,
+  'icon': 'videogame_asset',
   'color': const Color(0xFF00BCD4),
   'content': {
     'spawnRateMs': 1200,
