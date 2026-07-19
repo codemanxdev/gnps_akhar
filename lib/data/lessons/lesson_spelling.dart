@@ -9,7 +9,7 @@
 final Map<String, dynamic> lessonSpelling = {
   'id': 'lesson_spelling',
   'title': 'Spelling',
-  'order': 2,
+  'order': 3,
   'visible': true,
   'sections': [
     {

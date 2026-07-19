@@ -4,6 +4,7 @@ enum TaskType {
   wordSelection,
   arrangeSentence,
   fillInBlank,
+  letterSelection,
 }
 
 TaskType taskTypeFromString(String value) {

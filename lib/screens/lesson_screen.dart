@@ -14,6 +14,7 @@ import '../widgets/journey/current_lesson_banner.dart';
 import '../widgets/journey/reward_burst_overlay.dart';
 import '../widgets/tasks/arrange_sentence_task_widget.dart';
 import '../widgets/tasks/fill_in_blank_task_widget.dart';
+import '../widgets/tasks/letter_selection_task_widget.dart';
 import '../widgets/tasks/spelling_task_widget.dart';
 import '../widgets/tasks/trace_task_widget.dart';
 import '../widgets/tasks/word_selection_task_widget.dart';
@@ -225,6 +226,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
         );
       case TaskType.fillInBlank:
         return FillInBlankTaskWidget(
+          task: task,
+          onComplete: () => _onTaskComplete(task),
+          onIncorrect: _onTaskIncorrect,
+        );
+      case TaskType.letterSelection:
+        return LetterSelectionTaskWidget(
           task: task,
           onComplete: () => _onTaskComplete(task),
           onIncorrect: _onTaskIncorrect,

@@ -9,7 +9,7 @@
 final Map<String, dynamic> lessonMatching = {
   'id': 'lesson_matching',
   'title': 'Match the Word',
-  'order': 3,
+  'order': 4,
   'visible': true,
   'sections': [
     {
