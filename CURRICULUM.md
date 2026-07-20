@@ -2,82 +2,84 @@
 
 This document is automatically generated from the app's lesson data.
 
-## 🎓 Learning Journey
-
-### 1. Alphabet Tracing
+### 1. Alphabet Tracing (35 tasks)
 *Master the strokes of the Gurmukhi script.*
-- **Foundation Sounds**
-- **Guttural Sounds**
-- **Palatal Sounds**
-- **Retroflex Sounds**
-- **Dental Sounds**
-- **Labial Sounds**
-- **Semivowels**
+- **Foundation Sounds** (5 tasks)
+- **Guttural Sounds** (5 tasks)
+- **Palatal Sounds** (5 tasks)
+- **Retroflex Sounds** (5 tasks)
+- **Dental Sounds** (5 tasks)
+- **Labial Sounds** (5 tasks)
+- **Semivowels** (5 tasks)
 
-### 2. Letter Identification
+### 2. Letter Identification (35 tasks)
 *Practice auditory recognition and matching of Punjabi letters.*
-- **Vowel Sounds**
-- **Guttural Sounds**
-- **Palatal Sounds**
-- **Retroflex Sounds**
-- **Dental Sounds**
-- **Labial Sounds**
-- **Semivowels**
+- **Vowel Sounds** (5 tasks)
+- **Guttural Sounds** (5 tasks)
+- **Palatal Sounds** (5 tasks)
+- **Retroflex Sounds** (5 tasks)
+- **Dental Sounds** (5 tasks)
+- **Labial Sounds** (5 tasks)
+- **Semivowels** (5 tasks)
 
-### 3. Spelling
-- **Animals**
-- **Everyday Objects & Household**
-- **Fruits**
-- **Colors**
-- **Travel & Transport**
-- **School**
-- **Weather**
-- **Clothes**
-- **Kitchen**
-- **Nature**
-- **Birds**
-- **Days**
-- **Directions**
-- **Office**
-- **Shopping**
-- **Eating**
+### 3. Spelling (160 tasks)
+- **Animals** (10 tasks)
+- **Everyday Objects & Household** (10 tasks)
+- **Fruits** (10 tasks)
+- **Colors** (10 tasks)
+- **Travel & Transport** (10 tasks)
+- **School** (10 tasks)
+- **Weather** (10 tasks)
+- **Clothes** (10 tasks)
+- **Kitchen** (10 tasks)
+- **Nature** (10 tasks)
+- **Birds** (10 tasks)
+- **Days** (10 tasks)
+- **Directions** (10 tasks)
+- **Office** (10 tasks)
+- **Shopping** (10 tasks)
+- **Eating** (10 tasks)
 
-### 4. Match the Picture
-- **Animals**
-- **Everyday Objects & Household**
-- **Fruits**
-- **Colors**
-- **Travel & Transport**
-- **School**
-- **Weather**
-- **Clothes**
-- **Kitchen**
-- **Nature**
-- **Birds**
-- **Directions**
-- **Office**
-- **Shopping**
-- **Eating**
+### 4. Match the Picture (150 tasks)
+- **Animals** (10 tasks)
+- **Everyday Objects & Household** (10 tasks)
+- **Fruits** (10 tasks)
+- **Colors** (10 tasks)
+- **Travel & Transport** (10 tasks)
+- **School** (10 tasks)
+- **Weather** (10 tasks)
+- **Clothes** (10 tasks)
+- **Kitchen** (10 tasks)
+- **Nature** (10 tasks)
+- **Birds** (10 tasks)
+- **Directions** (10 tasks)
+- **Office** (10 tasks)
+- **Shopping** (10 tasks)
+- **Eating** (10 tasks)
 
-### 5. Match the Words
-- **Months of the Year**
-- **Colors**
-- **Animals**
-- **Food & Drink**
-- **Days of the Week**
-- **Directions**
-- **Nature**
-- **Common Objects**
+### 5. Match the Words (17 tasks)
+- **Months of the Year** (3 tasks)
+- **Colors** (2 tasks)
+- **Animals** (2 tasks)
+- **Food & Drink** (2 tasks)
+- **Days of the Week** (2 tasks)
+- **Directions** (2 tasks)
+- **Nature** (2 tasks)
+- **Common Objects** (2 tasks)
 
-### 6. Fill in the Blanks
-- **Everyday Objects & Animals**
-- **Colors & Family**
-- **Family Sentences**
+### 6. Fill in the Blanks (7 tasks)
+- **Everyday Objects & Animals** (3 tasks)
+- **Colors & Family** (2 tasks)
+- **Family Sentences** (2 tasks)
 
-### 7. Sentence Arrangement
-- **Everyday Sentences**
-- **More Sentences**
-- **Family Sentences**
+### 7. Sentence Arrangement (7 tasks)
+- **Everyday Sentences** (3 tasks)
+- **More Sentences** (2 tasks)
+- **Family Sentences** (2 tasks)
+
+### 📊 App Statistics
+- **Total Lessons**: 7
+- **Total Interactive Tasks**: 411
 
 ---
 

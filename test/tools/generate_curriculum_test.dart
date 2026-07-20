@@ -10,12 +10,14 @@ void main() {
     buffer.writeln();
     buffer.writeln('This document is automatically generated from the app\'s lesson data.');
     buffer.writeln();
-    buffer.writeln('## 🎓 Learning Journey');
-    buffer.writeln();
+    int appTotalTasks = 0;
 
     for (var i = 0; i < journeyData.lessons.length; i++) {
       final lesson = journeyData.lessons[i];
-      buffer.writeln('### ${i + 1}. ${lesson.title}');
+      final lessonTasks = lesson.allTasks.length;
+      appTotalTasks += lessonTasks;
+
+      buffer.writeln('### ${i + 1}. ${lesson.title} ($lessonTasks tasks)');
       
       // Attempt to find a description from common patterns (optional)
       if (lesson.id == 'lesson_tracing') {
@@ -25,10 +27,15 @@ void main() {
       }
 
       for (final section in lesson.sections) {
-        buffer.writeln('- **${section.title}**');
+        buffer.writeln('- **${section.title}** (${section.tasks.length} tasks)');
       }
       buffer.writeln();
     }
+
+    buffer.writeln('### 📊 App Statistics');
+    buffer.writeln('- **Total Lessons**: ${journeyData.lessons.length}');
+    buffer.writeln('- **Total Interactive Tasks**: $appTotalTasks');
+    buffer.writeln();
 
     buffer.writeln('---');
     buffer.writeln();
