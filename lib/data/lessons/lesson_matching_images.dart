@@ -6,9 +6,9 @@
 /// section. Sections mirror lessonSpelling except "Days", which was omitted —
 /// days of the week have no visually distinct emoji, so word-to-emoji
 /// matching doesn't work for them (see chat note).
-final Map<String, dynamic> lessonMatching = {
-  'id': 'lesson_matching',
-  'title': 'Match the Word',
+final Map<String, dynamic> lessonMatchingImages = {
+  'id': 'lesson_matching_images',
+  'title': 'Match the Picture',
   'order': 4,
   'visible': true,
   'sections': [
@@ -18,7 +18,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'wordSelect_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਬਿੱਲੀ',
@@ -28,7 +28,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'wordSelect_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕੁੱਤਾ',
@@ -38,7 +38,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'wordSelect_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਮੱਛੀ',
@@ -48,7 +48,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'animals_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਘੋੜਾ',
@@ -58,7 +58,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'animals_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਹਾਥੀ',
@@ -68,7 +68,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'animals_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸ਼ੇਰ',
@@ -78,7 +78,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'animals_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਬਾਂਦਰ',
@@ -88,7 +88,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'animals_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਬੱਤਖ',
@@ -98,7 +98,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'animals_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਭਾਲੂ',
@@ -108,7 +108,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'animals_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਊਠ',
@@ -124,7 +124,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'objhh_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕਿਤਾਬ',
@@ -134,7 +134,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'objhh_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸੂਰਜ',
@@ -144,7 +144,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'objhh_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਗੇਂਦ',
@@ -154,7 +154,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'objhh_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਤਾਰਾ',
@@ -164,7 +164,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'objhh_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਚੰਦ',
@@ -174,7 +174,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'objhh_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕੁਰਸੀ',
@@ -184,7 +184,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'objhh_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਦਰਵਾਜ਼ਾ',
@@ -194,7 +194,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'objhh_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਖਿੜਕੀ',
@@ -204,7 +204,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'objhh_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਮੰਜਾ',
@@ -214,7 +214,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'objhh_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸੋਫ਼ਾ',
@@ -230,7 +230,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'fruits_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸੇਬ',
@@ -240,7 +240,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'fruits_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕੇਲਾ',
@@ -250,7 +250,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'fruits_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਅੰਬ',
@@ -260,7 +260,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'fruits_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸੰਤਰਾ',
@@ -270,7 +270,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'fruits_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਅੰਗੂਰ',
@@ -280,7 +280,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'fruits_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਤਰਬੂਜ਼',
@@ -290,7 +290,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'fruits_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਅਨਾਨਾਸ',
@@ -300,7 +300,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'fruits_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਆੜੂ',
@@ -310,7 +310,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'fruits_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਨਾਸ਼ਪਾਤੀ',
@@ -320,7 +320,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'fruits_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਨਿੰਬੂ',
@@ -336,7 +336,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'wordSelect_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਲਾਲ',
@@ -346,7 +346,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'wordSelect_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਹਰਾ',
@@ -356,7 +356,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'colors_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਨੀਲਾ',
@@ -366,7 +366,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'colors_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪੀਲਾ',
@@ -376,7 +376,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'colors_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕਾਲਾ',
@@ -386,7 +386,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'colors_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਚਿੱਟਾ',
@@ -396,7 +396,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'colors_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸੰਤਰੀ',
@@ -406,7 +406,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'colors_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਗੁਲਾਬੀ',
@@ -416,7 +416,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'colors_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਭੂਰਾ',
@@ -426,7 +426,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'colors_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਜਾਮਨੀ',
@@ -442,7 +442,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'travel_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕਾਰ',
@@ -452,7 +452,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'travel_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਬੱਸ',
@@ -462,7 +462,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'travel_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਰੇਲਗੱਡੀ',
@@ -472,7 +472,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'travel_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਜਹਾਜ਼',
@@ -482,7 +482,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'travel_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸਾਈਕਲ',
@@ -492,7 +492,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'travel_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕਿਸ਼ਤੀ',
@@ -502,7 +502,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'travel_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਟੈਕਸੀ',
@@ -512,7 +512,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'travel_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਟਰੱਕ',
@@ -522,7 +522,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'travel_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਮੋਟਰਸਾਈਕਲ',
@@ -532,7 +532,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'travel_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਹੈਲੀਕਾਪਟਰ',
@@ -548,7 +548,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'school_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪੈਨਸਿਲ',
@@ -558,7 +558,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'school_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕਲਮ',
@@ -568,7 +568,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'school_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਬਸਤਾ',
@@ -578,7 +578,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'school_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਗੁਰੂ',
@@ -588,7 +588,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'school_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਤਖਤੀ',
@@ -598,7 +598,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'school_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਜਮਾਤ',
@@ -608,7 +608,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'school_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਵਿਦਿਆਰਥੀ',
@@ -618,7 +618,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'school_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਰਬੜ',
@@ -628,7 +628,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'school_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸਕੂਲ',
@@ -638,7 +638,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'school_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਮੇਜ਼',
@@ -654,7 +654,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'weather_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਮੀਂਹ',
@@ -664,7 +664,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'weather_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਬੱਦਲ',
@@ -674,7 +674,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'weather_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਹਵਾ',
@@ -684,7 +684,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'weather_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਬਰਫ਼',
@@ -694,7 +694,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'weather_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਧੁੰਦ',
@@ -704,7 +704,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'weather_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਧੁੱਪ',
@@ -714,7 +714,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'weather_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਗਰਮੀ',
@@ -724,7 +724,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'weather_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸਰਦੀ',
@@ -734,7 +734,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'weather_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਬਿਜਲੀ',
@@ -744,7 +744,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'weather_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਤੂਫ਼ਾਨ',
@@ -760,7 +760,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'clothes_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕਮੀਜ਼',
@@ -770,7 +770,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'clothes_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪੈਂਟ',
@@ -780,7 +780,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'clothes_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਜੁੱਤੀ',
@@ -790,7 +790,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'clothes_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਟੋਪੀ',
@@ -800,7 +800,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'clothes_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਜੁਰਾਬ',
@@ -810,7 +810,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'clothes_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸਵੈਟਰ',
@@ -820,7 +820,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'clothes_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਦਸਤਾਨੇ',
@@ -830,7 +830,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'clothes_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕੋਟ',
@@ -840,7 +840,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'clothes_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਰੁਮਾਲ',
@@ -850,7 +850,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'clothes_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪਜਾਮਾ',
@@ -866,7 +866,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'kitchen_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਚਮਚ',
@@ -876,7 +876,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'kitchen_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕਾਂਟਾ',
@@ -886,7 +886,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'kitchen_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਛੁਰੀ',
@@ -896,7 +896,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'kitchen_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਭਾਂਡਾ',
@@ -906,7 +906,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'kitchen_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਗਲਾਸ',
@@ -916,7 +916,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'kitchen_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪਲੇਟ',
@@ -926,7 +926,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'kitchen_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਫਰਿੱਜ',
@@ -936,7 +936,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'kitchen_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਚੁੱਲ੍ਹਾ',
@@ -946,7 +946,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'kitchen_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕੜਾਹੀ',
@@ -956,7 +956,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'kitchen_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਥਾਲੀ',
@@ -972,7 +972,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'nature_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਰੁੱਖ',
@@ -982,7 +982,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'nature_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਫੁੱਲ',
@@ -992,7 +992,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'nature_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪਹਾੜ',
@@ -1002,7 +1002,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'nature_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਦਰਿਆ',
@@ -1012,7 +1012,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'nature_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸਮੁੰਦਰ',
@@ -1022,7 +1022,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'nature_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਜੰਗਲ',
@@ -1032,7 +1032,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'nature_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪੱਤਾ',
@@ -1042,7 +1042,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'nature_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਘਾਹ',
@@ -1052,7 +1052,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'nature_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਅਸਮਾਨ',
@@ -1062,7 +1062,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'nature_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਰੇਤ',
@@ -1078,7 +1078,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'birds_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਤੋਤਾ',
@@ -1088,7 +1088,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'birds_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕਾਂ',
@@ -1098,7 +1098,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'birds_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕਬੂਤਰ',
@@ -1108,7 +1108,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'birds_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਮੋਰ',
@@ -1118,7 +1118,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'birds_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਬਾਜ਼',
@@ -1128,7 +1128,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'birds_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਉੱਲੂ',
@@ -1138,7 +1138,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'birds_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਚਿੜੀ',
@@ -1148,7 +1148,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'birds_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਮੁਰਗੀ',
@@ -1158,7 +1158,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'birds_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਹੰਸ',
@@ -1168,7 +1168,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'birds_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਚਮਗਿੱਦੜ',
@@ -1184,7 +1184,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'directions_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਉੱਤਰ',
@@ -1194,7 +1194,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'directions_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਦੱਖਣ',
@@ -1204,7 +1204,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'directions_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪੂਰਬ',
@@ -1214,7 +1214,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'directions_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪੱਛਮ',
@@ -1224,7 +1224,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'directions_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਉੱਪਰ',
@@ -1234,7 +1234,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'directions_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਹੇਠਾਂ',
@@ -1244,7 +1244,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'directions_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਖੱਬੇ',
@@ -1254,7 +1254,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'directions_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸੱਜੇ',
@@ -1264,7 +1264,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'directions_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਅੱਗੇ',
@@ -1274,7 +1274,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'directions_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪਿੱਛੇ',
@@ -1290,7 +1290,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'office_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਦਫ਼ਤਰ',
@@ -1300,7 +1300,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'office_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕੰਪਿਊਟਰ',
@@ -1310,7 +1310,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'office_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਫ਼ਾਈਲ',
@@ -1320,7 +1320,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'office_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪ੍ਰਿੰਟਰ',
@@ -1330,7 +1330,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'office_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਫੋਨ',
@@ -1340,7 +1340,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'office_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਘੜੀ',
@@ -1350,7 +1350,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'office_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸਟੈਪਲਰ',
@@ -1360,7 +1360,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'office_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਲਿਫ਼ਾਫ਼ਾ',
@@ -1370,7 +1370,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'office_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਡਾਇਰੀ',
@@ -1380,7 +1380,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'office_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਅਲਮਾਰੀ',
@@ -1396,7 +1396,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'shopping_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪੈਸਾ',
@@ -1406,7 +1406,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'shopping_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਦੁਕਾਨ',
@@ -1416,7 +1416,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'shopping_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਬਾਜ਼ਾਰ',
@@ -1426,7 +1426,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'shopping_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਕੀਮਤ',
@@ -1436,7 +1436,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'shopping_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਥੈਲਾ',
@@ -1446,7 +1446,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'shopping_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਗਾਹਕ',
@@ -1456,7 +1456,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'shopping_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਦੁਕਾਨਦਾਰ',
@@ -1466,7 +1466,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'shopping_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਨੋਟ',
@@ -1476,7 +1476,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'shopping_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸਿੱਕਾ',
@@ -1486,7 +1486,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'shopping_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਰਸੀਦ',
@@ -1502,7 +1502,7 @@ final Map<String, dynamic> lessonMatching = {
       'tasks': [
         {
           'id': 'eating_01',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਖਾਣਾ',
@@ -1512,7 +1512,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'eating_02',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਰੋਟੀ',
@@ -1522,7 +1522,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'eating_03',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਦਾਲ',
@@ -1532,7 +1532,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'eating_04',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਚਾਵਲ',
@@ -1542,7 +1542,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'eating_05',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਦੁੱਧ',
@@ -1552,7 +1552,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'eating_06',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਪਾਣੀ',
@@ -1562,7 +1562,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'eating_07',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਚਾਹ',
@@ -1572,7 +1572,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'eating_08',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਸਬਜ਼ੀ',
@@ -1582,7 +1582,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'eating_09',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਮਿੱਠਾ',
@@ -1592,7 +1592,7 @@ final Map<String, dynamic> lessonMatching = {
         },
         {
           'id': 'eating_10',
-          'type': 'wordSelection',
+          'type': 'matchingPictures',
           'pointsAwarded': 15,
           'content': {
             'word': 'ਨਾਸ਼ਤਾ',

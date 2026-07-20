@@ -7,7 +7,7 @@ export 'task_type.dart';
 /// `content` shape depends on `type`:
 /// - trace:            { letter, transliteration }
 /// - spelling:         { imageUrl, targetWord, letterBank: [...] }
-/// - wordSelection:    { word, correctImageUrl, distractorImageUrls: [...] }
+/// - matchingPictures: { word, correctImageUrl, distractorImageUrls: [...] }
 /// - arrangeSentence:  { words: [...], correctOrder: [...] }
 /// - fillInBlank:      { sentenceParts: [...], correctWord, options: [...] }
 class Task {

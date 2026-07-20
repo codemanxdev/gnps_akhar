@@ -3,7 +3,7 @@
 final Map<String, dynamic> lessonArrangeSentence = {
   'id': 'lesson_arrange_sentence',
   'title': 'Sentence Arrangement',
-  'order': 6,
+  'order': 7,
   'visible': true,
   'sections': [
     {

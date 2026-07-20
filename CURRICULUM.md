@@ -42,7 +42,7 @@ This document is automatically generated from the app's lesson data.
 - **Shopping**
 - **Eating**
 
-### 4. Match the Word
+### 4. Match the Picture
 - **Animals**
 - **Everyday Objects & Household**
 - **Fruits**
@@ -59,12 +59,22 @@ This document is automatically generated from the app's lesson data.
 - **Shopping**
 - **Eating**
 
-### 5. Fill in the Blanks
+### 5. Match the Words
+- **Months of the Year**
+- **Colors**
+- **Animals**
+- **Food & Drink**
+- **Days of the Week**
+- **Directions**
+- **Nature**
+- **Common Objects**
+
+### 6. Fill in the Blanks
 - **Everyday Objects & Animals**
 - **Colors & Family**
 - **Family Sentences**
 
-### 6. Sentence Arrangement
+### 7. Sentence Arrangement
 - **Everyday Sentences**
 - **More Sentences**
 - **Family Sentences**
@@ -84,4 +94,4 @@ flutter test test/tools/generate_curriculum_test.dart
 ```
 
 ---
-*Last Updated: 2026-07-19*
+*Last Updated: 2026-07-20*

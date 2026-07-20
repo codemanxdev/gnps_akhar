@@ -6,12 +6,12 @@ import '../../models/task.dart';
 import '../common/task_speaker_button.dart';
 import '../common/task_header.dart';
 
-class WordSelectionTaskWidget extends ConsumerStatefulWidget {
+class MatchingPicturesTaskWidget extends ConsumerStatefulWidget {
   final Task task;
   final VoidCallback onComplete;
   final VoidCallback? onIncorrect;
 
-  const WordSelectionTaskWidget({
+  const MatchingPicturesTaskWidget({
     super.key,
     required this.task,
     required this.onComplete,
@@ -19,12 +19,12 @@ class WordSelectionTaskWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<WordSelectionTaskWidget> createState() =>
-      _WordSelectionTaskWidgetState();
+  ConsumerState<MatchingPicturesTaskWidget> createState() =>
+      _MatchingPicturesTaskWidgetState();
 }
 
-class _WordSelectionTaskWidgetState
-    extends ConsumerState<WordSelectionTaskWidget>
+class _MatchingPicturesTaskWidgetState
+    extends ConsumerState<MatchingPicturesTaskWidget>
     with SingleTickerProviderStateMixin {
   late final List<String> _options;
   String? _selected;

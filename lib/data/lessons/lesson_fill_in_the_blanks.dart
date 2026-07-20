@@ -3,7 +3,7 @@
 final Map<String, dynamic> lessonFillInBlank = {
   'id': 'lesson_fill_in_blank',
   'title': 'Fill in the Blanks',
-  'order': 5,
+  'order': 6,
   'visible': true,
   'sections': [
     {

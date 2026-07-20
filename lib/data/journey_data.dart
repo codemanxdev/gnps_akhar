@@ -1,7 +1,8 @@
 import '../models/journey.dart';
 import 'lessons/lesson_tracing.dart';
 import 'lessons/lesson_spelling.dart';
-import 'lessons/lesson_matching.dart';
+import 'lessons/lesson_matching_images.dart';
+import 'lessons/lesson_matching_words.dart';
 import 'lessons/lesson_letter_selection.dart';
 import 'lessons/lesson_fill_in_the_blanks.dart';
 import 'lessons/lesson_arrange_sentence.dart';
@@ -32,12 +33,13 @@ import 'games/word_bubble_game_data.dart';
 /// NOTE: Gurmukhi spellings/grammar should be reviewed by a native speaker
 /// before wider release.
 final Journey journeyData = Journey.fromJson({
-  'version': 15,
+  'version': 18,
   'lessons': [
     lessonTracing,
     lessonLetterSelection,
     lessonSpelling,
-    lessonMatching,
+    lessonMatchingImages,
+    lessonMatchingWords,
     lessonFillInBlank,
     lessonArrangeSentence,
   ],
