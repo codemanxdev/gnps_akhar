@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
 import '../../providers/audio_providers.dart';
+import '../../config/task_config.dart';
 import '../common/task_speaker_button.dart';
 import '../common/task_header.dart';
 
@@ -49,7 +50,7 @@ class _LetterSelectionTaskWidgetState
     _options = [correct, ...distractors.take(3)]..shuffle(Random());
 
     // Auto-play the letter sound after a short delay
-    Future.delayed(const Duration(milliseconds: 800), () {
+    Future.delayed(TaskConfig.autoPlayDelay, () {
       if (mounted) {
         ref.read(audioServiceProvider).speak(correct);
       }

@@ -1,11 +1,11 @@
 enum TaskType {
   trace,
+  letterSelection,
   spelling,
   matchingPictures,
-  arrangeSentence,
-  fillInBlank,
-  letterSelection,
   matchingWords,
+  fillInBlank,
+  arrangeSentence,
 }
 
 TaskType taskTypeFromString(String value) {

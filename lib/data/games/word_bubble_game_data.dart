@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 final Map<String, dynamic> wordBubbleGameConfig = {
   'id': 'bubble_pop_words',
   'title': 'Word Bubbles',
-  'unlockAfterLessonId': 'lesson_arrange_sentence',
+  'unlockAfterLessonId': 'matchingWords',
   'type': 'bubble_pop',
   'mapXOffset': -110.0, // Tucked into the left tree line
   'mapYOffset': -20.0, // Slightly above the lesson node to avoid bottom edge

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
+import '../../providers/audio_providers.dart';
+import '../../config/task_config.dart';
 import '../common/task_speaker_button.dart';
 import '../common/task_header.dart';
 import '../common/task_letter_bank.dart';
@@ -34,6 +36,21 @@ class _FillInBlankTaskWidgetState extends ConsumerState<FillInBlankTaskWidget>
     vsync: this,
     duration: const Duration(milliseconds: 400),
   );
+
+  @override
+  void initState() {
+    super.initState();
+    // Auto-play the sentence sound after a short delay
+    final parts = List<String>.from(widget.task.content['sentenceParts'] as List);
+    final correctWord = widget.task.content['correctWord'] as String;
+    final fullSentence = parts.map((p) => p == '___' ? correctWord : p).join(' ');
+
+    Future.delayed(TaskConfig.autoPlayDelay, () {
+      if (mounted) {
+        ref.read(audioServiceProvider).speak(fullSentence);
+      }
+    });
+  }
 
   @override
   void dispose() {

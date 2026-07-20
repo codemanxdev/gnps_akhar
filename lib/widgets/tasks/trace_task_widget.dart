@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
+import '../../providers/audio_providers.dart';
+import '../../config/task_config.dart';
 import '../common/task_speaker_button.dart';
 import '../common/task_done_button.dart';
 import '../common/task_clear_button.dart';
@@ -171,6 +173,18 @@ class _TraceTaskWidgetState extends ConsumerState<TraceTaskWidget>
     if (_checkpoints.isEmpty) return -1;
     final index = _checkpoints.indexWhere((c) => !c.reached);
     return index; // -1 if all reached (List.indexWhere's own not-found value)
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Auto-play the letter sound after a short delay
+    final letter = widget.task.content['letter'] as String;
+    Future.delayed(TaskConfig.autoPlayDelay, () {
+      if (mounted) {
+        ref.read(audioServiceProvider).speak(letter);
+      }
+    });
   }
 
   @override

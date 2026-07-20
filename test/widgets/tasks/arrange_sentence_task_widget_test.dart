@@ -32,5 +32,8 @@ void main() {
     expect(find.text('Arrange the sentence'), findsOneWidget);
     expect(find.text('ਮੈਂ'), findsOneWidget);
     expect(find.text('ਸਕੂਲ'), findsOneWidget);
+
+    // Let the auto-play timer finish
+    await tester.pump(const Duration(milliseconds: 1000));
   });
 }

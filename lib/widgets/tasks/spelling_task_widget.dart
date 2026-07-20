@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
+import '../../providers/audio_providers.dart';
+import '../../config/task_config.dart';
 import '../common/task_speaker_button.dart';
 import '../common/task_check_button.dart';
 import '../common/task_header.dart';
@@ -50,6 +52,14 @@ class _SpellingTaskWidgetState extends ConsumerState<SpellingTaskWidget>
       for (int i = 0; i < letterBank.length; i++)
         _Tile(id: i, text: letterBank[i]),
     ]..shuffle(Random());
+
+    // Auto-play the target word sound after a short delay
+    final targetWord = widget.task.content['targetWord'] as String;
+    Future.delayed(TaskConfig.autoPlayDelay, () {
+      if (mounted) {
+        ref.read(audioServiceProvider).speak(targetWord);
+      }
+    });
   }
 
   @override

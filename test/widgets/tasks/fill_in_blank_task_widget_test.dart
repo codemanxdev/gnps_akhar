@@ -34,5 +34,8 @@ void main() {
     expect(find.text('ਮੇਰਾ ਨਾਮ'), findsOneWidget);
     expect(find.text('ਅਮਨ'), findsOneWidget);
     expect(find.text('ਰਾਹੁਲ'), findsOneWidget);
+
+    // Let the auto-play timer finish
+    await tester.pump(const Duration(milliseconds: 1000));
   });
 }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
+import '../../providers/audio_providers.dart';
+import '../../config/task_config.dart';
 import '../common/task_speaker_button.dart';
 import '../common/task_check_button.dart';
 import '../common/task_header.dart';
@@ -47,6 +49,14 @@ class _ArrangeSentenceTaskWidgetState
       for (int i = 0; i < words.length; i++)
         _WordTile(originalIndex: i, text: words[i]),
     ]..shuffle(Random());
+
+    // Auto-play the full sentence sound after a short delay
+    final fullSentence = words.join(' ');
+    Future.delayed(TaskConfig.autoPlayDelay, () {
+      if (mounted) {
+        ref.read(audioServiceProvider).speak(fullSentence);
+      }
+    });
   }
 
   @override

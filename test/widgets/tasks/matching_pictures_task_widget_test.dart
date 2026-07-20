@@ -36,5 +36,8 @@ void main() {
     expect(find.text('🍎'), findsOneWidget);
     expect(find.text('🐶'), findsOneWidget);
     expect(find.text('🚗'), findsOneWidget);
+
+    // Let the auto-play timer finish
+    await tester.pump(const Duration(milliseconds: 1000));
   });
 }

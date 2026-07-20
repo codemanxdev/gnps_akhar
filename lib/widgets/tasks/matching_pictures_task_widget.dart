@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/task.dart';
+import '../../providers/audio_providers.dart';
+import '../../config/task_config.dart';
 import '../common/task_speaker_button.dart';
 import '../common/task_header.dart';
 
@@ -43,6 +45,14 @@ class _MatchingPicturesTaskWidgetState
       widget.task.content['distractorEmojis'] as List,
     );
     _options = [correct, ...distractors]..shuffle(Random());
+
+    // Auto-play the target word sound after a short delay
+    final word = widget.task.content['word'] as String;
+    Future.delayed(TaskConfig.autoPlayDelay, () {
+      if (mounted) {
+        ref.read(audioServiceProvider).speak(word);
+      }
+    });
   }
 
   @override

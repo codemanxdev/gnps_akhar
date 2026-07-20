@@ -45,5 +45,8 @@ void main() {
     
     // Check button should now be enabled (or at least present)
     expect(find.byType(TaskCheckButton), findsOneWidget);
+
+    // Let the auto-play timer finish
+    await tester.pump(const Duration(milliseconds: 1000));
   });
 }
