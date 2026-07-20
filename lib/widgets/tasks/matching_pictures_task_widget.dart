@@ -91,7 +91,7 @@ class _MatchingPicturesTaskWidgetState
           Column(
             children: [
               TaskSpeakerButton(textToSpeak: word),
-              const SizedBox(height: 4),
+              const SizedBox(height: 12),
               Text(word, style: Theme.of(context).textTheme.displaySmall),
             ],
           ),
