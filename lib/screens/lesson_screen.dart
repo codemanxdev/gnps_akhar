@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +32,8 @@ class LessonScreen extends ConsumerStatefulWidget {
 }
 
 class _LessonScreenState extends ConsumerState<LessonScreen> {
+  late final List<Task> _sessionTasks;
+  final Map<String, LessonSection> _taskToSection = {};
   int _taskIndex = 0;
   int _pointsEarned = 0;
   bool _showingSuccess = false;
@@ -38,29 +41,49 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   final GlobalKey _starIconKey = GlobalKey();
   final GlobalKey<ConfettiOverlayState> _confettiKey = GlobalKey();
 
-  List<Task> get _allTasks => widget.lesson.allTasks;
-
   @override
   void initState() {
     super.initState();
-    _initializeTaskIndex();
+    _buildSession();
   }
 
-  void _initializeTaskIndex() {
+  void _buildSession() {
     final progress = ref.read(progressProvider).value;
-    if (progress == null) return;
+    if (progress == null) {
+      _sessionTasks = widget.lesson.allTasks;
+      return;
+    }
 
-    int accumulatedTasks = 0;
-    for (final section in widget.lesson.sections) {
-      if (progress.completedSectionIds.contains(section.id)) {
-        accumulatedTasks += section.tasks.length;
-      } else {
-        break;
+    // 1. Identify which sections to include.
+    // If some are incomplete, only show those. If all are complete, show all (replay).
+    var targetSections = widget.lesson.sections
+        .where((s) => !progress.completedSectionIds.contains(s.id))
+        .toList();
+
+    if (targetSections.isEmpty) {
+      targetSections = List.from(widget.lesson.sections);
+    }
+
+    // 2. Shuffle sections if configured.
+    if (widget.lesson.shuffleSections) {
+      targetSections.shuffle(Random());
+    }
+
+    // 3. Assemble tasks and build the ID -> Section lookup.
+    final List<Task> flattened = [];
+    for (final section in targetSections) {
+      final tasks = List<Task>.from(section.tasks);
+      if (widget.lesson.shuffleTasks) {
+        tasks.shuffle(Random());
+      }
+      for (final t in tasks) {
+        flattened.add(t);
+        _taskToSection[t.id] = section;
       }
     }
-    // If the whole lesson was already completed, reset to 0 to allow replay,
-    // otherwise start at the beginning of the first incomplete section.
-    _taskIndex = accumulatedTasks < _allTasks.length ? accumulatedTasks : 0;
+
+    _sessionTasks = flattened;
+    _taskIndex = 0;
   }
 
   void _onTaskComplete(Task task) async {
@@ -74,22 +97,18 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     if (!mounted) return;
     setState(() => _showingSuccess = false);
 
-    // Find which section this task belongs to
-    LessonSection? currentSection;
-    int accumulatedTasks = 0;
-    for (final section in widget.lesson.sections) {
-      accumulatedTasks += section.tasks.length;
-      if (_taskIndex < accumulatedTasks) {
-        currentSection = section;
-        break;
-      }
-    }
+    final currentSection = _taskToSection[task.id]!;
 
-    final isLastTaskInSection = _taskIndex + 1 == accumulatedTasks;
-    final isLastTaskInLesson = _taskIndex + 1 == _allTasks.length;
+    // A section is complete if:
+    // 1. This task was the last one in _sessionTasks (lesson complete)
+    // 2. The NEXT task belongs to a DIFFERENT section.
+    final isLastTaskInSession = _taskIndex + 1 == _sessionTasks.length;
+    final nextTaskBelongsToNewSection = !isLastTaskInSession &&
+        _taskToSection[_sessionTasks[_taskIndex + 1].id]?.id !=
+            currentSection.id;
 
-    if (isLastTaskInSection) {
-      await _handleSectionComplete(currentSection!, isLastTaskInLesson);
+    if (isLastTaskInSession || nextTaskBelongsToNewSection) {
+      await _handleSectionComplete(currentSection, isLastTaskInSession);
     } else {
       setState(() => _taskIndex++);
     }
@@ -248,25 +267,16 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final allTasks = _allTasks;
-    if (allTasks.isEmpty) {
+    if (_sessionTasks.isEmpty) {
       return const Scaffold(
         body: Center(child: Text('No tasks in this lesson')),
       );
     }
 
-    final task = allTasks[_taskIndex];
+    final task = _sessionTasks[_taskIndex];
     final progressAsync = ref.watch(progressProvider);
 
-    String? currentSectionTitle;
-    int accumulatedTasks = 0;
-    for (final section in widget.lesson.sections) {
-      if (_taskIndex < accumulatedTasks + section.tasks.length) {
-        currentSectionTitle = section.title;
-        break;
-      }
-      accumulatedTasks += section.tasks.length;
-    }
+    final currentSectionTitle = _taskToSection[task.id]?.title;
 
     return Scaffold(
       body: SafeArea(
@@ -278,7 +288,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                 lessonTitle: widget.lesson.title,
                 sectionTitle: currentSectionTitle,
                 taskIndex: _taskIndex,
-                totalTasks: allTasks.length,
+                totalTasks: _sessionTasks.length,
                 streak: progress.currentStreak,
                 points: progress.totalPoints,
                 onBack: () => Navigator.of(context).pop(),

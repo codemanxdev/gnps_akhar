@@ -5,6 +5,8 @@ final Map<String, dynamic> lessonLetterSelection = {
   'id': ContentIds.letterSelection,
   'title': 'Letter Identification',
   'order': 2,
+  'shuffleSections': true,
+  'shuffleTasks': true,
   'visible': true,
   'sections': [
     {

@@ -12,6 +12,8 @@ final Map<String, dynamic> lessonSpelling = {
   'id': ContentIds.spelling,
   'title': 'Spelling',
   'order': 3,
+  'shuffleSections': true,
+  'shuffleTasks': true,
   'visible': true,
   'sections': [
     {

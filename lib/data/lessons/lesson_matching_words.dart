@@ -5,6 +5,8 @@ final Map<String, dynamic> lessonMatchingWords = {
   'id': ContentIds.matchingWords,
   'title': 'Match the Words',
   'order': 5,
+  'shuffleSections': true,
+  'shuffleTasks': true,
   'visible': true,
   'sections': [
     {

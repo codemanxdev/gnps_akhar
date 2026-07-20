@@ -35,6 +35,13 @@ class Lesson {
   final int order;
   final List<LessonSection> sections;
 
+  /// When true, chapters/sections within this lesson are presented in a
+  /// random order during a learning session.
+  final bool shuffleSections;
+
+  /// When true, tasks within each chapter are presented in a random order.
+  final bool shuffleTasks;
+
   /// When false, this lesson is excluded from `Journey.activeLessons` —
   /// hidden from the journey map entirely, as if it doesn't exist yet.
   /// Defaults to true.
@@ -45,6 +52,8 @@ class Lesson {
     required this.title,
     required this.order,
     required this.sections,
+    this.shuffleSections = false,
+    this.shuffleTasks = false,
     this.visible = true,
   });
 
@@ -57,6 +66,8 @@ class Lesson {
       sections: rawSections
           .map((s) => LessonSection.fromJson(Map<String, dynamic>.from(s as Map)))
           .toList(),
+      shuffleSections: json['shuffleSections'] as bool? ?? false,
+      shuffleTasks: json['shuffleTasks'] as bool? ?? false,
       visible: json['visible'] as bool? ?? true,
     );
   }
@@ -66,6 +77,8 @@ class Lesson {
     'title': title,
     'order': order,
     'sections': sections.map((s) => s.toJson()).toList(),
+    'shuffleSections': shuffleSections,
+    'shuffleTasks': shuffleTasks,
     'visible': visible,
   };
 

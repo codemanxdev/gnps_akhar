@@ -12,6 +12,8 @@ final Map<String, dynamic> lessonMatchingImages = {
   'id': ContentIds.matchingPictures,
   'title': 'Match the Picture',
   'order': 4,
+  'shuffleSections': true,
+  'shuffleTasks': true,
   'visible': true,
   'sections': [
     {
