@@ -1,11 +1,17 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:crypto/crypto.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../config/debug_config.dart';
+import '../config/ui_strings.dart';
 import '../providers/content_providers.dart';
 import '../providers/progress_providers.dart';
+import '../tools/content_debug_screen.dart';
 import '../tools/tracing_checkpoint_recorder_screen.dart';
 import 'intro_screen.dart';
 
@@ -21,10 +27,17 @@ const List<Color> _themeColorOptions = [
   Colors.indigo,
 ];
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
-  Future<void> _confirmAndReset(BuildContext context, WidgetRef ref) async {
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  int _tapCount = 0;
+
+  Future<void> _confirmAndReset(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -52,24 +65,17 @@ class SettingsScreen extends ConsumerWidget {
     await ref.read(progressProvider.notifier).reset();
     await ref.read(contentRepositoryProvider).clearCache();
 
-    // Fetch fresh content directly from the repository (bypassing the
-    // journeySyncProvider state machine, which is meant for the one-time
-    // splash-screen sync, not for ad-hoc reloads like this).
+    // Fetch fresh content directly from the repository.
     final journey = await ref
         .read(contentRepositoryProvider)
         .checkForUpdatesAndSync();
 
-    // Keep journeyProvider/journeySyncProvider in sync with the new content
-    // in case any still-mounted screen watches them.
     ref.invalidate(journeySyncProvider);
 
     await ref
         .read(progressProvider.notifier)
         .ensureFirstLessonUnlocked(journey);
 
-    // reset() leaves hasCompletedOnboarding = false, so send the user back
-    // through onboarding and clear the stack so back-navigation can't
-    // return them to a screen built against the now-wiped state.
     if (context.mounted) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const IntroScreen()),
@@ -78,12 +84,7 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
-  Future<void> _debugCompleteAllLessons(
-    BuildContext context,
-    WidgetRef ref,
-  ) async {
-    // journeyProvider should already hold data by the time settings is
-    // reachable; fall back to a direct repository read just in case.
+  Future<void> _debugCompleteAllLessons(BuildContext context) async {
     final journey =
         ref.read(journeyProvider).value ??
         await ref.read(contentRepositoryProvider).getLocalJourney();
@@ -99,8 +100,26 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
+  Future<void> _contactSupport() async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: UIStrings.supportEmail,
+      query: 'subject=Support Request: GNPS Learning Hub',
+    );
+
+    if (await canLaunchUrl(emailLaunchUri)) {
+      await launchUrl(emailLaunchUri);
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open email app.')),
+        );
+      }
+    }
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final progressAsync = ref.watch(progressProvider);
 
     return Scaffold(
@@ -176,13 +195,17 @@ class SettingsScreen extends ConsumerWidget {
 
                 return Column(
                   children: [
-                    ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
+                    GestureDetector(
+                      onTap: () => _handleVersionTap(progress.isDeveloperModeEnabled),
+                      behavior: HitTestBehavior.opaque,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                        ),
+                        leading: const Icon(Icons.info_outline),
+                        title: const Text('App version'),
+                        trailing: Text(appVersion),
                       ),
-                      leading: const Icon(Icons.info_outline),
-                      title: const Text('App version'),
-                      trailing: Text(appVersion),
                     ),
                     ListTile(
                       contentPadding: const EdgeInsets.symmetric(
@@ -197,19 +220,36 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
             const Divider(height: 32),
+            const _SectionHeader('Support'),
             _SettingsActionButton(
-              onPressed: () => _confirmAndReset(context, ref),
+              onPressed: _contactSupport,
+              icon: Icons.email_outlined,
+              label: 'Contact Support',
+            ),
+            const Divider(height: 32),
+            _SettingsActionButton(
+              onPressed: () => _confirmAndReset(context),
               icon: Icons.restart_alt,
               label: 'Factory Reset',
               isDestructive: true,
             ),
-            if (kDebugMode) ...[
+            if (kDebugMode || progress.isDeveloperModeEnabled) ...[
               const Divider(height: 32),
               const _SectionHeader('Debug Tools'),
               _SettingsActionButton(
-                onPressed: () => _debugCompleteAllLessons(context, ref),
+                onPressed: () => _debugCompleteAllLessons(context),
                 icon: Icons.done_all,
                 label: 'Mark All Lessons Complete',
+              ),
+              const SizedBox(height: 12),
+              _SettingsActionButton(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const ContentDebugScreen(),
+                  ),
+                ),
+                icon: Icons.bug_report_outlined,
+                label: 'Content Progress Debug',
               ),
               const SizedBox(height: 12),
               _SettingsActionButton(
@@ -221,6 +261,15 @@ class SettingsScreen extends ConsumerWidget {
                 icon: Icons.edit_road,
                 label: 'Tracing Checkpoint Recorder',
               ),
+              if (progress.isDeveloperModeEnabled) ...[
+                const SizedBox(height: 12),
+                _SettingsActionButton(
+                  onPressed: () => ref.read(progressProvider.notifier).updateDeveloperMode(false),
+                  icon: Icons.no_accounts,
+                  label: 'Disable Developer Mode',
+                  isDestructive: true,
+                ),
+              ],
             ],
           ],
         ),
@@ -228,6 +277,71 @@ class SettingsScreen extends ConsumerWidget {
         error: (e, _) => Center(child: Text('Error loading settings: $e')),
       ),
     );
+  }
+
+  void _handleVersionTap(bool isAlreadyEnabled) {
+    if (isAlreadyEnabled) return;
+
+    setState(() => _tapCount++);
+
+    final remaining = DebugConfig.developerModeTapCount - _tapCount;
+    if (remaining > 0 && remaining <= 3) {
+      final messenger = ScaffoldMessenger.of(context);
+      messenger.clearSnackBars();
+      messenger.showSnackBar(
+        SnackBar(content: Text('You are $remaining steps away from developer mode.')),
+      );
+    } else if (remaining <= 0) {
+      _tapCount = 0;
+      _showUnlockDialog();
+    }
+  }
+
+  Future<void> _showUnlockDialog() async {
+    final controller = TextEditingController();
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Unlock Developer Mode'),
+        content: TextField(
+          controller: controller,
+          obscureText: true,
+          decoration: const InputDecoration(
+            labelText: 'Enter secret code',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              final bytes = utf8.encode(controller.text);
+              final digest = sha256.convert(bytes);
+              if (digest.toString() == DebugConfig.developerModeUnlockHash) {
+                Navigator.of(context).pop(true);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Incorrect code.')),
+                );
+              }
+            },
+            child: const Text('Unlock'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      await ref.read(progressProvider.notifier).updateDeveloperMode(true);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Developer mode unlocked!')),
+        );
+      }
+    }
   }
 }
 

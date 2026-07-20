@@ -7,4 +7,5 @@ class UIStrings {
   static const continueCapsLabel = 'CONTINUE';
   static const taskLabel = 'Task';
   static const ofLabel = 'of';
+  static const supportEmail = 'support@gnps.edu.org.au';
 }

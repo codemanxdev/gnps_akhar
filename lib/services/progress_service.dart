@@ -128,6 +128,47 @@ class ProgressService {
     return updated;
   }
 
+  /// DEBUG ONLY. Manually updates progress for a specific lesson to help test
+  /// UI states (Reset, Partial, Complete).
+  Future<LocalProgress> debugUpdateLessonProgress({
+    required LocalProgress progress,
+    required Journey journey,
+    required String lessonId,
+    required double percent, // 0.0 to 1.0
+  }) async {
+    if (!kDebugMode) return progress;
+
+    final updated = progress.clone();
+    final lesson = journey.lessons.firstWhere((l) => l.id == lessonId);
+
+    // 1. Clear existing completion for this lesson and its sections
+    updated.completedLessonIds.remove(lessonId);
+    for (final section in lesson.sections) {
+      updated.completedSectionIds.remove(section.id);
+    }
+
+    // 2. Add sections based on percent
+    final sectionsToMark = (lesson.sections.length * percent).round();
+    for (int i = 0; i < sectionsToMark; i++) {
+      updated.completedSectionIds.add(lesson.sections[i].id);
+    }
+
+    // 3. Mark lesson complete if 100%
+    if (percent >= 1.0) {
+      updated.completedLessonIds.add(lessonId);
+
+      // Unlock next lesson
+      final activeLessons = journey.activeLessons;
+      final index = activeLessons.indexWhere((l) => l.id == lessonId);
+      if (index != -1 && index + 1 < activeLessons.length) {
+        updated.unlockedLessonIds.add(activeLessons[index + 1].id);
+      }
+    }
+
+    await _repository.save(updated);
+    return updated;
+  }
+
   Future<LocalProgress> updateUserName(
     LocalProgress progress,
     String name,
@@ -181,6 +222,15 @@ class ProgressService {
 
   Future<LocalProgress> completeOnboarding(LocalProgress progress) async {
     final updated = progress.clone()..hasCompletedOnboarding = true;
+    await _repository.save(updated);
+    return updated;
+  }
+
+  Future<LocalProgress> updateDeveloperMode(
+    LocalProgress progress,
+    bool enabled,
+  ) async {
+    final updated = progress.clone()..isDeveloperModeEnabled = enabled;
     await _repository.save(updated);
     return updated;
   }

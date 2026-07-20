@@ -83,6 +83,24 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
     state = AsyncValue.data(updated);
   }
 
+  /// DEBUG ONLY. Manually updates progress for a specific lesson.
+  Future<void> debugUpdateLessonProgress({
+    required Journey journey,
+    required String lessonId,
+    required double percent,
+  }) async {
+    await _initialLoad;
+    final current = state.value;
+    if (current == null) return;
+    final updated = await _service.debugUpdateLessonProgress(
+      progress: current,
+      journey: journey,
+      lessonId: lessonId,
+      percent: percent,
+    );
+    state = AsyncValue.data(updated);
+  }
+
   Future<PurchaseResult> purchaseItem(ShopItem item) async {
     await _initialLoad;
     final current = state.value;
@@ -174,6 +192,14 @@ class ProgressNotifier extends StateNotifier<AsyncValue<LocalProgress>> {
     final current = state.value;
     if (current == null) return;
     final updated = await _service.completeOnboarding(current);
+    state = AsyncValue.data(updated);
+  }
+
+  Future<void> updateDeveloperMode(bool enabled) async {
+    await _initialLoad;
+    final current = state.value;
+    if (current == null) return;
+    final updated = await _service.updateDeveloperMode(current, enabled);
     state = AsyncValue.data(updated);
   }
 }

@@ -15,6 +15,7 @@ class LocalProgress {
   int themeSeedColor;
   bool hasCompletedOnboarding;
   int dailyGoalMinutes;
+  bool isDeveloperModeEnabled;
 
   static const Map<AvatarSlot, String> defaultEquippedItemIds = {
     AvatarSlot.base: DefaultItemIds.avatarBoy,
@@ -42,6 +43,7 @@ class LocalProgress {
     this.themeSeedColor = 0xFF2196F3, // Colors.blue
     this.hasCompletedOnboarding = false,
     this.dailyGoalMinutes = 10,
+    this.isDeveloperModeEnabled = false,
   }) : completedLessonIds = completedLessonIds ?? {},
        completedSectionIds = completedSectionIds ?? {},
        unlockedLessonIds = unlockedLessonIds ?? {},
@@ -97,6 +99,7 @@ class LocalProgress {
       themeSeedColor: (json['themeSeedColor'] as num?)?.toInt() ?? 0xFF2196F3,
       hasCompletedOnboarding: json['hasCompletedOnboarding'] as bool? ?? false,
       dailyGoalMinutes: (json['dailyGoalMinutes'] as num?)?.toInt() ?? 10,
+      isDeveloperModeEnabled: json['isDeveloperModeEnabled'] as bool? ?? false,
     );
   }
 
@@ -115,6 +118,7 @@ class LocalProgress {
     'themeSeedColor': themeSeedColor,
     'hasCompletedOnboarding': hasCompletedOnboarding,
     'dailyGoalMinutes': dailyGoalMinutes,
+    'isDeveloperModeEnabled': isDeveloperModeEnabled,
   };
 
   LocalProgress clone() => LocalProgress.fromJson(toJson());
