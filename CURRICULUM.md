@@ -67,19 +67,45 @@ This document is automatically generated from the app's lesson data.
 - **Nature** (2 tasks)
 - **Common Objects** (2 tasks)
 
-### 6. Fill in the Blanks (7 tasks)
-- **Everyday Objects & Animals** (3 tasks)
-- **Colors & Family** (2 tasks)
-- **Family Sentences** (2 tasks)
+### 6. Fill in the Blanks (80 tasks)
+- **Animals** (5 tasks)
+- **Everyday Objects & Household** (5 tasks)
+- **Fruits** (5 tasks)
+- **Colors** (5 tasks)
+- **Travel & Transport** (5 tasks)
+- **School** (5 tasks)
+- **Weather** (5 tasks)
+- **Clothes** (5 tasks)
+- **Kitchen** (5 tasks)
+- **Nature** (5 tasks)
+- **Birds** (5 tasks)
+- **Days** (5 tasks)
+- **Directions** (5 tasks)
+- **Office** (5 tasks)
+- **Shopping** (5 tasks)
+- **Eating** (5 tasks)
 
-### 7. Sentence Arrangement (7 tasks)
-- **Everyday Sentences** (3 tasks)
-- **More Sentences** (2 tasks)
-- **Family Sentences** (2 tasks)
+### 7. Sentence Arrangement (80 tasks)
+- **Animals** (5 tasks)
+- **Everyday Objects & Household** (5 tasks)
+- **Fruits** (5 tasks)
+- **Colors** (5 tasks)
+- **Travel & Transport** (5 tasks)
+- **School** (5 tasks)
+- **Weather** (5 tasks)
+- **Clothes** (5 tasks)
+- **Kitchen** (5 tasks)
+- **Nature** (5 tasks)
+- **Birds** (5 tasks)
+- **Days** (5 tasks)
+- **Directions** (5 tasks)
+- **Office** (5 tasks)
+- **Shopping** (5 tasks)
+- **Eating** (5 tasks)
 
 ### 📊 App Statistics
 - **Total Lessons**: 7
-- **Total Interactive Tasks**: 411
+- **Total Interactive Tasks**: 557
 
 ---
 
