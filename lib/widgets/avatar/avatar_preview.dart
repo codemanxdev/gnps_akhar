@@ -27,7 +27,8 @@ class AvatarPreview extends StatelessWidget {
   bool _isVisible(ShopItem? item) {
     if (item == null) return false;
     return item.id != DefaultItemIds.turbanNone &&
-        item.id != DefaultItemIds.accessoryNone;
+        item.id != DefaultItemIds.accessoryNone &&
+        item.id != DefaultItemIds.clothesDefault;
   }
 
   @override
@@ -61,8 +62,7 @@ class AvatarPreview extends StatelessWidget {
                 ),
 
               // 2. Clothes
-              if (clothes != null)
-                _Layer(item: clothes),
+              if (_isVisible(clothes)) _Layer(item: clothes!),
 
               // 3. Accessory (Glasses, etc.)
               if (_isVisible(accessory))
